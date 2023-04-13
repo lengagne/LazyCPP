@@ -6,20 +6,27 @@
 class LazyOperator2 : public LazyValue {
 public:
    
-    virtual double evaluate() = 0;
+    virtual double evaluate(uint index)=0;
+//     {
+//         std::cout<<"index = "<< index <<std::endl;
+//         std::cout<<"index_ = "<< index_ <<std::endl;
+//         if (index > index_)
+//         {
+//             std::cout<<"update"<<std::endl;
+//             index_ = index;
+//             return evaluate();
+//         }
+//         return value_;
+//     }
+    
+//     virtual double evaluate() = 0;
        
     virtual bool operator == (const LazyOperator2& A) const
     {
-        std::cout<<"a_ = "<< a_<< std::endl;
-        std::cout<<"A.a_ = "<< A.a_<< std::endl;
-        std::cout<<"first = "<< (a_ == A.a_) << std::endl;
-        std::cout<<"b_ = "<< b_<< std::endl;
-        std::cout<<"A.b_ = "<< A.b_<< std::endl;
-        std::cout<<"second = "<< (b_ == A.b_)<< std::endl;        
-        return a_ == A.a_ && b_ == A.b_;
+        return (a_ == A.a_ && b_ == A.b_) || (a_ == A.b_ && b_ == A.a_);
     }
     
-protected:
+
     LazyValue* a_=nullptr;
     LazyValue* b_=nullptr;
 };

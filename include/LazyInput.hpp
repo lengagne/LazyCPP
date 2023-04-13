@@ -12,17 +12,27 @@ public:
 //         LMANAGER.add_input(this);
 //     }
         
-    double evaluate() { return value_; }
+    double evaluate(uint index) { return value_; }
 
-    virtual void print( const std::string& tab ="") 
+    virtual void print( const std::string& tab ="",uint index=0) 
     {
+        if (index > index_)
+            std::cout<<"\x1B[35m";
+        else
+            std::cout<<"\x1B[32m";
+        
         std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
     }
     
-    void operator = (const double & d)
-    {
-        value_ = d;
-    }
+    void operator = (const double & d);
+//     {
+//         value_ = d;
+//     }
+    
+//     void set_value( const double & d)
+//     {
+//         value_ = d;
+//     }
         
 private:
     std::string name_;

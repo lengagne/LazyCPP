@@ -20,15 +20,7 @@ public:
         
     ~LazyVariable(){}
     
-    double evaluate()
-    {
-        return ref_->evaluate();
-    }
-    
-    void print_graph()
-    {
-        ref_->print();
-    }
+    double evaluate();    
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {
@@ -41,9 +33,15 @@ public:
     LazyVariable& operator - (  LazyVariable& b);
     
     LazyVariable& operator * (  LazyVariable& b);
-
+    
+    void operator = (double val);
+    
 private:
     LazyValue* ref_;
+    
+    friend class LazyManager;
+    
+    friend void PrintGraph(LazyVariable& in);
 };
 
 

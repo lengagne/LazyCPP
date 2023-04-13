@@ -11,17 +11,34 @@ public:
         value_ = a->value_-b->value_;        
     }
     
-    double evaluate() {
-        value_ = a_->evaluate() - b_->evaluate();
+    double evaluate(uint index) 
+    {
+        if (index > index_)
+        {
+            index_ = index;
+            value_ = a_->evaluate(index_) - b_->evaluate(index_);
+            return value_;
+        }
+//         std::cout<<"Sous Use previous computation"<<std::endl;
         return value_;
     }
     
-    virtual void print( const std::string& tab ="") 
+    virtual void print( const std::string& tab ="",uint index=0) 
     {
-        std::cout<<tab<<"("<<this<<") Soustraction: "<<std::endl;
-        a_->print(tab+"\t");
-        b_->print(tab+"\t");
+        if (index > index_)
+            std::cout<<"\x1B[35m";
+        else
+            std::cout<<"\x1B[32m";
+        
+        std::cout<<tab<<"("<<this<<") Soustraction ("<<value_<<")"<<std::endl;
+        a_->print(tab+"\t",index);
+        b_->print(tab+"\t",index);
     }
+    
+    virtual bool operator == (const LazyOperator2& A) const
+    {
+        return (a_ == A.a_ && b_ == A.b_);
+    }    
     
 private:
 };

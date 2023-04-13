@@ -9,9 +9,9 @@ public:
     
     virtual ~LazyValue(){}
     
-    virtual double evaluate() = 0;
+    virtual double evaluate(uint index=0) = 0;
     
-    virtual void print( const std::string& tab ="") = 0;
+    virtual void print( const std::string& tab ="", uint index=0) = 0;
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
     {
@@ -20,6 +20,7 @@ public:
     }
     
     double value_;
+    uint index_=0;
 };
 
 #endif // __LAZYVALUE_HPP__

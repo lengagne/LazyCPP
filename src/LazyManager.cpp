@@ -27,10 +27,7 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     {
         if (*multiplications_[i] == *out)
         {
-            std::cout<<"remove one multiplication"<<std::endl;
             out->print();
-            multiplications_[i]->print();
-            std::cout<<"*************************"<<std::endl;
             delete out;
             return multiplications_[i];
         }
@@ -52,4 +49,27 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     }        
     soustractions_.push_back(out);
     return out;
+}
+
+void LazyManager::affect_value( LazyValue* in, double value)
+{
+    for (int i=0;i<inputs_.size();i++)
+        if(inputs_[i] == in)
+        {
+            if (state_)
+                nb_process_++;              
+            state_ = false;
+            in->value_ = value;
+            in->index_ = nb_process_;
+            return;
+        }
+        
+    std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" try to set value to unexisting input"<<std::endl;
+    exit(2);
+}
+
+double LazyManager::evaluate( LazyVariable& a)
+{  
+    state_ = true;
+    return a.ref_->evaluate(nb_process_);
 }
