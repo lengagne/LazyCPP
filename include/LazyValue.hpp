@@ -9,7 +9,9 @@ public:
     
     virtual ~LazyValue(){}
     
-    virtual double evaluate() = 0;    
+    virtual double evaluate() = 0;
+    
+    virtual void print( const std::string& tab ="") = 0;
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
     {

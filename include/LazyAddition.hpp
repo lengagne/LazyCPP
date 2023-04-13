@@ -1,11 +1,13 @@
 #ifndef __LAZYADDITION_HPP__
 #define __LAZYADDITION_HPP__
 
-#include "LazyValue.hpp"
+#include "LazyOperator2.hpp"
 
-class LazyAddition : public LazyValue {
+class LazyAddition : public LazyOperator2 {
 public:
-    LazyAddition(LazyValue* a, LazyValue* b) : a_(a), b_(b) {
+    LazyAddition(LazyValue* a, LazyValue* b){
+        a_ = a;
+        b_ = b;
         value_ = a->value_+b->value_;        
     }
     
@@ -14,9 +16,16 @@ public:
         return value_;
     }
     
+    virtual void print( const std::string& tab ="") 
+    {
+        std::cout<<tab<<"("<<this<<"): Addition "<<std::endl;
+        a_->print(tab+"\t");
+        b_->print(tab+"\t");
+    }
+    
+    
 private:
-    LazyValue* a_;
-    LazyValue* b_;
+
 };
 
 #endif //  __LAZYADDITION_HPP__

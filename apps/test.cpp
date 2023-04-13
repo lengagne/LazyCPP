@@ -10,7 +10,8 @@ T test_function( T& x, T& y)
 //     T b = (x-2)*(x*y)*0.0 + x*y*1.5;
 //     T z = a + b - y*y*1;
 //     return z;
-    return x+y-(x+y)*(x+y);
+     return x+y-(x+y)*(x+y) *(x-y*y)*(x-y) ;
+
 }
 
 int main()
@@ -22,7 +23,7 @@ int main()
     std::cout<<"z = "<< z <<std::endl<<std::endl;
     
     
-    LazyInput lx = 1.0, ly = 2.0;
+    LazyInput lx(1.0,"X"), ly(2.0,"Y");
     LazyVariable X(lx), Y(ly);
     LazyVariable lz = test_function<LazyVariable>(X,Y);
     
@@ -39,6 +40,8 @@ int main()
     
     
     GetLazyInfo();
+    
+    lz.print_graph();
     
     return 0;
 }

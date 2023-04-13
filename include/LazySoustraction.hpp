@@ -1,11 +1,13 @@
 #ifndef __LAZYSOUSTRACTION_HPP__
 #define __LAZYSOUSTRACTION_HPP__
 
-#include "LazyValue.hpp"
+#include "LazyOperator2.hpp"
 
-class LazySoustraction : public LazyValue {
+class LazySoustraction : public LazyOperator2 {
 public:
-    LazySoustraction(LazyValue* a, LazyValue* b) : a_(a), b_(b) {
+    LazySoustraction(LazyValue* a, LazyValue* b) {
+        a_ =a;
+        b_ = b;
         value_ = a->value_-b->value_;        
     }
     
@@ -14,9 +16,14 @@ public:
         return value_;
     }
     
+    virtual void print( const std::string& tab ="") 
+    {
+        std::cout<<tab<<"("<<this<<") Soustraction: "<<std::endl;
+        a_->print(tab+"\t");
+        b_->print(tab+"\t");
+    }
+    
 private:
-    LazyValue* a_;
-    LazyValue* b_;
 };
 
 

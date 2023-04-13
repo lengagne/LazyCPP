@@ -25,6 +25,11 @@ public:
         return ref_->evaluate();
     }
     
+    void print_graph()
+    {
+        ref_->print();
+    }
+    
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {
         stream<< *(v.ref_);

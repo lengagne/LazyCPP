@@ -2,33 +2,6 @@
 
 LazyManager LMANAGER;
 
-
-void LazyManager::add_input( LazyInput* in)
-{
-    inputs_.push_back(in);
-}
-
-LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
-{
-    LazyAddition* out = new LazyAddition(a,b);
-    additions_.push_back(out);
-    return out;
-}
-
-LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
-{
-    LazyMultiplication* out = new LazyMultiplication(a,b);
-    multiplications_.push_back(out);
-    return out;
-}
-
-LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
-{
-    LazySoustraction* out = new LazySoustraction(a,b);
-    soustractions_.push_back(out);
-    return out;
-}
-
 void GetLazyInfo()
 {
     std::cout<<"GetLazyInfo()"<<std::endl;
@@ -38,7 +11,8 @@ void GetLazyInfo()
     std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
 }
 
-LazyInput::LazyInput(double value) 
+
+LazyInput::LazyInput(double value, const std::string name):name_(name) 
 {        
     value_ = value;
     LMANAGER.add_input(this);
