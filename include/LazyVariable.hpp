@@ -1,96 +1,5 @@
-#ifndef __LAZYCPP_H__
-#define __LAZYCPP_H__
-
-class LazyValue
-{
-public:
-    
-    virtual ~LazyValue(){}
-    
-    virtual double evaluate() = 0;    
-    
-    friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
-    {
-        stream<<v.value_;
-        return stream;
-    }
-    
-    double value_;
-};
-
-class LazyInput : public LazyValue {
-public:
-    LazyInput(double value) {value_ = value;}
-    double evaluate() { return value_; }
-    void operator = (const double & d)
-    {
-        value_ = d;
-    }
-        
-private:
-};
-
-class LazyConstant : public LazyValue {
-public:
-    LazyConstant(double value){value_ = value;}
-    double evaluate() { return value_; }
-    void operator = (const double & d)
-    {
-        value_ = d;
-    }
-        
-private:
-};
-
-
-class LazyAddition : public LazyValue {
-public:
-    LazyAddition(LazyValue* a, LazyValue* b) : a_(a), b_(b) {
-        value_ = a->value_+b->value_;        
-    }
-    
-    double evaluate() {
-        value_ = a_->evaluate() + b_->evaluate();
-        return value_;
-    }
-    
-private:
-    LazyValue* a_;
-    LazyValue* b_;
-};
-
-class LazyMultiplication : public LazyValue {
-public:
-    LazyMultiplication(LazyValue* a, LazyValue* b) : a_(a), b_(b) {
-        value_ = a->value_*b->value_;        
-    }
-    
-    double evaluate() {
-        value_ = a_->evaluate() * b_->evaluate();
-        return value_;
-    }
-    
-private:
-    LazyValue* a_;
-    LazyValue* b_;
-};
-
-class LazySoustraction : public LazyValue {
-public:
-    LazySoustraction(LazyValue* a, LazyValue* b) : a_(a), b_(b) {
-        value_ = a->value_-b->value_;        
-    }
-    
-    double evaluate() {
-        value_ = a_->evaluate() - b_->evaluate();
-        return value_;
-    }
-    
-private:
-    LazyValue* a_;
-    LazyValue* b_;
-};
-
+#ifndef __LAZYVARIABLE_HPP__
+#define __LAZYVARIABLE_HPP__
 
 class LazyVariable
 {
@@ -189,5 +98,4 @@ inline LazyVariable& operator * ( int  a, LazyVariable& b)
     return b* *A;
 }
 
-
-#endif // __LAZYCPP_H__
+#endif // __LAZYVARIABLE_HPP__

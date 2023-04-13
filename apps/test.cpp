@@ -1,5 +1,5 @@
 #include <iostream>
-#include "LazyCPP.h"
+#include "LazyCPP.hpp"
 
 
 template<typename T>
