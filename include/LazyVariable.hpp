@@ -24,78 +24,72 @@ public:
     {
         return ref_->evaluate();
     }
+    
+    friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
+    {
+        stream<< *(v.ref_);
+        return stream;
+    }    
 
-    inline LazyVariable& operator + (  LazyVariable& b)
-    {
-        LazyVariable *out = new LazyVariable();
-        out->ref_ = new LazyAddition(ref_,b.ref_);
-        return *out;
-    }
+    LazyVariable& operator + ( LazyVariable& b);
     
-    inline LazyVariable& operator - (  LazyVariable& b)
-    {
-        LazyVariable *out = new LazyVariable();
-        out->ref_ = new LazySoustraction(ref_,b.ref_);
-        return *out;
-    }    
+    LazyVariable& operator - (  LazyVariable& b);
     
-    inline LazyVariable& operator * (  LazyVariable& b)
-    {
-        LazyVariable *out = new LazyVariable();
-        out->ref_ = new LazyMultiplication(ref_,b.ref_);
-        return *out;
-    }    
-        
+    LazyVariable& operator * (  LazyVariable& b);
+
+private:
     LazyValue* ref_;
 };
 
-inline LazyVariable& operator + ( double a, LazyVariable& b)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b+*A;
-}
-
-inline LazyVariable& operator + ( int  a, LazyVariable& b)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b+*A;
-}
-
-inline LazyVariable& operator - ( LazyVariable& a , double b)
-{
-    LazyVariable *B = new LazyVariable(b);
-    return a- *B;
-}
-
-inline LazyVariable& operator - (  LazyVariable& a , int b)
-{
-    LazyVariable *B = new LazyVariable(b);
-    return a- *B;
-}
-
-inline LazyVariable& operator * ( LazyVariable& b, double a)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b* *A;
-}
-
-inline LazyVariable& operator * (LazyVariable& b, int  a)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b* *A;
-}
 
 
-inline LazyVariable& operator * ( double a, LazyVariable& b)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b* *A;
-}
-
-inline LazyVariable& operator * ( int  a, LazyVariable& b)
-{
-    LazyVariable *A = new LazyVariable(a);
-    return b* *A;
-}
+// inline LazyVariable& operator + ( double a, LazyVariable& b)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b+*A;
+// }
+// 
+// inline LazyVariable& operator + ( int  a, LazyVariable& b)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b+*A;
+// }
+// 
+// inline LazyVariable& operator - ( LazyVariable& a , double b)
+// {
+//     LazyVariable *B = new LazyVariable(b);
+//     return a- *B;
+// }
+// 
+// inline LazyVariable& operator - (  LazyVariable& a , int b)
+// {
+//     LazyVariable *B = new LazyVariable(b);
+//     return a- *B;
+// }
+// 
+// inline LazyVariable& operator * ( LazyVariable& b, double a)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b* *A;
+// }
+// 
+// inline LazyVariable& operator * (LazyVariable& b, int  a)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b* *A;
+// }
+// 
+// 
+// inline LazyVariable& operator * ( double a, LazyVariable& b)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b* *A;
+// }
+// 
+// inline LazyVariable& operator * ( int  a, LazyVariable& b)
+// {
+//     LazyVariable *A = new LazyVariable(a);
+//     return b* *A;
+// }
 
 #endif // __LAZYVARIABLE_HPP__

@@ -1,6 +1,7 @@
 #ifndef __LAZYVALUE_HPP__
 #define __LAZYVALUE_HPP__
 
+#include <iostream>
 
 class LazyValue
 {
