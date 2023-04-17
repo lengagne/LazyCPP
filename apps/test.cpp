@@ -20,8 +20,8 @@ int main()
     LazyVariable X(x,"X"), Y(y,"y");
     LazyVariable lz = test_function<LazyVariable>(X,Y);
     LazyVariable lz1 = lz*lz;
-    AddLazyOutput(lz);
-    AddLazyOutput(lz1);
+    LazyAddOutput(lz);
+    LazyAddOutput(lz1);
     
     LazyPrepare();
     
@@ -44,7 +44,7 @@ int main()
     
     std::cout<<"lz1 = " << lz1 <<std::endl<<std::endl;
     
-    GetLazyInfo();
+    LazyGetInfo();
     
 //     PrintGraph(lz);
     

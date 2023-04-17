@@ -15,7 +15,10 @@
 class LazyManager
 {
 public:
-    LazyManager(){}
+    LazyManager(){
+        zero_ = new LazyConstant(0.0);        
+        one_ = new LazyConstant(0.0);
+    }
     
     virtual ~LazyManager(){}
     
@@ -29,13 +32,32 @@ public:
     
     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
-    LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
+    LazyValue* add_cosinus( LazyValue* a);
     
     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_sinus( LazyValue* a);
+    
+    LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
     
     void affect_value( LazyValue* in, double value);
     
     double evaluate( LazyVariable&a);
+    
+    uint get_nb_inputs() const
+    {
+        return inputs_.size();
+    }
+    
+    LazyValue* get_zero() const
+    {
+        return zero_;
+    }
+    
+    bool is_zero(LazyValue * in) const
+    {
+        return in == zero_;
+    }
     
     void prepare();
     
@@ -43,22 +65,24 @@ public:
     
     void update_all();
     
-    void update(uint index);
+    double update(uint index);
     
+    friend void LazyAddOutput(LazyVariable& in);
     
-    friend void GetLazyInfo();
+    friend void LazyGetInfo();    
     
-    friend void AddLazyOutput(LazyVariable& in);
-    
-    friend void PrintGraph(LazyVariable& in);
+    friend void LazyPrintGraph(LazyVariable& in);
     
 private:
 
+    LazyConstant * zero_, *one_;
+    
     std::vector<LazyInput*> inputs_;    
     std::vector<LazyAddition*> additions_;
+    std::vector<LazyCosinus*> cosinus_;
+    std::vector<LazyMultiplication*> multiplications_;        
+    std::vector<LazySinus*> sinus_;
     std::vector<LazySoustraction*> soustractions_;
-    std::vector<LazyMultiplication*> multiplications_;
-    
     std::vector< std::vector< LazyValue* > > output_dependances_;
     
     std::vector< LazyValue* > outputs_;
@@ -69,9 +93,7 @@ private:
     
 };
 
-void GetLazyInfo();
 
-void PrintGraph(LazyValue* in);
 
 
 #endif // __LAZYMANAGER_HPP__

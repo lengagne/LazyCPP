@@ -4,54 +4,83 @@
 class LazyVariable
 {
 public:
-    LazyVariable(){}
-
-    LazyVariable(const int & a)
-    {
-        ref_ = new LazyConstant(1.0*a);        
-    }    
+    LazyVariable();
     
-    LazyVariable(const double & a)
-    {
-        ref_ = new LazyConstant(a);        
-    }    
+    LazyVariable(const uint & a);
+
+    LazyVariable(const int & a);
+    
+    LazyVariable(const double & a);
     
     LazyVariable(const double &a, const std::string& name)
     {
         ref_ = new LazyInput(a,name);
     }
     
+    LazyVariable(const std::string& name) : LazyVariable(0,name){}
+    
     LazyVariable(LazyValue & a): ref_(&a){}
         
     ~LazyVariable(){}
     
-    double evaluate();    
-    
     void define_as_output();
     
+    double evaluate();    
+    
+    double get_value() const
+    {
+        return ref_->get_value();
+    }
+    
+    bool is_not_null() const;
+
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {
         stream<< *(v.ref_);
         return stream;
     }    
 
-    LazyVariable& operator + ( LazyVariable& b);
+    LazyVariable& operator + ( const LazyVariable& b) const;
     
-    LazyVariable& operator - (  LazyVariable& b);
+    LazyVariable& operator - ( const LazyVariable& b) const;
     
-    LazyVariable& operator * (  LazyVariable& b);
+    LazyVariable& operator * ( const LazyVariable& b) const;
+    
+    void operator += (const LazyVariable& b);
+    
+    void operator -= (const LazyVariable& b);
+    
+    void operator *= (const  LazyVariable& b);    
     
     void operator = (double val);
+    
+    bool operator != (const LazyVariable& b) const
+    {
+        return ref_ != b.ref_;
+    }
     
 private:
     LazyValue* ref_;
     
     friend class LazyManager;
     
-    friend void AddLazyOutput(LazyVariable& in);
+    friend void LazyAddOutput(LazyVariable& in);
     
-    friend void PrintGraph(LazyVariable& in);
+    friend bool LazyIsZero(LazyValue * in);
+    
+    friend void LazyPrintGraph(LazyVariable& in);
+    
+    friend LazyVariable cos (const LazyVariable&a);
+    friend LazyVariable sin (const LazyVariable&a);    
 };
+
+inline LazyVariable operator* (int a, LazyVariable& b)
+{
+    return LazyVariable(a)*b;
+}
+
+// LazyVariable cos (const LazyVariable&a);
+// LazyVariable sin (const LazyVariable&a);
 
 
 

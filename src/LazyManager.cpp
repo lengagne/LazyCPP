@@ -12,6 +12,11 @@ void LazyManager::add_output( LazyValue* in)
 
 LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 {
+    if (is_zero(a))
+        return b;
+    if (is_zero(b))
+        return a;    
+    
     LazyAddition* out = new LazyAddition(a,b);
     for (int i=0;i<additions_.size();i++)
     {
@@ -25,8 +30,29 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
     return out;
 }
 
+LazyValue* LazyManager::add_cosinus( LazyValue* a)
+{
+    if (is_zero(a))
+        return one_;
+    
+    LazyCosinus* out = new LazyCosinus(a);
+    for (int i=0;i<cosinus_.size();i++)
+    {
+        if (*cosinus_[i] == *out)
+        {
+            delete out;
+            return cosinus_[i];
+        }
+    }
+    cosinus_.push_back(out);
+    return out;    
+}
+
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
 {
+    if (is_zero(a) || is_zero(b))
+        return zero_;
+    
     LazyMultiplication* out = new LazyMultiplication(a,b);
     for (int i=0;i<multiplications_.size();i++)
     {
@@ -41,8 +67,29 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     return out;
 }
 
+LazyValue* LazyManager::add_sinus( LazyValue* a)
+{    
+    LazySinus* out = new LazySinus(a);
+    for (int i=0;i<cosinus_.size();i++)
+    {
+        if (*sinus_[i] == *out)
+        {
+            delete out;
+            return sinus_[i];
+        }
+    }
+    sinus_.push_back(out);
+    return out;    
+}
+
+
 LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
 {
+//     if (is_zero(a))
+//         return - b;
+    if (is_zero(b))
+        return a;    
+    
     LazySoustraction* out = new LazySoustraction(a,b);
     for (int i=0;i<soustractions_.size();i++)
     {
@@ -68,9 +115,12 @@ void LazyManager::affect_value( LazyValue* in, double value)
             in->index_ = nb_process_;
             return;
         }
+    
+    // It is not an input it should be a constante.
+    in->value_ = value;
         
-    std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" try to set value to unexisting input"<<std::endl;
-    exit(2);
+//     std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" try to set value to unexisting input"<<std::endl;
+//     exit(2);
 }
 
 double LazyManager::evaluate( LazyVariable& a)
@@ -116,8 +166,9 @@ void LazyManager::update_all()
     }
 }
 
-void LazyManager::update(uint index)
+double LazyManager::update(uint index)
 {
     for (int j =0;j<output_dependances_[index].size();j++)
         output_dependances_[index][j]->compute(); 
+    return outputs_[index]->get_value();
 }

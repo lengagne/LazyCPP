@@ -1,0 +1,14 @@
+# - Config file for the LazyCPP lib
+# It defines the following variables
+#
+# LazyCPP_INCLUDE_DIRS - include directories
+# LazyCPP_LIBRARY_DIRS - library directory (normally not used!)
+# LazyCPP_LIBRARIES - libraries to link against
+
+# Tell the user project where to find our headers and libraries
+
+SET(LazyCPP_INCLUDE_DIRS @LazyCPP_INCLUDE_DIRS@)
+
+SET(LazyCPP_LIBRARIES @LazyCPP_LIBRARIES@)
+
+SET(LazyCPP_FLAGS @LazyCPP_FLAGS@ )

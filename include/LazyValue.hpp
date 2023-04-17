@@ -17,11 +17,16 @@ public:
         
     }
     
+    void define_as_output();
+    
+    inline double get_value()const
+    {
+        return value_;
+    }
+    
     virtual double evaluate(uint index=0) = 0;
     
     virtual void print( const std::string& tab ="", uint index=0) = 0;
-
-    void define_as_output();
     
     virtual void re_init_known()
     {
