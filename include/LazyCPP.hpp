@@ -13,4 +13,16 @@
 #include "LazyVariable.hpp"
 #include "LazyManager.hpp"
 
+void GetLazyInfo();
+
+void AddLazyOutput(LazyVariable& in);
+
+void PrintGraph(LazyVariable& in);
+
+void LazyPrepare();
+
+void LazyUpdate(uint index);
+
+void LazyUpdateAll();
+
 #endif // __LAZYCPP_H__

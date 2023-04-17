@@ -5,6 +5,11 @@ void LazyManager::add_input( LazyInput* in)
     inputs_.push_back(in);
 }
 
+void LazyManager::add_output( LazyValue* in)
+{
+    outputs_.push_back(in);
+}
+
 LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 {
     LazyAddition* out = new LazyAddition(a,b);
@@ -72,4 +77,47 @@ double LazyManager::evaluate( LazyVariable& a)
 {  
     state_ = true;
     return a.ref_->evaluate(nb_process_);
+}
+
+void LazyManager::prepare()
+{
+    std::cout<<"prepare : there are "<< outputs_.size() << " outputs."<<std::endl;
+    re_init_known();
+    
+    nb_outputs_ = outputs_.size();
+    for (int i=0;i<nb_outputs_;i++)
+    {
+        std::vector<LazyValue*> vec;
+        outputs_[i]->add_to_list(vec);
+        output_dependances_.push_back(vec);      
+        std::cout<<"output("<<i<<") has "<< vec.size() <<" dependances"<<std::endl;
+    }
+    
+}
+
+void LazyManager::re_init_known()
+{
+    for (int i=0;i<additions_.size();i++)
+        additions_[i]->re_init_known();
+
+    for (int i=0;i<soustractions_.size();i++)
+        soustractions_[i]->re_init_known();
+
+    for (int i=0;i<multiplications_.size();i++)
+        multiplications_[i]->re_init_known();
+}
+
+void LazyManager::update_all()
+{
+    for (int i=0;i<nb_outputs_;i++)
+    {
+        for (int j =0;j<output_dependances_[i].size();j++)
+            output_dependances_[i][j]->compute();
+    }
+}
+
+void LazyManager::update(uint index)
+{
+    for (int j =0;j<output_dependances_[index].size();j++)
+        output_dependances_[index][j]->compute(); 
 }

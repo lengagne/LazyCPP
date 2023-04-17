@@ -7,10 +7,11 @@
 class LazyInput : public LazyValue {
 public:
     LazyInput(double value, const std::string name="not_defined"); 
-//     {        
-//         value_ = value;
-//         LMANAGER.add_input(this);
-//     }
+    
+    void add_to_list(std::vector<LazyValue*>& vec)
+    {
+        /// nothing to do
+    }    
         
     double evaluate(uint index) { return value_; }
 
@@ -22,6 +23,11 @@ public:
             std::cout<<"\x1B[32m";
         
         std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
+    }
+    
+    virtual void re_init_known()
+    {
+        known_ = true;
     }
     
     void operator = (const double & d);

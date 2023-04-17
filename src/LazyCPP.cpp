@@ -2,6 +2,11 @@
 
 LazyManager LMANAGER;
 
+void AddLazyOutput(LazyVariable& in)
+{
+    LMANAGER.add_output(in.ref_);
+}
+
 void GetLazyInfo()
 {
     std::cout<<"GetLazyInfo()"<<std::endl;
@@ -10,6 +15,22 @@ void GetLazyInfo()
     std::cout<<"There are "<< LMANAGER.soustractions_.size()<<" soustractions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
     std::cout<<"We performed "<< LMANAGER.nb_process_<<" evaluations."<<std::endl;
+}
+
+void LazyPrepare()
+{
+    LMANAGER.prepare();
+    
+}
+
+void LazyUpdate(uint index)
+{
+    LMANAGER.update(index);
+}
+
+void LazyUpdateAll()
+{
+    LMANAGER.update_all();
 }
 
 void PrintGraph(LazyVariable& in)
@@ -21,6 +42,7 @@ void PrintGraph(LazyVariable& in)
 LazyInput::LazyInput(double value, const std::string name):name_(name) 
 {        
     value_ = value;
+    known_ = true;
     LMANAGER.add_input(this);
 }
 
@@ -60,5 +82,9 @@ double LazyVariable::evaluate()
     return LMANAGER.evaluate(*this);
 }
 
+void LazyVariable::define_as_output()
+{
+    LMANAGER.add_output(ref_);
+}
 
         

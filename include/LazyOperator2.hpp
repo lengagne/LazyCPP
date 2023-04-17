@@ -5,21 +5,20 @@
 
 class LazyOperator2 : public LazyValue {
 public:
+    
+    virtual void add_to_list(std::vector<LazyValue*>& vec)
+    {
+        if (!known_)
+        {
+//             vec.insert(vec.begin(),this);
+            a_->add_to_list(vec);
+            b_->add_to_list(vec);
+            vec.push_back(this);            
+        }
+        known_ =true;
+    }    
    
     virtual double evaluate(uint index)=0;
-//     {
-//         std::cout<<"index = "<< index <<std::endl;
-//         std::cout<<"index_ = "<< index_ <<std::endl;
-//         if (index > index_)
-//         {
-//             std::cout<<"update"<<std::endl;
-//             index_ = index;
-//             return evaluate();
-//         }
-//         return value_;
-//     }
-    
-//     virtual double evaluate() = 0;
        
     virtual bool operator == (const LazyOperator2& A) const
     {

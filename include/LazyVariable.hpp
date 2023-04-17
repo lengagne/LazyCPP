@@ -6,21 +6,28 @@ class LazyVariable
 public:
     LazyVariable(){}
 
-    LazyVariable(int & a)
+    LazyVariable(const int & a)
     {
         ref_ = new LazyConstant(1.0*a);        
     }    
     
-    LazyVariable(double & a)
+    LazyVariable(const double & a)
     {
         ref_ = new LazyConstant(a);        
     }    
+    
+    LazyVariable(const double &a, const std::string& name)
+    {
+        ref_ = new LazyInput(a,name);
+    }
     
     LazyVariable(LazyValue & a): ref_(&a){}
         
     ~LazyVariable(){}
     
     double evaluate();    
+    
+    void define_as_output();
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {
@@ -41,58 +48,11 @@ private:
     
     friend class LazyManager;
     
+    friend void AddLazyOutput(LazyVariable& in);
+    
     friend void PrintGraph(LazyVariable& in);
 };
 
 
-
-// inline LazyVariable& operator + ( double a, LazyVariable& b)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b+*A;
-// }
-// 
-// inline LazyVariable& operator + ( int  a, LazyVariable& b)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b+*A;
-// }
-// 
-// inline LazyVariable& operator - ( LazyVariable& a , double b)
-// {
-//     LazyVariable *B = new LazyVariable(b);
-//     return a- *B;
-// }
-// 
-// inline LazyVariable& operator - (  LazyVariable& a , int b)
-// {
-//     LazyVariable *B = new LazyVariable(b);
-//     return a- *B;
-// }
-// 
-// inline LazyVariable& operator * ( LazyVariable& b, double a)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b* *A;
-// }
-// 
-// inline LazyVariable& operator * (LazyVariable& b, int  a)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b* *A;
-// }
-// 
-// 
-// inline LazyVariable& operator * ( double a, LazyVariable& b)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b* *A;
-// }
-// 
-// inline LazyVariable& operator * ( int  a, LazyVariable& b)
-// {
-//     LazyVariable *A = new LazyVariable(a);
-//     return b* *A;
-// }
 
 #endif // __LAZYVARIABLE_HPP__

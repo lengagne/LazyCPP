@@ -11,6 +11,12 @@ public:
         value_ = a->value_+b->value_;        
     }
     
+    inline void compute()
+    {
+        std::cout<<"Addition Compute" <<std::endl;
+        value_ = a_->value_ + b_->value_;
+    }
+    
     double evaluate(uint index) 
     {
         if (index > index_)
