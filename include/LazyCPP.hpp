@@ -20,13 +20,19 @@ void LazyGetInfo();
 
 uint LazyGetNbInputs();
 
+uint LazyGetNbOutputs();
+
 bool LazyIsZero(const LazyVariable& in);
 
 void LazyPrepare();
 
 void LazyPrintGraph(LazyVariable& in);
 
+void LazyPrintInputs();
+
 void LazyReInit();
+
+void LazyReset();
 
 double LazyUpdate(uint index);
 

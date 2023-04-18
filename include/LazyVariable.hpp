@@ -32,7 +32,7 @@ public:
         return ref_->get_value();
     }
     
-    bool is_not_null() const;
+//     bool is_not_null() const;
 
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {

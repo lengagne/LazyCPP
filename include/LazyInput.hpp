@@ -17,10 +17,10 @@ public:
 
     virtual void print( const std::string& tab ="",uint index=0) 
     {
-        if (index > index_)
-            std::cout<<"\x1B[35m";
-        else
-            std::cout<<"\x1B[32m";
+//         if (index > index_)
+//             std::cout<<"\x1B[35m";
+//         else
+//             std::cout<<"\x1B[32m";
         
         std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
     }

@@ -8,9 +8,8 @@ public:
     
     virtual void add_to_list(std::vector<LazyValue*>& vec)
     {
-        if (!known_)
+//         if (!known_)
         {
-//             vec.insert(vec.begin(),this);
             a_->add_to_list(vec);
             b_->add_to_list(vec);
             vec.push_back(this);            
@@ -18,7 +17,7 @@ public:
         known_ =true;
     }    
    
-    virtual double evaluate(uint index)=0;
+//     virtual double evaluate(uint index)=0;
        
     virtual bool operator == (const LazyOperator2& A) const
     {

@@ -16,8 +16,8 @@ class LazyManager
 {
 public:
     LazyManager(){
-        zero_ = new LazyConstant(0.0);        
-        one_ = new LazyConstant(0.0);
+//         zero_ = new LazyConstant(0.0);        
+//         one_ = new LazyConstant(1.0);
     }
     
     virtual ~LazyManager(){}
@@ -42,26 +42,35 @@ public:
     
     void affect_value( LazyValue* in, double value);
     
-    double evaluate( LazyVariable&a);
+//     double evaluate( LazyVariable&a);
     
     uint get_nb_inputs() const
     {
         return inputs_.size();
     }
     
-    LazyValue* get_zero() const
+    uint get_nb_outputs() const
     {
-        return zero_;
+        return outputs_.size();
     }
     
-    bool is_zero(LazyValue * in) const
-    {
-        return in == zero_;
-    }
+//     LazyValue* get_zero() const
+//     {
+//         return zero_;
+//     }
+//     
+//     bool is_zero(LazyValue * in) const
+//     {
+//         return in == zero_;
+//     }
     
     void prepare();
     
+    void print_inputs();
+    
     void re_init_known();
+    
+    void reset();
     
     void update_all();
     
@@ -75,7 +84,7 @@ public:
     
 private:
 
-    LazyConstant * zero_, *one_;
+//     LazyConstant * zero_, *one_;
     
     std::vector<LazyInput*> inputs_;    
     std::vector<LazyAddition*> additions_;
@@ -87,8 +96,8 @@ private:
     
     std::vector< LazyValue* > outputs_;
     
-    bool state_ = true;    // 0 for assignation, 1 for evaluation
-    uint nb_process_=0;
+//     bool state_ = true;    // 0 for assignation, 1 for evaluation
+//     uint nb_process_=0;
     uint nb_outputs_ = 0;
     
 };

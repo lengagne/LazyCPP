@@ -24,7 +24,7 @@ public:
         return value_;
     }
     
-    virtual double evaluate(uint index=0) = 0;
+//     virtual double evaluate(uint index=0) = 0;
     
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
@@ -40,7 +40,7 @@ public:
     }
     
     double value_;
-    uint index_=0;
+//     uint index_=0;
     
     // defined if the value is already known;
     bool known_=false;

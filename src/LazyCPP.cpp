@@ -15,18 +15,23 @@ void LazyGetInfo()
     std::cout<<"There are "<< LMANAGER.additions_.size()<<" additions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.soustractions_.size()<<" soustractions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
-    std::cout<<"We performed "<< LMANAGER.nb_process_<<" evaluations."<<std::endl;
+//     std::cout<<"We performed "<< LMANAGER.nb_process_<<" evaluations."<<std::endl;
 }
 
 uint LazyGetNbInputs()
 {
-    LMANAGER.get_nb_inputs();
+    return LMANAGER.get_nb_inputs();
 }
 
-bool LazyIsZero(LazyValue * in)
+uint LazyGetNbOutputs()
 {
-    return LMANAGER.is_zero(in);
+    return LMANAGER.get_nb_outputs();
 }
+
+// bool LazyIsZero(LazyValue * in)
+// {
+//     return LMANAGER.is_zero(in);
+// }
 
 void LazyPrepare()
 {
@@ -35,12 +40,22 @@ void LazyPrepare()
 
 void LazyPrintGraph(LazyVariable& in)
 {
-    in.ref_->print("",LMANAGER.nb_process_);
+    in.ref_->print("");
+}
+
+void LazyPrintInputs()
+{
+    LMANAGER.print_inputs();
 }
 
 void LazyReInit()
 {
     LMANAGER.re_init_known();
+}
+
+void LazyReset()
+{
+    LMANAGER.reset();
 }
 
 double LazyUpdate(uint index)
@@ -67,30 +82,31 @@ void LazyInput::operator = (const double & d)
 
 LazyVariable::LazyVariable()
 {
-    ref_ = LMANAGER.get_zero();        
+    /*ref_ = LMANAGER.get_zero();   */     
+    ref_ = new LazyConstant(0.0);
 }
 
 LazyVariable::LazyVariable(const uint & a)
 {
-    if (a==0)
-        ref_ = LMANAGER.get_zero();
-    else
+//     if (a==0)
+//         ref_ = LMANAGER.get_zero();
+//     else
         ref_ = new LazyConstant(1.0*a);        
 }        
 
 LazyVariable::LazyVariable(const int & a)
 {
-    if (a==0)
+/*    if (a==0)
         ref_ = LMANAGER.get_zero();
-    else    
+    else   */ 
         ref_ = new LazyConstant(1.0*a);        
 }    
 
 LazyVariable::LazyVariable(const double & a)
 {
-    if (a==0)
-        ref_ = LMANAGER.get_zero();
-    else
+//     if (a==0)
+//         ref_ = LMANAGER.get_zero();
+//     else
         ref_ = new LazyConstant(a);        
 }    
     
@@ -139,20 +155,20 @@ void LazyVariable::operator = (double val)
     LMANAGER.affect_value( ref_,val);
 }
 
-double LazyVariable::evaluate()
-{
-    return LMANAGER.evaluate(*this);
-}
+// double LazyVariable::evaluate()
+// {
+//     return LMANAGER.evaluate(*this);
+// }
 
 void LazyVariable::define_as_output()
 {
     LMANAGER.add_output(ref_);
 }
 
-bool LazyVariable::is_not_null() const
-{
-    return ! LMANAGER.is_zero(ref_);
-}
+// bool LazyVariable::is_not_null() const
+// {
+//     return ! LMANAGER.is_zero(ref_);
+// }
 
 LazyVariable cos (const LazyVariable&a)
 {

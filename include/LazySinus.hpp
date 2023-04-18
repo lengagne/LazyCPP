@@ -12,28 +12,28 @@ public:
     
     inline void compute()
     {
-        value_ = sin(a_
-        ->value_);
+//         std::cout<<"Sinus Compute a("<<a_->value_ <<")"<<std::endl;
+        value_ = sin(a_->value_);
     }
     
-    double evaluate(uint index) 
-    {
-        if (index > index_)
-        {
-            index_ = index;
-            value_ = sin(a_->evaluate(index_));
-            return value_;
-        }
-//         std::cout<<"Add Use previous computation"<<std::endl;
-        return value_;
-    }
+//     double evaluate(uint index) 
+//     {
+// //         if (index > index_)
+// //         {
+// //             index_ = index;
+//             value_ = sin(a_->evaluate(index_));
+//             return value_;
+// //         }
+// //         std::cout<<"Add Use previous computation"<<std::endl;
+//         return value_;
+//     }
     
     virtual void print( const std::string& tab ="",uint index=0) 
     {
-        if (index > index_)
-            std::cout<<"\x1B[35m";
-        else
-            std::cout<<"\x1B[32m";
+//         if (index > index_)
+//             std::cout<<"\x1B[35m";
+//         else
+//             std::cout<<"\x1B[32m";
         
         std::cout<<tab<<"("<<this<<"): COSINUS ("<<value_<<")"<<std::endl;
         a_->print(tab+"\t",index);
