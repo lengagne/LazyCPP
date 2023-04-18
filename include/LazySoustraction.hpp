@@ -13,7 +13,7 @@ public:
     
     inline void compute()
     {
-        std::cout<<"Soustraction Compute a("<<a_->value_<<")-b("<<b_->value_<<")" <<std::endl;
+//         std::cout<<"Soustraction Compute a("<<a_->value_<<")-b("<<b_->value_<<")" <<std::endl;
         value_ = a_->value_ - b_->value_;
     }    
     

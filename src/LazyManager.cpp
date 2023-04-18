@@ -199,6 +199,6 @@ double LazyManager::update(uint index)
         output_dependances_[index][j]->compute(); 
 //         std::cout<<"update with "<< output_dependances_[index][j]->get_value()<<std::endl;
     }
-    outputs_[index]->print();
+//     outputs_[index]->print();
     return outputs_[index]->get_value();
 }
