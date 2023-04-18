@@ -3,6 +3,7 @@
 
 #include "LazyCPP.hpp"
 #include <vector>
+#include <map>
 
 // struct InputDependancies
 // {
@@ -10,6 +11,14 @@
 //     uint max_index_;
 //     uint update_index_;
 // };
+
+struct OutDependance
+{
+    uint index=0;
+    uint nb_outputs_ = 0;
+    std::vector< LazyValue* > outputs;
+    std::vector< std::vector< LazyValue* > > output_dependances;
+};
 
 
 class LazyManager
@@ -25,7 +34,7 @@ public:
     void add_input( LazyInput* in);
     
     // add an instance as output
-    void add_output( LazyValue* in);
+    void add_output( uint index, LazyValue* in);
 
     
     ///  basis operation
@@ -49,10 +58,10 @@ public:
         return inputs_.size();
     }
     
-    uint get_nb_outputs() const
-    {
-        return outputs_.size();
-    }
+//     uint get_nb_outputs() const
+//     {
+//         return outputs_.size();
+//     }
     
 //     LazyValue* get_zero() const
 //     {
@@ -74,9 +83,9 @@ public:
     
     void update_all();
     
-    double update(uint index);
+    double update(uint index, uint cpt);
     
-    friend void LazyAddOutput(LazyVariable& in);
+    friend void LazyAddOutput(uint index, LazyVariable& in);
     
     friend void LazyGetInfo();    
     
@@ -92,13 +101,13 @@ private:
     std::vector<LazyMultiplication*> multiplications_;        
     std::vector<LazySinus*> sinus_;
     std::vector<LazySoustraction*> soustractions_;
-    std::vector< std::vector< LazyValue* > > output_dependances_;
     
-    std::vector< LazyValue* > outputs_;
-    
+    std::map<uint,OutDependance> dependances_;
+
 //     bool state_ = true;    // 0 for assignation, 1 for evaluation
 //     uint nb_process_=0;
-    uint nb_outputs_ = 0;
+    uint nb_groups_ = 0;
+    
     
 };
 

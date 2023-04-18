@@ -23,7 +23,7 @@ public:
         
     ~LazyVariable(){}
     
-    void define_as_output();
+    void define_as_output(uint index);
     
     double evaluate();    
     
@@ -64,7 +64,7 @@ private:
     
     friend class LazyManager;
     
-    friend void LazyAddOutput(LazyVariable& in);
+    friend void LazyAddOutput(uint index,LazyVariable& in);
     
     friend bool LazyIsZero(LazyValue * in);
     

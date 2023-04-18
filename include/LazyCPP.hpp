@@ -14,7 +14,7 @@
 #include "LazyVariable.hpp"
 #include "LazyManager.hpp"
 
-void LazyAddOutput(LazyVariable& in);
+void LazyAddOutput(uint index,LazyVariable& in);
 
 void LazyGetInfo();
 
@@ -34,7 +34,7 @@ void LazyReInit();
 
 void LazyReset();
 
-double LazyUpdate(uint index);
+double LazyUpdate(uint index, uint cpt);
 
 void LazyUpdateAll();
 

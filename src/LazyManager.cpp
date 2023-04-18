@@ -5,9 +5,14 @@ void LazyManager::add_input( LazyInput* in)
     inputs_.push_back(in);
 }
 
-void LazyManager::add_output( LazyValue* in)
+void LazyManager::add_output( uint index, LazyValue* in)
 {
-    outputs_.push_back(in);
+    if (dependances_.find(index) == dependances_.end())
+    { // there is no such element, we create it
+        dependances_[index] = OutDependance();    
+    }
+    
+    dependances_[index].outputs.push_back(in);
 }
 
 LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
@@ -133,17 +138,19 @@ void LazyManager::affect_value( LazyValue* in, double value)
 void LazyManager::prepare()
 {
 //     std::cout<<"prepare : there are "<< outputs_.size() << " outputs."<<std::endl;
-    re_init_known();
     
-    nb_outputs_ = outputs_.size();
-    for (int i=0;i<nb_outputs_;i++)
-    {
-        std::vector<LazyValue*> vec;
-        outputs_[i]->add_to_list(vec);
-        output_dependances_.push_back(vec);      
-//         std::cout<<"output("<<i<<") has "<< vec.size() <<" dependances"<<std::endl;
+     for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
+     {
+        re_init_known();
+            
+        OutDependance& dep = iter->second;
+        for (int i=0;i<dep.outputs.size();i++)
+        {
+            std::vector<LazyValue*> vec;
+            dep.outputs[i]->add_to_list(vec);
+            dep.output_dependances.push_back(vec);      
+        }
     }
-    
 }
 
 void LazyManager::print_inputs()
@@ -178,27 +185,38 @@ void LazyManager::reset()
     multiplications_.clear();
     sinus_.clear();
     soustractions_.clear();
-    output_dependances_.clear();
-    outputs_.clear();
+    dependances_.clear();
 }
 
 void LazyManager::update_all()
 {
-    for (int i=0;i<nb_outputs_;i++)
+    for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
     {
-        for (int j =0;j<output_dependances_[i].size();j++)
-            output_dependances_[i][j]->compute();
+        OutDependance& dep = iter->second;
+        for (int i=0;i<dep.outputs.size();i++)
+        {
+            for (int j =0;j<dep.output_dependances[i].size();j++)
+                dep.output_dependances[i][j]->compute();
+        }
     }
 }
 
-double LazyManager::update(uint index)
+double LazyManager::update(uint index, uint cpt)
 {
+    
+    OutDependance& dep = dependances_[index];
+//     for (int i=0;i<dep.outputs.size();i++)
+//     {
+        for (int j =0;j<dep.output_dependances[cpt].size();j++)
+            dep.output_dependances[cpt][j]->compute();
+//     }
+        
 //     std::cout<<"Update index = "<< index <<std::endl;
-    for (int j =0;j<output_dependances_[index].size();j++)
-    {
-        output_dependances_[index][j]->compute(); 
-//         std::cout<<"update with "<< output_dependances_[index][j]->get_value()<<std::endl;
-    }
+//     for (int j =0;j<output_dependances_[index].size();j++)
+//     {
+//         output_dependances_[index][j]->compute(); 
+// // //         std::cout<<"update with "<< output_dependances_[index][j]->get_value()<<std::endl;
+//     }
 //     outputs_[index]->print();
-    return outputs_[index]->get_value();
+    return dep.outputs[cpt]->get_value();
 }

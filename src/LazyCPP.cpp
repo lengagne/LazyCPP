@@ -3,9 +3,9 @@
 LazyManager LMANAGER;
 
 
-void LazyAddOutput(LazyVariable& in)
+void LazyAddOutput(uint index, LazyVariable& in)
 {
-    LMANAGER.add_output(in.ref_);
+    LMANAGER.add_output(index,in.ref_);
 }
 
 void LazyGetInfo()
@@ -23,10 +23,10 @@ uint LazyGetNbInputs()
     return LMANAGER.get_nb_inputs();
 }
 
-uint LazyGetNbOutputs()
-{
-    return LMANAGER.get_nb_outputs();
-}
+// uint LazyGetNbOutputs()
+// {
+//     return LMANAGER.get_nb_outputs();
+// }
 
 // bool LazyIsZero(LazyValue * in)
 // {
@@ -58,9 +58,9 @@ void LazyReset()
     LMANAGER.reset();
 }
 
-double LazyUpdate(uint index)
+double LazyUpdate(uint index, uint cpt)
 {
-    return LMANAGER.update(index);
+    return LMANAGER.update(index,cpt);
 }
 
 void LazyUpdateAll()
@@ -160,9 +160,9 @@ void LazyVariable::operator = (double val)
 //     return LMANAGER.evaluate(*this);
 // }
 
-void LazyVariable::define_as_output()
+void LazyVariable::define_as_output(uint index)
 {
-    LMANAGER.add_output(ref_);
+    LMANAGER.add_output(index,ref_);
 }
 
 // bool LazyVariable::is_not_null() const
