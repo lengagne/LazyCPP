@@ -16,8 +16,8 @@ struct OutDependance
 {
     uint index=0;
     uint nb_outputs_ = 0;
-    std::vector< LazyValue* > outputs;
-    std::vector< std::vector< LazyValue* > > output_dependances;
+    std::map< uint, LazyValue* > outputs;
+    std::map< uint, std::vector< LazyValue* > > output_dependances;
 };
 
 
@@ -25,8 +25,10 @@ class LazyManager
 {
 public:
     LazyManager(){
-//         zero_ = new LazyConstant(0.0);        
-//         one_ = new LazyConstant(1.0);
+        zero_ = new LazyConstant(0.0);   
+        one_ = new LazyConstant(1.0);
+        minus_one_ = new LazyConstant(-1.0);
+        init_basic_constant();
     }
     
     virtual ~LazyManager(){}
@@ -34,48 +36,74 @@ public:
     void add_input( LazyInput* in);
     
     // add an instance as output
-    void add_output( uint index, LazyValue* in);
+    void add_output( LazyValue* in, uint index, uint rank );
 
     
     ///  basis operation
     
     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
+    LazyValue* add_constant(double d);
+    
     LazyValue* add_cosinus( LazyValue* a);
     
     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_opposite(LazyValue* a );
     
     LazyValue* add_sinus( LazyValue* a);
     
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
     
-    void affect_value( LazyValue* in, double value);
+//     void affect_value( LazyValue* in, double value);
     
 //     double evaluate( LazyVariable&a);
+    void init_basic_constant()
+    {             
+        constants_.push_back(zero_);
+        constants_.push_back(one_);
+        constants_.push_back(minus_one_);        
+    }
     
     uint get_nb_inputs() const
     {
         return inputs_.size();
     }
     
+    bool is_constant( LazyValue* in) const;
+    
+    bool is_input( LazyValue* in) const;
+    
 //     uint get_nb_outputs() const
 //     {
 //         return outputs_.size();
 //     }
     
-//     LazyValue* get_zero() const
-//     {
-//         return zero_;
-//     }
-//     
-//     bool is_zero(LazyValue * in) const
-//     {
-//         return in == zero_;
-//     }
+    inline LazyValue* get_zero() const
+    {
+        return zero_;
+    }
+    
+    inline bool is_minus_one(LazyValue * in) const
+    {
+        return in == minus_one_;
+    }    
+    
+    inline bool is_one(LazyValue * in) const
+    {
+        return in == one_;
+    }    
+    
+    inline bool is_zero(LazyValue * in) const
+    {
+        return in == zero_;
+    }
     
     void prepare();
     
     void print_inputs();
+    
+    void print_output_graph(uint index, uint cpt);
     
     void re_init_known();
     
@@ -93,7 +121,7 @@ public:
     
 private:
 
-//     LazyConstant * zero_, *one_;
+    LazyConstant * zero_, *one_, *minus_one_;
     
     std::vector<LazyInput*> inputs_;    
     std::vector<LazyAddition*> additions_;
@@ -101,6 +129,8 @@ private:
     std::vector<LazyMultiplication*> multiplications_;        
     std::vector<LazySinus*> sinus_;
     std::vector<LazySoustraction*> soustractions_;
+    std::vector<LazyConstant*> constants_;
+    std::vector<LazyOpposite*> opposites_;
     
     std::map<uint,OutDependance> dependances_;
 

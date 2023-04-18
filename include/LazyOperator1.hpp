@@ -8,7 +8,7 @@ public:
     
     virtual void add_to_list(std::vector<LazyValue*>& vec)
     {
-//         if (!known_)
+        if (!known_)
         {
 //             vec.insert(vec.begin(),this);
             a_->add_to_list(vec);

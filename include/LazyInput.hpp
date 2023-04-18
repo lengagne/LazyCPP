@@ -25,6 +25,11 @@ public:
         std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
     }
     
+    virtual void print_equation()
+    {
+        std::cout<<name_;
+    }
+    
     virtual void re_init_known()
     {
         known_ = true;

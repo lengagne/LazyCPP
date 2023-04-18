@@ -26,6 +26,10 @@ public:
 
         std::cout<<tab<<"("<<this<<") Constante : "<< value_<<std::endl;
     }    
+    virtual void print_equation()
+    {
+        std::cout<< value_;
+    }    
     
     
     virtual void re_init_known()

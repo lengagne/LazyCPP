@@ -8,13 +8,14 @@
 #include "LazyMultiplication.hpp"
 #include "LazySoustraction.hpp"
 
+#include "LazyOpposite.hpp"
 #include "LazyCosinus.hpp"
 #include "LazySinus.hpp"
 
 #include "LazyVariable.hpp"
 #include "LazyManager.hpp"
 
-void LazyAddOutput(uint index,LazyVariable& in);
+void LazyAddOutput(LazyVariable& in,uint index,uint rank);
 
 void LazyGetInfo();
 
@@ -24,11 +25,15 @@ uint LazyGetNbOutputs();
 
 bool LazyIsZero(const LazyVariable& in);
 
+bool LazyIsInput(const LazyVariable& in);
+
 void LazyPrepare();
 
 void LazyPrintGraph(LazyVariable& in);
 
 void LazyPrintInputs();
+
+void LazyPrintOutputGraph(uint index, uint cpt);
 
 void LazyReInit();
 

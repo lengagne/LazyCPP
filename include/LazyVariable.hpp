@@ -23,7 +23,7 @@ public:
         
     ~LazyVariable(){}
     
-    void define_as_output(uint index);
+//     void define_as_output(uint index);
     
     double evaluate();    
     
@@ -32,14 +32,16 @@ public:
         return ref_->get_value();
     }
     
-//     bool is_not_null() const;
+    bool is_null() const;
 
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
     {
-        stream<< *(v.ref_);
+        v.ref_->print_equation();
         return stream;
-    }    
+    }   
 
+    LazyVariable& operator - ( ) const;
+    
     LazyVariable& operator + ( const LazyVariable& b) const;
     
     LazyVariable& operator - ( const LazyVariable& b) const;
@@ -64,7 +66,9 @@ private:
     
     friend class LazyManager;
     
-    friend void LazyAddOutput(uint index,LazyVariable& in);
+    friend void LazyAddOutput(LazyVariable& in,uint index,uint rank);
+    
+    friend bool LazyIsInput(const LazyVariable& in);
     
     friend bool LazyIsZero(LazyValue * in);
     

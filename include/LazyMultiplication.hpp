@@ -39,7 +39,16 @@ public:
         std::cout<<tab<<"("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
         a_->print(tab+"\t",index);
         b_->print(tab+"\t",index);
-    }    
+    }   
+    
+    virtual void print_equation()
+    {
+        std::cout<<"(";
+        a_->print_equation();
+        std::cout<<"*";
+        b_->print_equation();
+        std::cout<<")";
+    }
     
 private:
 

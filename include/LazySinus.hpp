@@ -35,8 +35,15 @@ public:
 //         else
 //             std::cout<<"\x1B[32m";
         
-        std::cout<<tab<<"("<<this<<"): COSINUS ("<<value_<<")"<<std::endl;
+        std::cout<<tab<<"("<<this<<"): SINUS ("<<value_<<")"<<std::endl;
         a_->print(tab+"\t",index);
+    }
+    
+    virtual void print_equation()
+    {
+        std::cout<<"sin(";
+        a_->print_equation();
+        std::cout<<")";
     }
     
     

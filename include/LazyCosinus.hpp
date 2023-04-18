@@ -39,6 +39,12 @@ public:
         a_->print(tab+"\t",index);
     }
     
+    virtual void print_equation()
+    {
+        std::cout<<"cos(";
+        a_->print_equation();
+        std::cout<<")";      
+    }
     
 private:
 

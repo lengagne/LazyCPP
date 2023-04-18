@@ -20,8 +20,8 @@ int main()
     LazyVariable X(x,"X"), Y(y,"y");
     LazyVariable lz = test_function<LazyVariable>(X,Y);
     LazyVariable lz1 = lz*lz;
-    LazyAddOutput(0,lz);
-    LazyAddOutput(0,lz1);
+    LazyAddOutput(lz,0,0);
+    LazyAddOutput(lz1,0,1);
     
     LazyPrepare();
     

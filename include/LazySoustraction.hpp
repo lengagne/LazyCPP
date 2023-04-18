@@ -41,6 +41,15 @@ public:
         b_->print(tab+"\t",index);
     }
     
+    virtual void print_equation()
+    {
+        std::cout<<"(";
+        a_->print_equation();
+        std::cout<<" - ";
+        b_->print_equation();
+        std::cout<<")";
+    }
+    
     virtual bool operator == (const LazyOperator2& A) const
     {
         return (a_ == A.a_ && b_ == A.b_);

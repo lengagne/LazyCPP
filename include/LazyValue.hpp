@@ -28,6 +28,8 @@ public:
     
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
+    virtual void print_equation() = 0;
+    
     virtual void re_init_known()
     {
         known_ = false;
