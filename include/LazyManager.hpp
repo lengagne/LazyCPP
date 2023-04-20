@@ -5,7 +5,6 @@
 #include <vector>
 #include <map>
 
-
 // struct InputDependancies
 // {
 //     std::vector<LazyInput*> inputs_;
@@ -48,7 +47,7 @@ public:
     
     LazyValue* add_cosinus( LazyValue* a);
     
-    LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+    LazyValue* add_multiplication( LazyValue* a , LazyValue *b, bool check_contraction = true);
     
     LazyValue* add_opposite(LazyValue* a );
     
@@ -56,6 +55,9 @@ public:
     
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
     
+//     void affect_value( LazyValue* in, double value);
+    
+//     double evaluate( LazyVariable&a);
     void init_basic_constant()
     {             
         constants_.push_back(zero_);
@@ -70,15 +72,22 @@ public:
     
     bool is_addition(LazyValue* in) const;
     
+//     bool is_additionX(LazyValue* in) const;
+    
     bool is_constant( LazyValue* in) const;
     
     bool is_input( LazyValue* in) const;
     
     bool is_multiplication(LazyValue* in) const;
     
+//     bool is_multiplicationX(LazyValue* in) const;
+    
+    bool is_opposite(LazyValue* in) const;
+    
     void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
     
     void get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite);
+    
     
     inline LazyValue* get_zero() const
     {
@@ -93,14 +102,14 @@ public:
     inline bool is_one(LazyValue * in) const
     {
         return in == one_;
-    }
-    
-    bool is_opposite(LazyValue* in) const;
+    }    
     
     inline bool is_zero(LazyValue * in) const
     {
         return in == zero_;
     }
+    
+    void plot_info() const;
     
     void prepare();
     
@@ -112,13 +121,13 @@ public:
     
     void reset();
     
+//     void simplify(LazyMultiplicationX* v);
+    
     void update_all();
     
     double update(uint index, uint cpt);
     
     friend void LazyAddOutput(uint index, LazyVariable& in);
-    
-    friend void LazyGetInfo();    
     
     friend void LazyPrintGraph(LazyVariable& in);
     
@@ -135,17 +144,16 @@ private:
     std::vector<LazyConstant*> constants_;
     std::vector<LazyOpposite*> opposites_;
     
-    std::vector<LazyMultiplicationX*> multiplicationsX_;
+//     std::vector<LazyMultiplicationX*> multiplicationsX_;
+//     std::vector<LazyAdditionX*> additionsX_;
     
     std::map<uint,OutDependance> dependances_;
 
-//     bool state_ = true;    // 0 for assignation, 1 for evaluation
-//     uint nb_process_=0;
-    uint nb_groups_ = 0;
+//     uint nb_groups_ = 0;
     
-    bool contract = true;
-    bool contract_add = true;
-
+//     bool contract = true;
+//     bool contract_add = false;
+//     bool simplify_ = true;
     
 };
 

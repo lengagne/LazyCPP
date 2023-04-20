@@ -10,17 +10,7 @@ void LazyAddOutput(LazyVariable& in,uint index,uint rank)
 
 void LazyGetInfo()
 {
-    std::cout<<"GetLazyInfo()"<<std::endl;
-    std::cout<<"There are "<< LMANAGER.inputs_.size()<<" inputs."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.additions_.size()<<" additions."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.soustractions_.size()<<" soustractions."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.multiplicationsX_.size()<<" multiplicationsX."<<std::endl;
-    
-    std::cout<<"There are "<< LMANAGER.constants_.size()<<" constants."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.sinus_.size()<<" sinus."<<std::endl;
-    std::cout<<"There are "<< LMANAGER.cosinus_.size()<<" cosinus."<<std::endl;
-//     std::cout<<"We performed "<< LMANAGER.nb_process_<<" evaluations."<<std::endl;
+    LMANAGER.plot_info();
 }
 
 uint LazyGetNbInputs()

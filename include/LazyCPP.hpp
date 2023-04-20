@@ -9,6 +9,7 @@
 #include "LazySoustraction.hpp"
 
 #include "LazyMultiplicationX.hpp"
+#include "LazyAdditionX.hpp"
 
 
 #include "LazyOpposite.hpp"

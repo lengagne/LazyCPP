@@ -1,11 +1,11 @@
-#ifndef __LAZYMULTIPLICATIONX_HPP__
-#define __LAZYMULTIPLICATIONX_HPP__
+#ifndef __LAZYADDITIONX_HPP__
+#define __LAZYADDITIONX_HPP__
 
 #include "LazyOperatorX.hpp"
 
-class LazyMultiplicationX : public LazyOperatorX {
+class LazyAdditionX : public LazyOperatorX {
 public:
-    LazyMultiplicationX(std::vector<LazyValue*>& a) 
+    LazyAdditionX(std::vector<LazyValue*>& a) 
     {
         p_ = a;
         compute();
@@ -13,15 +13,15 @@ public:
     
     inline void compute()
     {
-        value_ = 1.0;
+        value_ = 0.0;
         for (int i=0;i<p_.size();i++)
-            value_ *= p_[i]->value_;
+            value_ += p_[i]->value_;
     }    
     
     virtual void print( const std::string& tab ="",uint index=0) 
     {
         
-        std::cout<<tab<<"("<<this<<"): MultiplicationX ("<<value_<<")"<<std::endl;
+        std::cout<<tab<<"("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;
         for (int i=0;i<p_.size();i++)
             p_[i]->print(tab+"\t",index);
 
@@ -33,8 +33,9 @@ public:
         for (int i=0;i<p_.size();i++)
         {
             p_[i]->print_equation();
-            if (i != p_.size()-1)   std::cout<<" X ";   
+            if (i != p_.size()-1)   std::cout<<" PLUS ";   
         }
+        std::cout<<")";
     }
     
 private:

@@ -16,6 +16,17 @@ public:
         }
         known_ =true;
     }    
+    
+    virtual void check_known()
+    {
+        if(!known_)
+        {
+            a_->check_known();
+            b_->check_known();
+        }
+        known_ = true;
+    }
+    
    
 //     virtual double evaluate(uint index)=0;
        

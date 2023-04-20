@@ -16,6 +16,16 @@ public:
         }
         known_ =true;
     }    
+    
+    virtual void check_known()
+    {
+        if(!known_)
+        {
+            for (int i=0;i<p_.size();i++)
+                p_[i]->check_known();
+        }
+        known_ = true;
+    }    
        
     virtual bool operator == (const LazyOperatorX& A) const
     {

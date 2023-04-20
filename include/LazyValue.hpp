@@ -17,6 +17,8 @@ public:
         
     }
     
+    virtual void check_known() = 0;
+    
     void define_as_output();
     
     void get_multiplication( std::vector<LazyValue*> vec);

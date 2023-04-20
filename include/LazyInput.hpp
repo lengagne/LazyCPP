@@ -13,6 +13,11 @@ public:
         /// nothing to do
     }    
         
+    virtual void check_known()
+    {
+        /// nothing to do
+    }
+        
     double evaluate(uint index) { return value_; }
 
     virtual void print( const std::string& tab ="",uint index=0) 
