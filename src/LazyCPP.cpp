@@ -15,6 +15,8 @@ void LazyGetInfo()
     std::cout<<"There are "<< LMANAGER.additions_.size()<<" additions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.soustractions_.size()<<" soustractions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
+    std::cout<<"There are "<< LMANAGER.multiplicationsX_.size()<<" multiplicationsX."<<std::endl;
+    
     std::cout<<"There are "<< LMANAGER.constants_.size()<<" constants."<<std::endl;
     std::cout<<"There are "<< LMANAGER.sinus_.size()<<" sinus."<<std::endl;
     std::cout<<"There are "<< LMANAGER.cosinus_.size()<<" cosinus."<<std::endl;

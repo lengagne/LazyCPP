@@ -136,6 +136,8 @@ private:
     std::vector<LazyConstant*> constants_;
     std::vector<LazyOpposite*> opposites_;
     
+    std::vector<LazyMultiplicationX*> multiplicationsX_;
+    
     std::map<uint,OutDependance> dependances_;
 
 //     bool state_ = true;    // 0 for assignation, 1 for evaluation

@@ -8,6 +8,9 @@
 #include "LazyMultiplication.hpp"
 #include "LazySoustraction.hpp"
 
+#include "LazyMultiplicationX.hpp"
+
+
 #include "LazyOpposite.hpp"
 #include "LazyCosinus.hpp"
 #include "LazySinus.hpp"
