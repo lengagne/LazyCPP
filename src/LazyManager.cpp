@@ -64,7 +64,6 @@ LazyValue* LazyManager::add_cosinus( LazyValue* a)
 {
 //     if (is_zero(a))
 //         return one_;
-    
     LazyCosinus* out = new LazyCosinus(a);
     for (int i=0;i<cosinus_.size();i++)
     {
@@ -166,6 +165,7 @@ LazyValue* LazyManager::add_sinus( LazyValue* a)
             return sinus_[i];
         }
     }
+    std::cout<<"Add sinus "<<std::endl;
     sinus_.push_back(out);
     return out;    
 }

@@ -15,6 +15,9 @@ void LazyGetInfo()
     std::cout<<"There are "<< LMANAGER.additions_.size()<<" additions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.soustractions_.size()<<" soustractions."<<std::endl;
     std::cout<<"There are "<< LMANAGER.multiplications_.size()<<" multiplications."<<std::endl;
+    std::cout<<"There are "<< LMANAGER.constants_.size()<<" constants."<<std::endl;
+    std::cout<<"There are "<< LMANAGER.sinus_.size()<<" sinus."<<std::endl;
+    std::cout<<"There are "<< LMANAGER.cosinus_.size()<<" cosinus."<<std::endl;
 //     std::cout<<"We performed "<< LMANAGER.nb_process_<<" evaluations."<<std::endl;
 }
 
@@ -195,14 +198,14 @@ bool LazyVariable::is_null() const
 LazyVariable cos (const LazyVariable&a)
 {
     LazyVariable out;
-    out.ref_ = new LazyCosinus(a.ref_);
+    out.ref_ = LMANAGER.add_cosinus(a.ref_);
     return out;
 }
 
 LazyVariable sin (const LazyVariable&a)
 {
     LazyVariable out;
-    out.ref_ = new LazySinus(a.ref_);
+    out.ref_ = LMANAGER.add_sinus(a.ref_);
     return out;    
 }
 
