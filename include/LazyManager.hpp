@@ -84,9 +84,9 @@ public:
     
     bool is_opposite(LazyValue* in) const;
     
-    void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
+//     void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
     
-    void get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite);
+//     void get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite);
     
     
     inline LazyValue* get_zero() const

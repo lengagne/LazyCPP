@@ -246,50 +246,50 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     return out;
 }
 
-void LazyManager::get_addition(LazyValue * a, std::vector<LazyValue*>& vec)
-{
-    if (is_addition(a))
-    {
-        LazyAddition* v = (LazyAddition*) a;
-        get_addition(v->a_,vec);
-        get_addition(v->b_,vec);
-    }
-//     else 
-//         if (is_additionX(a))
+// void LazyManager::get_addition(LazyValue * a, std::vector<LazyValue*>& vec)
+// {
+//     if (is_addition(a))
 //     {
-//         LazyAdditionX* v = (LazyAdditionX*) a;
-//         for (int i=0;i<v->p_.size();i++)
-//             get_addition(v->p_[i],vec);        
+//         LazyAddition* v = (LazyAddition*) a;
+//         get_addition(v->a_,vec);
+//         get_addition(v->b_,vec);
 //     }
-    else
-        vec.push_back(a);
-    
-}
-
-void LazyManager::get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite)
-{
-    if (is_opposite(a))
-    {
-        nb_opposite++;
-        LazyOpposite* v = (LazyOpposite*) a;
-        get_multiplication(v->a_,vec,nb_opposite);
-    }else 
-    if (is_multiplication(a))
-    {
-        LazyMultiplication* v = (LazyMultiplication*) a;
-        get_multiplication(v->a_,vec,nb_opposite);
-        get_multiplication(v->b_,vec,nb_opposite);
-    }
+// //     else 
+// //         if (is_additionX(a))
+// //     {
+// //         LazyAdditionX* v = (LazyAdditionX*) a;
+// //         for (int i=0;i<v->p_.size();i++)
+// //             get_addition(v->p_[i],vec);        
+// //     }
 //     else
-//     if (is_multiplicationX(a))
+//         vec.push_back(a);
+//     
+// }
+
+// void LazyManager::get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite)
+// {
+//     if (is_opposite(a))
 //     {
-//         LazyMultiplicationX* v = (LazyMultiplicationX*) a;
-//         for (int i=0;i<v->p_.size();i++)
-//             get_multiplication(v->p_[i],vec,nb_opposite);
+//         nb_opposite++;
+//         LazyOpposite* v = (LazyOpposite*) a;
+//         get_multiplication(v->a_,vec,nb_opposite);
+//     }else 
+//     if (is_multiplication(a))
+//     {
+//         LazyMultiplication* v = (LazyMultiplication*) a;
+//         get_multiplication(v->a_,vec,nb_opposite);
+//         get_multiplication(v->b_,vec,nb_opposite);
 //     }
-    else        
-        vec.push_back(a);
-}
+// //     else
+// //     if (is_multiplicationX(a))
+// //     {
+// //         LazyMultiplicationX* v = (LazyMultiplicationX*) a;
+// //         for (int i=0;i<v->p_.size();i++)
+// //             get_multiplication(v->p_[i],vec,nb_opposite);
+// //     }
+//     else        
+//         vec.push_back(a);
+// }
 
 bool LazyManager::is_addition(LazyValue* in) const
 {
@@ -419,22 +419,8 @@ void LazyManager::prepare()
         }        
     }
 
-    std::cout<<"il y a "<< cpt <<" opérations "<<std::endl;
-//     uint cptl = 0;
-//     for (int i=0;i<additions_.size();i++)   if (!additions_[i]->known_) cptl++;
-//     for (int i=0;i<soustractions_.size();i++)   if (!soustractions_[i]->known_) cptl++;
-//     for (int i=0;i<multiplications_.size();i++)   if (!multiplications_[i]->known_) cptl++;
-//     for (int i=0;i<sinus_.size();i++)   if (!sinus_[i]->known_) cptl++;
-//     for (int i=0;i<cosinus_.size();i++)   if (!cosinus_[i]->known_) cptl++;
-// //     for (int i=0;i<multiplicationsX_.size();i++)   if (!multiplicationsX_[i]->known_) cptl++;
-// //     for (int i=0;i<additionsX_.size();i++)   if (!additionsX_[i]->known_) cptl++;
-//     
-//     std::cout<<"On peut économiser "<< cptl <<" opérations"<<std::endl;
-//     
-//     std::cout<<"Donc on devrait pouvoir ne faire que "<< cpt - cptl <<" opérations"<<std::endl; 
-//     
-//     std::cout<<" Apres LazyManager::Prepare"<<std::endl;
-    plot_info();
+//     std::cout<<"il y a "<< cpt <<" opérations "<<std::endl;
+//     plot_info();
 }
 
 void LazyManager::print_inputs()
