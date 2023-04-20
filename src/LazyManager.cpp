@@ -1,4 +1,6 @@
 #include "LazyManager.hpp"
+#include <algorithm>
+
 
 void LazyManager::add_input( LazyInput* in)
 {
@@ -6,13 +8,11 @@ void LazyManager::add_input( LazyInput* in)
 }
 
 void LazyManager::add_output( LazyValue* in, uint index, uint rank )
-// void LazyManager::add_output( uint index, LazyValue* in)
 {
     if (dependances_.find(index) == dependances_.end())
     { // there is no such element, we create it
         dependances_[index] = OutDependance();    
-    }
-    
+    }    
     dependances_[index].outputs[rank] = in;
 }
 
@@ -20,19 +20,49 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 {
     if (is_zero(a))
     {
-//         std::cout<<"Simplify Addition with zero"<<std::endl;
         return b;
     }
     if (is_zero(b))
     {
-//         std::cout<<"Simplify Addition with zero"<<std::endl;
         return a;    
     }
     
-//     if ( is_addition(a) || is_addition(b))
-//     {
-//         std::cout<<"addition of addition "<<std::endl;
-//     }
+    if (contract_add)
+    {
+        if ( is_addition(a) || is_addition(b))
+        {
+    //         std::cout<<"addition of addition "<<std::endl;
+    //          std::cout<<"a = "; a->print_equation();    std::cout<<"\n";
+    //          std::cout<<"b = "; b->print_equation();    std::cout<<"\n";
+            std::vector<LazyValue*> vec;
+            get_addition(a,vec);
+            get_addition(b,vec);
+
+            
+            double constante = 0.0;
+            for (int i=0;i<vec.size();i++) 
+            {
+                if (is_constant(vec[i]))
+                {
+                    constante += vec[i]->value_;
+                    vec.erase (vec.begin()+i);
+                }
+            }            
+    //         std::cout<<"on a "<<vec.size()<<" additions imbriquées "<<std::endl;
+    // 
+    //          for (int i=0;i<vec.size();i++)
+    //          {
+    //              std::cout<<"\t";   vec[i]->print_equation();   std::cout<<"\n";
+    //          }
+                    
+    //          std::cout<<"sort"<<std::endl;
+//             std::sort(vec.begin(),vec.end());        
+            LazyValue* out = new LazyConstant(constante);
+            for (int i=0;i<vec.size();i++)
+                out = new LazyAddition(out,vec[i]);
+            return out;         
+        }
+    }
     
     LazyAddition* out = new LazyAddition(a,b);
     for (int i=0;i<additions_.size();i++)
@@ -55,15 +85,12 @@ LazyValue* LazyManager::add_constant( double d)
             return constants_[i];
         }
     LazyConstant * out = new LazyConstant(d);
-//     std::cout<<"Return new constant d = "<<d<<"\t"<< out<<std::endl;
     constants_.push_back(out);
     return out;    
 }
 
 LazyValue* LazyManager::add_cosinus( LazyValue* a)
 {
-//     if (is_zero(a))
-//         return one_;
     LazyCosinus* out = new LazyCosinus(a);
     for (int i=0;i<cosinus_.size();i++)
     {
@@ -81,50 +108,82 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
 {
     if (is_zero(a) || is_zero(b))
     {
-//         std::cout<<"Simplify Multiplication with zero"<<std::endl;
         return zero_;
     }
     
     if (is_one(a))
     {
-//         std::cout<<"Simplify Multiplication by one"<<std::endl;
         return b;
     }
 
     if (is_one(b))
     {
-//         std::cout<<"Simplify Multiplication by one"<<std::endl;
         return a;
     }    
 
     if (is_minus_one(a))
     {
-//         std::cout<<"Simplify Multiplication by minus one"<<std::endl;
         return add_opposite(b);
     }
 
     if (is_minus_one(b))
     {
-//         std::cout<<"Simplify Multiplication by minus one"<<std::endl;
         return add_opposite(a);
     }  
     
     if (is_constant(a) && is_constant(b))
     {
-        std::cout<<"a "<<is_constant(a)<<" et b"<<is_constant(b)<<" sont constants"<<std::endl;
         return add_constant(a->value_ * b-> value_);
     }
-
-//     if ( is_multiplication(a) || is_multiplication(b))
-//     {
-//         std::cout<<"multiplication of multiplication "<<std::endl;
-//         std::cout<<"a:"<<is_multiplication(a)<<" et b:"<<is_multiplication(b)<<std::endl;
-//         std::cout<<"\t";
-//         a->print_equation();
-//         std::cout<<"\n\t";
-//         b->print_equation();
-//         std::cout<<"\n";
-//     }    
+    
+    if (contract)
+    {
+        if ( is_multiplication(a) || is_multiplication(b))
+        {
+    //          std::cout<<"multiplication of multiplication "<<std::endl;
+    //          std::cout<<"a = "; a->print_equation();    std::cout<<"\n";
+    //          std::cout<<"b = "; b->print_equation();    std::cout<<"\n";
+            
+            std::vector<LazyValue*> vec;
+            uint nb_opposite = 0;
+            get_multiplication(a,vec,nb_opposite);
+            get_multiplication(b,vec,nb_opposite);
+    //          std::cout<<"on a "<<vec.size()<<" multiplication imbriquées avec "<< nb_opposite <<" opposée"<<std::endl;
+            
+            double constante = 1.0;
+            if (nb_opposite%2 == 1)    constante = -1.0;
+            for (int i=0;i<vec.size();i++) 
+            {
+                if (is_constant(vec[i]))
+                {
+                    constante *= vec[i]->value_;
+                    vec.erase (vec.begin()+i);
+                }
+            }
+    //          std::cout<<"constante : "<< constante<<std::endl;
+    //          for (int i=0;i<vec.size();i++)
+    //          {
+    //              std::cout<<"\t";   vec[i]->print_equation();   std::cout<<"\n";
+    //          }
+    //          std::cout<<"sort"<<std::endl;
+//             std::sort(vec.begin(),vec.end());
+    //          for (int i=0;i<vec.size();i++)
+    //          {
+    //              std::cout<<"\t";   vec[i]->print_equation();   std::cout<<"\n";
+    //          }         
+            
+            LazyValue* out = new LazyConstant(constante);
+            for (int i=0;i<vec.size();i++)
+                out = new LazyMultiplication(out,vec[i]);
+            return out;
+    //         std::cout<<"a:"<<is_multiplication(a)<<" et b:"<<is_multiplication(b)<<std::endl;
+    //         std::cout<<"\t";
+    //         a->print_equation();
+    //         std::cout<<"\n\t";
+    //         b->print_equation();
+    //         std::cout<<"\n";
+        }    
+    }
     
     LazyMultiplication* out = new LazyMultiplication(a,b);
     for (int i=0;i<multiplications_.size();i++)
@@ -204,6 +263,35 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     return out;
 }
 
+void LazyManager::get_addition(LazyValue * a, std::vector<LazyValue*>& vec)
+{
+    if (is_addition(a))
+    {
+        LazyAddition* v = (LazyAddition*) a;
+        get_addition(v->a_,vec);
+        get_addition(v->b_,vec);
+    }else
+        vec.push_back(a);
+    
+}
+
+void LazyManager::get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite)
+{
+    if (is_opposite(a))
+    {
+        nb_opposite++;
+        LazyOpposite* v = (LazyOpposite*) a;
+        get_multiplication(v->a_,vec,nb_opposite);
+    }else 
+    if (is_multiplication(a))
+    {
+        LazyMultiplication* v = (LazyMultiplication*) a;
+        get_multiplication(v->a_,vec,nb_opposite);
+        get_multiplication(v->b_,vec,nb_opposite);
+    }else
+        vec.push_back(a);
+}
+
 bool LazyManager::is_addition(LazyValue* in) const
 {
     for (int i=0;i<additions_.size();i++)
@@ -237,10 +325,20 @@ bool LazyManager::is_multiplication( LazyValue* in) const
     return false;
 }
 
+bool LazyManager::is_opposite(LazyValue* in) const
+{
+{
+    for (int i=0;i<opposites_.size();i++)
+        if( in == opposites_[i])
+            return true;
+    return false;
+}    
+}
 
 void LazyManager::prepare()
 {
 //     std::cout<<"prepare : there are "<< dependances_.size() << " outputs."<<std::endl;
+    uint cpt = 0;
      for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
      {
         re_init_known();
@@ -251,8 +349,15 @@ void LazyManager::prepare()
             std::vector<LazyValue*> vec;
             idep->second->add_to_list(vec);
             dep.output_dependances[idep->first] = vec;
+            cpt += vec.size();
+            for (int i=0;i<vec.size();i++)
+            {
+                std::cout<<"\ti="<<i<<" "; vec[i]->print_equation(); std::cout<<"\n";
+            }
         }
+        
     }    
+    std::cout<<"il y a "<< cpt <<" opérations "<<std::endl;
 }
 
 void LazyManager::print_inputs()

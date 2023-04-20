@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 
+
 // struct InputDependancies
 // {
 //     std::vector<LazyInput*> inputs_;
@@ -55,9 +56,6 @@ public:
     
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
     
-//     void affect_value( LazyValue* in, double value);
-    
-//     double evaluate( LazyVariable&a);
     void init_basic_constant()
     {             
         constants_.push_back(zero_);
@@ -78,10 +76,9 @@ public:
     
     bool is_multiplication(LazyValue* in) const;
     
-//     uint get_nb_outputs() const
-//     {
-//         return outputs_.size();
-//     }
+    void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
+    
+    void get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite);
     
     inline LazyValue* get_zero() const
     {
@@ -96,7 +93,9 @@ public:
     inline bool is_one(LazyValue * in) const
     {
         return in == one_;
-    }    
+    }
+    
+    bool is_opposite(LazyValue* in) const;
     
     inline bool is_zero(LazyValue * in) const
     {
@@ -144,6 +143,9 @@ private:
 //     uint nb_process_=0;
     uint nb_groups_ = 0;
     
+    bool contract = true;
+    bool contract_add = true;
+
     
 };
 
