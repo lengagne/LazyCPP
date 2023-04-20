@@ -29,6 +29,11 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
         return a;    
     }
     
+//     if ( is_addition(a) || is_addition(b))
+//     {
+//         std::cout<<"addition of addition "<<std::endl;
+//     }
+    
     LazyAddition* out = new LazyAddition(a,b);
     for (int i=0;i<additions_.size();i++)
     {
@@ -47,7 +52,6 @@ LazyValue* LazyManager::add_constant( double d)
     for (int i=0;i<constants_.size();i++)
         if(constants_[i]->value_ == d)
         {
-//             std::cout<<"Return existing constant d ="<<d <<"\t"<< constants_[i] <<std::endl;
             return constants_[i];
         }
     LazyConstant * out = new LazyConstant(d);
@@ -108,9 +112,20 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     
     if (is_constant(a) && is_constant(b))
     {
-        std::cout<<"a et b sont constants"<<std::endl;
+        std::cout<<"a "<<is_constant(a)<<" et b"<<is_constant(b)<<" sont constants"<<std::endl;
         return add_constant(a->value_ * b-> value_);
     }
+
+//     if ( is_multiplication(a) || is_multiplication(b))
+//     {
+//         std::cout<<"multiplication of multiplication "<<std::endl;
+//         std::cout<<"a:"<<is_multiplication(a)<<" et b:"<<is_multiplication(b)<<std::endl;
+//         std::cout<<"\t";
+//         a->print_equation();
+//         std::cout<<"\n\t";
+//         b->print_equation();
+//         std::cout<<"\n";
+//     }    
     
     LazyMultiplication* out = new LazyMultiplication(a,b);
     for (int i=0;i<multiplications_.size();i++)
@@ -176,13 +191,6 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
         return add_opposite(b);
     }    
     
-    
-    
-//     if (is_zero(a))
-//         return - b;
-/*    if (is_zero(b))
-        return a;   */ 
-    
     LazySoustraction* out = new LazySoustraction(a,b);
     for (int i=0;i<soustractions_.size();i++)
     {
@@ -196,27 +204,13 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     return out;
 }
 
-// void LazyManager::affect_value( LazyValue* in, double value)
-// {
-//     if (is_input(in))
-//     {
-//         in->value_ = value;
-//         return;
-//     }
-//     
-//     std::cout<<" quoi faire ? "<< std::endl;
-//     in->value_ = value;
-//         
-// //     std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" try to set value to unexisting input"<<std::endl;
-// //     exit(2);
-// }
-
-// double LazyManager::evaluate( LazyVariable& a)
-// {  
-// //     state_ = true;
-//     return a.ref_->evaluate(nb_process_);
-// }
-
+bool LazyManager::is_addition(LazyValue* in) const
+{
+    for (int i=0;i<additions_.size();i++)
+        if( in == additions_[i])
+            return true;
+    return false;    
+}
 
 bool LazyManager::is_constant( LazyValue* in) const
 {
@@ -235,6 +229,15 @@ bool LazyManager::is_input( LazyValue* in) const
     return false;
 }
 
+bool LazyManager::is_multiplication( LazyValue* in) const
+{
+    for (int i=0;i<multiplications_.size();i++)
+        if( in == multiplications_[i])
+            return true;
+    return false;
+}
+
+
 void LazyManager::prepare()
 {
 //     std::cout<<"prepare : there are "<< dependances_.size() << " outputs."<<std::endl;
@@ -248,16 +251,8 @@ void LazyManager::prepare()
             std::vector<LazyValue*> vec;
             idep->second->add_to_list(vec);
             dep.output_dependances[idep->first] = vec;
-//             std::cout<<"input "<< iter->first<<" rank "<< idep->first <<" there are "<< vec.size() <<" computations"<<std::endl;
         }
-        
-//         for (int i=0;i<dep.outputs.size();i++)
-//         {
-//             
-//            
-//             dep.output_dependances.push_back(vec);      
-//         }
-    }
+    }    
 }
 
 void LazyManager::print_inputs()
@@ -314,6 +309,7 @@ void LazyManager::reset()
     soustractions_.clear();
     dependances_.clear();
     opposites_.clear();
+    constants_.clear();
     init_basic_constant();
 }
 
@@ -333,18 +329,9 @@ void LazyManager::update_all()
 double LazyManager::update(uint index, uint cpt)
 {
     OutDependance& dep = dependances_[index];
-//     for (int i=0;i<dep.outputs.size();i++)
-//     {
-        for (int j =0;j<dep.output_dependances[cpt].size();j++)
-            dep.output_dependances[cpt][j]->compute();
-//     }
-        
-//     std::cout<<"Update index = "<< index <<std::endl;
-//     for (int j =0;j<output_dependances_[index].size();j++)
-//     {
-//         output_dependances_[index][j]->compute(); 
-// // //         std::cout<<"update with "<< output_dependances_[index][j]->get_value()<<std::endl;
-//     }
-//     outputs_[index]->print();
+    for(auto i = dep.output_dependances[cpt].begin(); i != dep.output_dependances[cpt].end();++i)
+    {
+        (*i)->compute();
+    }
     return dep.outputs[cpt]->get_value();
 }

@@ -70,9 +70,13 @@ public:
         return inputs_.size();
     }
     
+    bool is_addition(LazyValue* in) const;
+    
     bool is_constant( LazyValue* in) const;
     
     bool is_input( LazyValue* in) const;
+    
+    bool is_multiplication(LazyValue* in) const;
     
 //     uint get_nb_outputs() const
 //     {

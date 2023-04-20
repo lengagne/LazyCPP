@@ -97,26 +97,29 @@ LazyVariable::LazyVariable()
 
 LazyVariable::LazyVariable(const uint & a)
 {
-    if (a==0)
-        ref_ = LMANAGER.get_zero();
-    else
-        ref_ = new LazyConstant(1.0*a);        
+    ref_ = LMANAGER.add_constant(1.0*a);
+//     if (a==0)
+//         ref_ = LMANAGER.get_zero();
+//     else
+//         ref_ = new LazyConstant(1.0*a);        
 }        
 
 LazyVariable::LazyVariable(const int & a)
 {
-    if (a==0)
-        ref_ = LMANAGER.get_zero();
-    else    
-        ref_ = new LazyConstant(1.0*a);        
+    ref_ = LMANAGER.add_constant(1.0*a);
+//     if (a==0)
+//         ref_ = LMANAGER.get_zero();
+//     else    
+//         ref_ = new LazyConstant(1.0*a);        
 }    
 
 LazyVariable::LazyVariable(const double & a)
 {
-    if (a==0)
-        ref_ = LMANAGER.get_zero();
-    else
-        ref_ = new LazyConstant(a);        
+    ref_ = LMANAGER.add_constant(a);    
+//     if (a==0)
+//         ref_ = LMANAGER.get_zero();
+//     else
+//         ref_ = new LazyConstant(a);        
 }    
     
 
