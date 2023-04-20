@@ -19,6 +19,8 @@ public:
     
     void define_as_output();
     
+    void get_multiplication( std::vector<LazyValue*> vec);
+    
     inline double get_value()const
     {
         return value_;
