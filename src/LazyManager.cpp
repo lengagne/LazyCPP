@@ -2,91 +2,119 @@
 #include <algorithm>
 
 
-void LazyManager::add_input( LazyInput* in)
+LazyManager::LazyManager()
 {
-    inputs_.push_back(in);
-}
-
-void LazyManager::add_output( LazyValue* in, uint index, uint rank )
-{
-    if (dependances_.find(index) == dependances_.end())
-    { // there is no such element, we create it
-        dependances_[index] = OutDependance();    
-    }    
-    dependances_[index].outputs[rank] = in;
-}
-
-LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
-{
-    if (is_zero(a))
-    {
-        return b;
-    }
-    if (is_zero(b))
-    {
-        return a;    
-    }
-    
-//     if (contract_add)
-//     {
-//         if ( is_addition(a) || is_addition(b) ||  is_additionX(a) || is_additionX(b))
-//         {
-//             std::vector<LazyValue*> vec;
-//             uint nb_opposite = 0;
-//             get_addition(a,vec);
-//             get_addition(b,vec);
-//             
-//             double constante = 0.0;
-//             for (int i=0;i<vec.size();i++) 
-//             {
-//                 if (is_constant(vec[i]))
-//                 {
-//                     constante += vec[i]->value_;
-//                     vec.erase (vec.begin()+i);
-//                 }
-//             }
-//             vec.push_back(new LazyConstant(constante));            
-//             LazyAdditionX* out = new LazyAdditionX(vec);
-//             {
-//                 for (int i=0;i<additionsX_.size();i++)
-//                 {
-//                     if (*additionsX_[i] == *out)
-//                     {
-//                         delete out;
-//                         return additionsX_[i];
-//                     }
-//                 }    
-//                 additionsX_.push_back(out);                
-//             }
-//             return out;
-//         }    
-//     }
-    
-    LazyAddition* out = new LazyAddition(a,b);
-    for (int i=0;i<additions_.size();i++)
-    {
-        if (*additions_[i] == *out)
-        {
-            delete out;
-            return additions_[i];
-        }
-    }
-    additions_.push_back(out);
-    return out;
+    zero_ = new LazyConstant(0.0);   
+    one_ = new LazyConstant(1.0);
+    minus_one_ = new LazyConstant(-1.0);
+    init_basic_constant();
 }
 
 LazyValue* LazyManager::add_constant( double d)
 {
-    for (int i=0;i<constants_.size();i++)
-        if(constants_[i]->value_ == d)
+    for (auto iter : constants_)
+        if(iter->value_ == d)
         {
-            return constants_[i];
+            return iter;
         }
     LazyConstant * out = new LazyConstant(d);
     constants_.push_back(out);
     return out;    
 }
 
+LazyInput* LazyManager::add_input( const double &a, const std::string& name)
+{
+    LazyInput* out = new LazyInput(a,name);
+    inputs_.push_back(out);
+    return out;
+}
+
+LazyValue* LazyManager::get_zero() const
+{
+    return zero_;
+}
+
+
+bool LazyManager::is_zero(LazyValue * in) const
+{
+    return in == zero_;
+}
+
+// void LazyManager::add_input( LazyInput* in)
+// {
+//     inputs_.push_back(in);
+// }
+// 
+// void LazyManager::add_output( LazyValue* in, uint index, uint rank )
+// {
+//     if (dependances_.find(index) == dependances_.end())
+//     { // there is no such element, we create it
+//         dependances_[index] = OutDependance();    
+//     }    
+//     dependances_[index].outputs[rank] = in;
+// }
+// 
+// LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
+// {
+//     if (is_zero(a))
+//     {
+//         return b;
+//     }
+//     if (is_zero(b))
+//     {
+//         return a;    
+//     }
+//     
+// //     if (contract_add)
+// //     {
+// //         if ( is_addition(a) || is_addition(b) ||  is_additionX(a) || is_additionX(b))
+// //         {
+// //             std::vector<LazyValue*> vec;
+// //             uint nb_opposite = 0;
+// //             get_addition(a,vec);
+// //             get_addition(b,vec);
+// //             
+// //             double constante = 0.0;
+// //             for (int i=0;i<vec.size();i++) 
+// //             {
+// //                 if (is_constant(vec[i]))
+// //                 {
+// //                     constante += vec[i]->value_;
+// //                     vec.erase (vec.begin()+i);
+// //                 }
+// //             }
+// //             vec.push_back(new LazyConstant(constante));            
+// //             LazyAdditionX* out = new LazyAdditionX(vec);
+// //             {
+// //                 for (int i=0;i<additionsX_.size();i++)
+// //                 {
+// //                     if (*additionsX_[i] == *out)
+// //                     {
+// //                         delete out;
+// //                         return additionsX_[i];
+// //                     }
+// //                 }    
+// //                 additionsX_.push_back(out);                
+// //             }
+// //             return out;
+// //         }    
+// //     }
+//     
+//     LazyAddition* out = new LazyAddition(a,b);
+//     for (int i=0;i<additions_.size();i++)
+//     {
+//         if (*additions_[i] == *out)
+//         {
+//             delete out;
+//             return additions_[i];
+//         }
+//     }
+//     additions_.push_back(out);
+//     return out;
+// }
+// 
+
+ /*
 LazyValue* LazyManager::add_cosinus( LazyValue* a)
 {
     LazyCosinus* out = new LazyCosinus(a);
@@ -544,4 +572,16 @@ double LazyManager::update(uint index, uint cpt)
         (*i)->compute();
     }
     return dep.outputs[cpt]->get_value();
+}*/
+
+
+/////////////////////////////////////////////////////
+////////////////////Private functions ///////////////
+/////////////////////////////////////////////////////
+
+void LazyManager::init_basic_constant()
+{             
+    constants_.push_back(zero_);
+    constants_.push_back(one_);
+    constants_.push_back(minus_one_);        
 }

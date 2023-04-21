@@ -2,7 +2,7 @@
 
 LazyManager LMANAGER;
 
-
+/*
 void LazyAddOutput(LazyVariable& in,uint index,uint rank)
 {
     LMANAGER.add_output(in.ref_, index,rank);
@@ -22,16 +22,6 @@ bool LazyIsInput(const LazyVariable& in)
 {
     return LMANAGER.is_input(in.ref_);
 }
-
-// uint LazyGetNbOutputs()
-// {
-//     return LMANAGER.get_nb_outputs();
-// }
-
-// bool LazyIsZero(LazyValue * in)
-// {
-//     return LMANAGER.is_zero(in);
-// }
 
 void LazyPrepare()
 {
@@ -85,38 +75,6 @@ LazyInput::LazyInput(double value, const std::string name):name_(name)
 //     LMANAGER.affect_value(this,d);
 // }
 
-LazyVariable::LazyVariable()
-{
-    ref_ = LMANAGER.get_zero();       
-}
-
-LazyVariable::LazyVariable(const uint & a)
-{
-    ref_ = LMANAGER.add_constant(1.0*a);
-//     if (a==0)
-//         ref_ = LMANAGER.get_zero();
-//     else
-//         ref_ = new LazyConstant(1.0*a);        
-}        
-
-LazyVariable::LazyVariable(const int & a)
-{
-    ref_ = LMANAGER.add_constant(1.0*a);
-//     if (a==0)
-//         ref_ = LMANAGER.get_zero();
-//     else    
-//         ref_ = new LazyConstant(1.0*a);        
-}    
-
-LazyVariable::LazyVariable(const double & a)
-{
-    ref_ = LMANAGER.add_constant(a);    
-//     if (a==0)
-//         ref_ = LMANAGER.get_zero();
-//     else
-//         ref_ = new LazyConstant(a);        
-}    
-    
 
 LazyVariable& LazyVariable::operator + (const LazyVariable& b) const
 {
@@ -182,10 +140,7 @@ void LazyVariable::operator = (double val)
 //     LMANAGER.add_output(index,ref_);
 // }
 
-bool LazyVariable::is_null() const
-{
-    return LMANAGER.is_zero(ref_);
-}
+
 
 LazyVariable cos (const LazyVariable&a)
 {
@@ -202,4 +157,4 @@ LazyVariable sin (const LazyVariable&a)
 }
 
 
-        
+        */
