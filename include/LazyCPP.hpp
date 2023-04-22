@@ -14,8 +14,8 @@
 #include "LazySoustraction.hpp"
 
 #include "LazyOpposite.hpp"
-// #indclude "LazyCosinus.hpp"
-// #include "LazySinus.hpp"
+#include "LazyCosinus.hpp"
+#include "LazySinus.hpp"
 
 
 // #include "LazyManager.hpp"

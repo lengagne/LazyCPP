@@ -84,6 +84,18 @@ bool LazyVariable::operator != (const LazyVariable& b) const
     return ref_ != b.ref_;
 }
 
+LazyVariable cos (const LazyVariable& a)
+{
+    LazyVariable out (LMANAGER.add_cosinus(a.ref_));
+    return out;
+}
+
+LazyVariable sin (const LazyVariable& a)
+{
+    LazyVariable out (LMANAGER.add_sinus(a.ref_));
+    return out;
+}
+
 
 /////////////////////////////////////////////////////
 ////////////////////Private functions ///////////////

@@ -44,6 +44,10 @@ private:
     
     friend class LazyManager;
     
+    friend LazyVariable cos (const LazyVariable& a);
+
+    friend LazyVariable sin (const LazyVariable& a);    
+    
     LazyVariable(LazyValue* in);
 };
 

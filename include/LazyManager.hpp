@@ -34,7 +34,7 @@ public:
     
     LazyInput* add_input( const double &a, const std::string& name);
 //     
-//     LazyValue* add_cosinus( LazyValue* a);
+    LazyValue* add_cosinus( LazyValue* a);
 //     
 //     LazyValue* add_multiplication( LazyValue* a , LazyValue *b, bool check_contraction = true);
 //  
@@ -42,7 +42,7 @@ public:
     
     LazyValue* add_opposite(LazyValue* a );
 //     
-//     LazyValue* add_sinus( LazyValue* a);
+    LazyValue* add_sinus( LazyValue* a);
 //     
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
 //     
@@ -115,17 +115,19 @@ private:
     
 
 //     
-    std::vector<LazySoustraction*> soustractions_;
+    
 //     
-//     std::vector<LazySinus*> sinus_;
-//     std::vector<LazyCosinus*> cosinus_;
 //     
 //     
     std::vector<LazyConstant*> constants_;
     std::vector<LazyInput*> inputs_;        
     
     std::vector<LazyOpposite*> opposites_;
-//     
+    std::vector<LazySinus*> sinus_;
+    std::vector<LazyCosinus*> cosinus_;
+
+    std::vector<LazySoustraction*> soustractions_;
+    
     std::vector<LazyMultiplicationX*> multiplicationsX_;
     std::vector<LazyAdditionX*> additionsX_;
 //     

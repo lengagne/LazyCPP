@@ -69,6 +69,18 @@ LazyInput* LazyManager::add_input( const double &a, const std::string& name)
     return out;
 }
 
+LazyValue* LazyManager::add_cosinus( LazyValue* a)
+{
+    LazyCosinus* out = new LazyCosinus(a);
+    // check if does not already exist
+    for (auto iter : cosinus_)
+        if (*iter == *out)
+            return iter;
+    cosinus_.push_back(out);
+    return out;
+}
+
+
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 {
     std::list<LazyValue*> vec;
@@ -124,6 +136,18 @@ LazyValue* LazyManager::add_opposite(LazyValue* a )
     opposites_.push_back(out);
     return out;      
 }
+
+LazyValue* LazyManager::add_sinus( LazyValue* a)
+{
+    LazySinus* out = new LazySinus(a);
+    // check if does not already exist
+    for (auto iter : sinus_)
+        if (*iter == *out)
+            return iter;
+    sinus_.push_back(out);
+    return out;
+}
+
 
 LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
 {
@@ -242,20 +266,6 @@ bool LazyManager::is_zero(LazyValue * in) const
 // 
 
  /*
-LazyValue* LazyManager::add_cosinus( LazyValue* a)
-{
-    LazyCosinus* out = new LazyCosinus(a);
-    for (int i=0;i<cosinus_.size();i++)
-    {
-        if (*cosinus_[i] == *out)
-        {
-            delete out;
-            return cosinus_[i];
-        }
-    }
-    cosinus_.push_back(out);
-    return out;    
-}
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b,bool check_contraction )
 {
