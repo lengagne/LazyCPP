@@ -35,6 +35,18 @@ LazyVariable::LazyVariable(const std::string& name)
 {
     ref_ = LMANAGER.add_input(0,name);
 }
+
+void LazyVariable::operator = (double d)
+{
+    std::cout<<" avant update : "<< *this <<std::endl;
+    if (LMANAGER.is_input(ref_))
+    {
+        std::cout<<"update input "<<std::endl;
+        ref_->value_ = d;
+    }else
+        ref_ = LMANAGER.add_constant(d);
+    std::cout<<" apres update : "<< *this <<std::endl;
+}
         
 LazyVariable::~LazyVariable(){}
     
@@ -72,9 +84,25 @@ LazyVariable LazyVariable::operator * (const LazyVariable& b) const
     return out;    
 }
 
+void LazyVariable::operator += (const LazyVariable& b)
+{
+    ref_ = LMANAGER.add_additionX(ref_,b.ref_);
+}
+
+void LazyVariable::operator -= (const LazyVariable& b)
+{
+    ref_ = LMANAGER.add_soustraction(ref_,b.ref_);
+}
+
+void LazyVariable::operator *= (const LazyVariable& b)
+{
+    ref_ = LMANAGER.add_multiplicationX(ref_,b.ref_);
+}
+
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-    v.ref_->print_equation();
+//     v.ref_->print_equation();
+    stream << v.ref_->value_;
     return stream;
 }
    

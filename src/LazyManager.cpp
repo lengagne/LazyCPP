@@ -137,6 +137,16 @@ LazyValue* LazyManager::add_opposite(LazyValue* a )
     return out;      
 }
 
+void LazyManager::add_output( LazyValue* in, uint index, uint rank )
+{
+    if (dependances_.find(index) == dependances_.end())
+    { // there is no such element, we create it
+        dependances_[index] = OutDependance();    
+    }    
+    std::cout<<"ajout de la sortie "<< in->value_<<"\n";
+    dependances_[index].outputs[rank] = in;
+}
+
 LazyValue* LazyManager::add_sinus( LazyValue* a)
 {
     LazySinus* out = new LazySinus(a);
@@ -179,12 +189,23 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     return out;
 }
 
+uint LazyManager::get_nb_inputs() const
+{
+    return inputs_.size();
+}
 
 LazyValue* LazyManager::get_zero() const
 {
     return zero_;
 }
 
+bool LazyManager::is_input( LazyValue* in) const
+{
+    for (auto iter : inputs_)
+        if (iter == in)
+            return true;
+    return false;
+}
 
 bool LazyManager::is_zero(LazyValue * in) const
 {
@@ -196,14 +217,6 @@ bool LazyManager::is_zero(LazyValue * in) const
 //     inputs_.push_back(in);
 // }
 // 
-// void LazyManager::add_output( LazyValue* in, uint index, uint rank )
-// {
-//     if (dependances_.find(index) == dependances_.end())
-//     { // there is no such element, we create it
-//         dependances_[index] = OutDependance();    
-//     }    
-//     dependances_[index].outputs[rank] = in;
-// }
 // 
 // LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 // {
@@ -420,13 +433,7 @@ bool LazyManager::is_addition(LazyValue* in) const
 
 
 
-bool LazyManager::is_input( LazyValue* in) const
-{
-    for (int i=0;i<inputs_.size();i++)
-        if( in == inputs_[i])
-            return true;
-    return false;
-}
+
 
 bool LazyManager::is_multiplication( LazyValue* in) const
 {
@@ -481,22 +488,10 @@ void LazyManager::plot_info() const
 //     std::cout<<"          Pour un total de "<< cpt_add <<" additions"<<std::endl;
     
 }
-
+*/
 
 void LazyManager::prepare()
 {
-//     std::cout<<" Avant LazyManager::Prepare"<<std::endl;
-//     plot_info();
-//     // try to simplify multiplication X 
-//     if (simplify_)
-//     {
-//         for (int i=0;i<multiplicationsX_.size();i++)
-//         {
-//             simplify(multiplicationsX_[i]);
-//         }
-//     }    
-    
-//     std::cout<<"prepare : there are "<< dependances_.size() << " outputs."<<std::endl;
     uint cpt = 0;
      for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
      {
@@ -510,23 +505,11 @@ void LazyManager::prepare()
             dep.output_dependances[idep->first] = vec;
             cpt += vec.size();
         }        
-    }    
-    
-    // on regarde si certaines opérations sont encore nécessaires.
-    re_init_known();
-    for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
-    {
-        OutDependance& dep = iter->second;
-        for (auto idep =dep.outputs.begin(); idep != dep.outputs.end(); idep++)
-        {
-            idep->second->check_known();
-        }        
-    }
-
-//     std::cout<<"il y a "<< cpt <<" opérations "<<std::endl;
-//     plot_info();
+    }        
 }
 
+
+/*
 void LazyManager::print_inputs()
 {
     for (int i=0;i<inputs_.size();i++)
@@ -549,42 +532,36 @@ void LazyManager::print_output_graph(uint index, uint cpt)
     OutDependance& dep = dependances_[index];
     dep.outputs[cpt]->print();            
 }
-
+*/
 void LazyManager::re_init_known()
 {
-    for (int i=0;i<additions_.size();i++)
-        additions_[i]->re_init_known();
-
-    for (int i=0;i<soustractions_.size();i++)
-        soustractions_[i]->re_init_known();
-
-    for (int i=0;i<multiplications_.size();i++)
-        multiplications_[i]->re_init_known();
-    
-    for (int i=0;i<cosinus_.size();i++)
-        cosinus_[i]->re_init_known();
-
-    for (int i=0;i<sinus_.size();i++)
-        sinus_[i]->re_init_known();    
-
-    for (int i=0;i<opposites_.size();i++)
-        opposites_[i]->re_init_known();   
+//     for (auto iter : additions_)   iter->re_init_known();
+    for (auto iter : additionsX_)   iter->re_init_known();
+    for (auto iter : soustractions_)   iter->re_init_known();
+//     for (auto iter : multiplications_)   iter->re_init_known();
+    for (auto iter : multiplicationsX_)   iter->re_init_known();
+    for (auto iter : cosinus_)   iter->re_init_known();
+    for (auto iter : sinus_)   iter->re_init_known();
+    for (auto iter : opposites_)   iter->re_init_known();
 }
 
 void LazyManager::reset()
 {
     inputs_.clear();
-    additions_.clear();
+    additionsX_.clear();
+//     additions_.clear();
     cosinus_.clear();
-    multiplications_.clear();
+//     multiplications_.clear();
+    multiplicationsX_.clear();
     sinus_.clear();
     soustractions_.clear();
-    dependances_.clear();
     opposites_.clear();
     constants_.clear();
     init_basic_constant();
+    
+    dependances_.clear();
 }
-
+/*
 // void LazyManager::simplify(LazyMultiplicationX* v)
 // {
 //     bool test = false;
@@ -626,6 +603,17 @@ void LazyManager::reset()
 //     
 //     v->p_ = vec_new;
 // }
+*/
+
+double LazyManager::update(uint index, uint cpt)
+{
+    OutDependance& dep = dependances_[index];
+    for(auto i = dep.output_dependances[cpt].begin(); i != dep.output_dependances[cpt].end();++i)
+    {
+        (*i)->compute();        
+    }
+    return dep.outputs[cpt]->get_value();
+}
 
 void LazyManager::update_all()
 {
@@ -639,17 +627,6 @@ void LazyManager::update_all()
         }
     }
 }
-
-double LazyManager::update(uint index, uint cpt)
-{
-    OutDependance& dep = dependances_[index];
-    for(auto i = dep.output_dependances[cpt].begin(); i != dep.output_dependances[cpt].end();++i)
-    {
-        (*i)->compute();
-    }
-    return dep.outputs[cpt]->get_value();
-}*/
-
 
 /////////////////////////////////////////////////////
 ////////////////////Private functions ///////////////

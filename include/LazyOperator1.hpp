@@ -6,6 +6,9 @@
 class LazyOperator1 : public LazyValue {
 public:
     
+    /// update the list of the dependancies
+    virtual void add_to_list(std::vector<LazyValue*>& vec);    
+    
     virtual void check_known();
            
     virtual bool operator == (const LazyOperator1& A) const;

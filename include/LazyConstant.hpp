@@ -6,6 +6,9 @@
 class LazyConstant : public LazyValue {
 public:
     LazyConstant(double value);
+    
+    /// update the list of the dependancies
+    virtual void add_to_list(std::vector<LazyValue*>& vec);
         
     virtual void check_known();
     

@@ -22,15 +22,17 @@
 
 #include "LazyVariable.hpp"
 
-// LazyManager LMANAGER;
+class LazyVariable;
 
 // LazyManager LMANAGER;
 
-// void LazyAddOutput(LazyVariable& in,uint index,uint rank);
+// LazyManager LMANAGER;
+
+void LazyAddOutput(const LazyVariable& in,uint index,uint rank);
 // 
 // void LazyGetInfo();
 // 
-// uint LazyGetNbInputs();
+uint LazyGetNbInputs();
 // 
 // uint LazyGetNbOutputs();
 // 
@@ -38,7 +40,7 @@
 // 
 // bool LazyIsInput(const LazyVariable& in);
 // 
-// void LazyPrepare();
+void LazyPrepare();
 // 
 // void LazyPrintGraph(LazyVariable& in);
 // 
@@ -46,12 +48,10 @@
 // 
 // void LazyPrintOutputGraph(uint index, uint cpt);
 // 
-// void LazyReInit();
-// 
-// void LazyReset();
-// 
-// double LazyUpdate(uint index, uint cpt);
-// 
-// void LazyUpdateAll();
+void LazyReset();
+
+double LazyUpdate(uint index, uint cpt);
+
+void LazyUpdateAll();
 
 #endif // __LAZYCPP_H__

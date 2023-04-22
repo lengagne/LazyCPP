@@ -1,15 +1,15 @@
 #include "LazyOperatorX.hpp"
 
-// void LazyOperatorX::add_to_list(std::list<LazyValue*>& vec)
-// {
-//     if (!known_)
-//     {
-//         for (int i=0;i<p_.size();i++)
-//             p_[i]->add_to_list(vec);
-//         vec.push_back(this);            
-//     }
-//     known_ =true;
-// }    
+void LazyOperatorX::add_to_list(std::vector<LazyValue*>& vec)
+{
+    if (!known_)
+    {
+        for (auto iter : p_)
+            iter->add_to_list(vec);
+        vec.push_back(this);            
+    }
+    known_ =true;
+}    
     
 void LazyOperatorX::check_known()
 {

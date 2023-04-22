@@ -6,6 +6,11 @@ LazyConstant::LazyConstant(double value){
     known_ = true;
 }    
     
+void LazyConstant::add_to_list(std::vector<LazyValue*>& vec)
+{
+    /// nothing to do
+}
+    
 void LazyConstant::check_known()
 {
     /// nothing to do

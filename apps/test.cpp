@@ -21,30 +21,27 @@ int main()
     LazyVariable X(x,"X"), Y(y,"Y");
     
     LazyVariable lz = test_function<LazyVariable>(X,Y);
-//     LazyVariable lz1 = lz*lz;
-//     LazyAddOutput(lz,0,0);
-//     LazyAddOutput(lz1,0,1);
-//     
-//     LazyPrepare();
-//     
-//     std::cout<<"X = "<< x <<std::endl;
-//     std::cout<<"Y = "<< y <<std::endl;
+    LazyVariable lz1 = lz*lz;
+    LazyAddOutput(lz,0,0);
+    LazyAddOutput(lz1,0,1);
+    
+    LazyPrepare();
+    
+    std::cout<<"X = "<< x <<std::endl;
+    std::cout<<"Y = "<< y <<std::endl;
     std::cout<<"lz = " << lz <<std::endl;
-//     std::cout<<"z = "<< test_function<double>(x,y) <<std::endl;
-//     std::cout<<"lz1 = " << lz1 <<std::endl<<std::endl;
-//     //     PrintGraph(lz);
-//     
-//     X = x = -1.0;
-//     std::cout<<"X = "<< X <<std::endl;
-//     std::cout<<"Y = "<< Y <<std::endl;    
-//     
-// //     PrintGraph(lz);
-// //     lz.evaluate();
+    std::cout<<"z = "<< test_function<double>(x,y) <<std::endl<<std::endl;
+    //     PrintGraph(lz);
+    
+    X = x = -1.0;
+
+    LazyUpdate(0,0);
+    
 //     LazyUpdateAll();
-//     std::cout<<"lz = " << lz <<std::endl;
-//     std::cout<<"z = "<< test_function<double>(x,y) <<std::endl;
-//     
-//     std::cout<<"lz1 = " << lz1 <<std::endl<<std::endl;
+    std::cout<<"X = "<< X <<std::endl;
+    std::cout<<"Y = "<< Y <<std::endl;        
+    std::cout<<"lz = " << lz <<std::endl;
+    std::cout<<"z = "<< test_function<double>(x,y) <<std::endl<<std::endl;
 //     
 //     LazyGetInfo();
 //     

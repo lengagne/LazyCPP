@@ -2,32 +2,32 @@
 
 LazyManager LMANAGER;
 
-/*
+
 void LazyAddOutput(LazyVariable& in,uint index,uint rank)
 {
     LMANAGER.add_output(in.ref_, index,rank);
 }
 
-void LazyGetInfo()
+/*void LazyGetInfo()
 {
     LMANAGER.plot_info();
 }
-
+*/
 uint LazyGetNbInputs()
 {
     return LMANAGER.get_nb_inputs();
 }
-
+/*
 bool LazyIsInput(const LazyVariable& in)
 {
     return LMANAGER.is_input(in.ref_);
 }
-
+*/
 void LazyPrepare()
 {
     LMANAGER.prepare();
 }
-
+/*
 void LazyPrintGraph(LazyVariable& in)
 {
     in.ref_->print("");
@@ -43,11 +43,7 @@ void LazyPrintOutputGraph(uint index, uint cpt)
     LMANAGER.print_output_graph(index,cpt);
 }
 
-void LazyReInit()
-{
-    LMANAGER.re_init_known();
-}
-
+*/
 void LazyReset()
 {
     LMANAGER.reset();
@@ -62,7 +58,7 @@ void LazyUpdateAll()
 {
     LMANAGER.update_all();
 }
-
+/*
 LazyInput::LazyInput(double value, const std::string name):name_(name) 
 {        
     value_ = value;

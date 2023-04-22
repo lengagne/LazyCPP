@@ -5,13 +5,13 @@
 #include <vector>
 #include <map>
 
-// struct OutDependance
-// {
-//     uint index=0;
-//     uint nb_outputs_ = 0;
-//     std::map< uint, LazyValue* > outputs;
-//     std::map< uint, std::vector< LazyValue* > > output_dependances;
-// };
+struct OutDependance
+{
+    uint index=0;
+    uint nb_outputs_ = 0;
+    std::map< uint, LazyValue* > outputs;
+    std::map< uint, std::vector< LazyValue* > > output_dependances;
+};
 
 class LazyManager
 {
@@ -22,8 +22,8 @@ public:
 //     
     
 //     
-//     // add an instance as output
-//     void add_output( LazyValue* in, uint index, uint rank );
+    // add an instance as output
+    void add_output( LazyValue* in, uint index, uint rank );
 //     
 //     ///  basis operation   
 //     LazyValue* add_addition( LazyValue* a , LazyValue *b);
@@ -51,10 +51,7 @@ public:
 // //     double evaluate( LazyVariable&a);
 
 //     
-//     uint get_nb_inputs() const
-//     {
-//         return inputs_.size();
-//     }
+    uint get_nb_inputs() const;
 //     
 //     bool is_addition(LazyValue* in) const;
 //     
@@ -62,7 +59,7 @@ public:
 //     
 
 //     
-//     bool is_input( LazyValue* in) const;
+    bool is_input( LazyValue* in) const;
 //     
 //     bool is_multiplication(LazyValue* in) const;
 //     
@@ -94,21 +91,20 @@ public:
 //     
 //     void plot_info() const;
 //     
-//     void prepare();
+    void prepare();
 //     
 // //     void print_inputs();
 //     
 // //     void print_output_graph(uint index, uint cpt);
 //     
-//     void re_init_known();
-//     
-//     void reset();
-//         
-//     void update_all();
-//     
-//     double update(uint index, uint cpt);
+    void re_init_known();
     
-   
+    void reset();
+    
+    double update(uint index, uint cpt);
+    
+    void update_all();
+    
 private:
 
     LazyConstant * zero_, *one_, *minus_one_;
@@ -135,7 +131,7 @@ private:
 //     std::vector<LazyMultiplication*> multiplications_;        
 //     std::vector<LazyAddition*> additions_;
     
-//     std::map<uint,OutDependance> dependances_;
+    std::map<uint,OutDependance> dependances_;
 
     
     void init_basic_constant();    
