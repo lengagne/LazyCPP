@@ -7,12 +7,13 @@
 
 // #include "LazyAddition.hpp"
 // #include "LazyMultiplication.hpp"
-// #include "LazySoustraction.hpp"
+
 
 #include "LazyMultiplicationX.hpp"
 #include "LazyAdditionX.hpp"
+#include "LazySoustraction.hpp"
 
-// #include "LazyOpposite.hpp"
+#include "LazyOpposite.hpp"
 // #indclude "LazyCosinus.hpp"
 // #include "LazySinus.hpp"
 

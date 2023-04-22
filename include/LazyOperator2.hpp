@@ -5,36 +5,10 @@
 
 class LazyOperator2 : public LazyValue {
 public:
+        
+    virtual void check_known();
     
-    virtual void add_to_list(std::vector<LazyValue*>& vec)
-    {
-        if (!known_)
-        {
-            a_->add_to_list(vec);
-            b_->add_to_list(vec);
-            vec.push_back(this);            
-        }
-        known_ =true;
-    }    
-    
-    virtual void check_known()
-    {
-        if(!known_)
-        {
-            a_->check_known();
-            b_->check_known();
-        }
-        known_ = true;
-    }
-    
-   
-//     virtual double evaluate(uint index)=0;
-       
-    virtual bool operator == (const LazyOperator2& A) const
-    {
-        return (a_ == A.a_ && b_ == A.b_) || (a_ == A.b_ && b_ == A.a_);
-    }
-    
+    virtual bool operator == (const LazyOperator2& A) const;
 
     LazyValue* a_=nullptr;
     LazyValue* b_=nullptr;

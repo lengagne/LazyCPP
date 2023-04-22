@@ -6,7 +6,7 @@
 template<typename T>
 T test_function( T& x, T& y)
 {
-     return (x+y); //-(x+y)*(x-y) *(y-y*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
+     return (x+y)*x*(x+y+y)-(x+y)*(x-y) *(y-y*y)*(x-y) ; //* sin(y) + sin(y) * cos(y+x);
 }
 
 int main()

@@ -37,12 +37,14 @@ public:
 //     LazyValue* add_cosinus( LazyValue* a);
 //     
 //     LazyValue* add_multiplication( LazyValue* a , LazyValue *b, bool check_contraction = true);
-//     
-//     LazyValue* add_opposite(LazyValue* a );
+//  
+    LazyValue* add_multiplicationX( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_opposite(LazyValue* a );
 //     
 //     LazyValue* add_sinus( LazyValue* a);
 //     
-//     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
+    LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
 //     
 // //     void affect_value( LazyValue* in, double value);
 //     
@@ -113,7 +115,7 @@ private:
     
 
 //     
-//     std::vector<LazySoustraction*> soustractions_;
+    std::vector<LazySoustraction*> soustractions_;
 //     
 //     std::vector<LazySinus*> sinus_;
 //     std::vector<LazyCosinus*> cosinus_;
@@ -122,9 +124,9 @@ private:
     std::vector<LazyConstant*> constants_;
     std::vector<LazyInput*> inputs_;        
     
-//     std::vector<LazyOpposite*> opposites_;
+    std::vector<LazyOpposite*> opposites_;
 //     
-//     std::vector<LazyMultiplicationX*> multiplicationsX_;
+    std::vector<LazyMultiplicationX*> multiplicationsX_;
     std::vector<LazyAdditionX*> additionsX_;
 //     
     
@@ -139,6 +141,8 @@ private:
     bool is_additionX(LazyValue* in) const;    
     
     bool is_constant( LazyValue* in) const;    
+    
+    bool is_multiplicationX(LazyValue* in) const;    
 };
 
 

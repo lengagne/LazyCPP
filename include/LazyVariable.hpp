@@ -35,6 +35,10 @@ public:
   
     LazyVariable operator + (const LazyVariable& b) const;
     
+    LazyVariable operator - (const LazyVariable& b) const;
+    
+    LazyVariable operator * (const LazyVariable& b) const;
+    
 private:
     LazyValue* ref_;
     

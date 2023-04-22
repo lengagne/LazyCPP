@@ -15,7 +15,6 @@ void LazyOperatorX::check_known()
 {
     if(!known_)
     {
-//         for (int i=0;i<p_.size();i++)
         for (auto iter : p_)
             iter->check_known();
     }
@@ -28,10 +27,5 @@ bool LazyOperatorX::operator == (const LazyOperatorX& A) const
         return false;
     
     return p_ == A.p_;
-//     for (int i=0;i<p_.size();i++)
-//         if (p_[i] != A.p_[i])
-//             return false;
-    
-    return true;
 }
 

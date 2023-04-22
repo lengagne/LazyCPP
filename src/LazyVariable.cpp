@@ -59,10 +59,22 @@ LazyVariable LazyVariable::operator + (const LazyVariable& b) const
     return out;    
 }
 
+LazyVariable LazyVariable::operator - (const LazyVariable& b) const
+{
+    LazyVariable out( LMANAGER.add_soustraction(ref_, b.ref_));
+    return out;    
+}
+
+
+LazyVariable LazyVariable::operator * (const LazyVariable& b) const
+{
+    LazyVariable out( LMANAGER.add_multiplicationX(ref_,b.ref_));
+    return out;    
+}
+
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-    std::cout<<"pointeur = "<< v.ref_<<std::endl;
-    std::cout<<"equation = ";    v.ref_->print_equation();
+    v.ref_->print_equation();
     return stream;
 }
    
@@ -80,8 +92,5 @@ bool LazyVariable::operator != (const LazyVariable& b) const
 
 LazyVariable::LazyVariable(LazyValue* in):ref_(in)
 {
-    std::cout<<"Constructor a partir de pointeur"<<std::endl;
-    ref_->print_equation();
-    std::cout<<"Constructor a partir de pointeur"<<std::endl;
-    std::cout<<" moi meme = "<< *this <<std::endl;
+
 }

@@ -6,30 +6,9 @@
 class LazyOperator1 : public LazyValue {
 public:
     
-    virtual void add_to_list(std::vector<LazyValue*>& vec)
-    {
-        if (!known_)
-        {
-//             vec.insert(vec.begin(),this);
-            a_->add_to_list(vec);
-            vec.push_back(this);            
-        }
-        known_ =true;
-    }    
-    
-    virtual void check_known()
-    {
-        if(!known_)
-            a_->check_known();
-        known_ = true;
-    }
-   
-//     virtual double evaluate(uint index)=0;
+    virtual void check_known();
            
-    virtual bool operator == (const LazyOperator1& A) const
-    {
-        return (a_ == A.a_ );
-    }
+    virtual bool operator == (const LazyOperator1& A) const;
     
     LazyValue* a_=nullptr;
 };
