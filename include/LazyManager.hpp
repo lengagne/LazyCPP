@@ -92,10 +92,14 @@ public:
 //     void plot_info() const;
 //     
     void prepare();
+    
+    void print_all_inputs() const;
 //     
 // //     void print_inputs();
 //     
 // //     void print_output_graph(uint index, uint cpt);
+    
+    void print_all_output_equations();
 //     
     void re_init_known();
     

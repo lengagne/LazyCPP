@@ -1,8 +1,7 @@
 #include "LazyAdditionX.hpp"
 
-LazyAdditionX::LazyAdditionX(double d, std::list<LazyValue*>& a)
+LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 {
-    constant_ = d;
     p_ = a;
     p_.sort();
     compute();
@@ -10,11 +9,9 @@ LazyAdditionX::LazyAdditionX(double d, std::list<LazyValue*>& a)
 
 inline void LazyAdditionX::compute()
 {
-    value_ = constant_;
+    value_ = 0;
     for (auto iter : p_)
-    {
         value_ += iter->value_;
-    }
 }    
 
 void LazyAdditionX::print( const std::string& tab,uint index) 
@@ -32,5 +29,5 @@ void LazyAdditionX::print_equation()
         iter->print_equation();
         std::cout<<" PLUS ";   
     }
-    std::cout<<constant_<<")";
+    std::cout<<0<<")";
 }

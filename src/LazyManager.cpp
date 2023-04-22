@@ -13,16 +13,11 @@ LazyManager::LazyManager()
 LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
 {
     std::list<LazyValue*> vec;
-    double c = 0;
     if (is_additionX(a))
     {
         LazyAdditionX *A = (LazyAdditionX*) a;
         for (auto iter : A->p_)
             vec.push_back(iter);
-        c += A->constant_;
-    }else if (is_constant(a))
-    {
-        c += a->value_;
     }else
         vec.push_back(a);
         
@@ -31,16 +26,11 @@ LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
         LazyAdditionX *B = (LazyAdditionX*) b;
         for (auto iter : B->p_)
             vec.push_back(iter);    
-        c += B->constant_;
-    }else if (is_constant(b))
-    {
-        c += b->value_;
-        
     }else
         vec.push_back(b);
     
     // creation of the new object
-    LazyAdditionX* out = new LazyAdditionX(c,vec);
+    LazyAdditionX* out = new LazyAdditionX(vec);
     
     // check if does not already exist
     for (auto iter : additionsX_)
@@ -64,6 +54,13 @@ LazyValue* LazyManager::add_constant( double d)
 
 LazyInput* LazyManager::add_input( const double &a, const std::string& name)
 {
+    for (auto iter : inputs_)
+        if(iter->name_ == name)
+        {
+            iter->value_ = a;
+            return iter;
+        }
+        
     LazyInput* out = new LazyInput(a,name);
     inputs_.push_back(out);
     return out;
@@ -84,16 +81,11 @@ LazyValue* LazyManager::add_cosinus( LazyValue* a)
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 {
     std::list<LazyValue*> vec;
-    double c = 1;
     if (is_multiplicationX(a))
     {
         LazyMultiplicationX *A = (LazyMultiplicationX*) a;
         for (auto iter : A->p_)
             vec.push_back(iter);
-        c *= A->constant_;
-    }else if (is_constant(a))
-    {
-        c *= a->value_;
     }else
         vec.push_back(a);
         
@@ -102,16 +94,11 @@ LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
         LazyMultiplicationX *B = (LazyMultiplicationX*) b;
         for (auto iter : B->p_)
             vec.push_back(iter);    
-        c *= B->constant_;
-    }else if (is_constant(b))
-    {
-        c *= b->value_;
-        
     }else
         vec.push_back(b);
     
     // creation of the new object
-    LazyMultiplicationX* out = new LazyMultiplicationX(c,vec);
+    LazyMultiplicationX* out = new LazyMultiplicationX(vec);
     
     // check if does not already exist
     for (auto iter : multiplicationsX_)
@@ -143,7 +130,6 @@ void LazyManager::add_output( LazyValue* in, uint index, uint rank )
     { // there is no such element, we create it
         dependances_[index] = OutDependance();    
     }    
-    std::cout<<"ajout de la sortie "<< in->value_<<"\n";
     dependances_[index].outputs[rank] = in;
 }
 
@@ -492,11 +478,11 @@ void LazyManager::plot_info() const
 
 void LazyManager::prepare()
 {
+//     print_all_inputs();
     uint cpt = 0;
-     for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
-     {
-        re_init_known();
-            
+    for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
+    {
+        re_init_known();          
         OutDependance& dep = iter->second;
         for (auto idep =dep.outputs.begin(); idep != dep.outputs.end(); idep++)
         {
@@ -505,10 +491,31 @@ void LazyManager::prepare()
             dep.output_dependances[idep->first] = vec;
             cpt += vec.size();
         }        
-    }        
+    }
+//     print_all_output_equations();
 }
 
+void LazyManager::print_all_inputs() const
+{
+    for (auto iter : inputs_)
+    {
+        std::cout<<" input : "<< iter->name_<<std::endl;
+    }
+}
 
+void LazyManager::print_all_output_equations()
+{
+    for (auto iter = dependances_.begin(); iter != dependances_.end(); ++iter)
+    {
+        OutDependance& dep = iter->second;
+        for (auto idep =dep.outputs.begin(); idep != dep.outputs.end(); idep++)
+        {
+            std::cout<<"output : ";
+            idep->second->print();
+            std::cout<<"\n";
+        }
+    }
+}
 /*
 void LazyManager::print_inputs()
 {

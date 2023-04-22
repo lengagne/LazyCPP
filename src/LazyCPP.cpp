@@ -32,12 +32,12 @@ void LazyPrintGraph(LazyVariable& in)
 {
     in.ref_->print("");
 }
-
-void LazyPrintInputs()
+*/
+void LazyPrintAllInputs()
 {
-    LMANAGER.print_inputs();
+    LMANAGER.print_all_inputs();
 }
-
+/*
 void LazyPrintOutputGraph(uint index, uint cpt)
 {
     LMANAGER.print_output_graph(index,cpt);

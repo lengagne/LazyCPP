@@ -4,7 +4,7 @@
 LazySinus::LazySinus(LazyValue* a)
 {
     a_ = a;
-    value_ = sin(a_->value_);
+    compute();
 }
     
 inline void LazySinus::compute()

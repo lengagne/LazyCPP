@@ -1,8 +1,7 @@
 #include "LazyMultiplicationX.hpp"
 
-LazyMultiplicationX::LazyMultiplicationX(double d, std::list<LazyValue*>& a)
+LazyMultiplicationX::LazyMultiplicationX(std::list<LazyValue*>& a)
 {
-    constant_ = d;
     p_ = a;
     p_.sort();
     compute();
@@ -10,7 +9,7 @@ LazyMultiplicationX::LazyMultiplicationX(double d, std::list<LazyValue*>& a)
 
 inline void LazyMultiplicationX::compute()
 {
-    value_ = constant_;
+    value_ = 1.0;
     for (auto iter : p_)
         value_ *= iter->value_;
 }    
@@ -32,5 +31,5 @@ void LazyMultiplicationX::print_equation()
         iter->print_equation();
         std::cout<<" FOIS ";   
     }
-    std::cout<<constant_<<")";
+    std::cout<<1<<")";
 }

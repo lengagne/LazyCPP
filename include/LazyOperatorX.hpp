@@ -14,7 +14,6 @@ public:
        
     virtual bool operator == (const LazyOperatorX& A) const;
 
-    double constant_;
     std::list<LazyValue*> p_;
 };
 

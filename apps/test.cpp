@@ -6,7 +6,8 @@
 template<typename T>
 T test_function( T& x, T& y)
 {
-     return (x+y)*x*(x+y+y)-(x+y)*(x-y) *(y-y*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
+//      return (x+y)*x*(x+y+y+sin(y)+sin(y)+cos(x))-(x+y)*(x-y) *(y-y*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
+    return (x*y*cos(x));
 }
 
 int main()
@@ -34,6 +35,7 @@ int main()
     //     PrintGraph(lz);
     
     X = x = -1.0;
+    Y = y = 42.0;
 
     LazyUpdate(0,0);
     
@@ -46,6 +48,8 @@ int main()
 //     LazyGetInfo();
 //     
 // //     PrintGraph(lz);
+    
+    LazyPrintAllInputs();
     
     return 0;
 }

@@ -44,7 +44,7 @@ void LazyPrepare();
 // 
 // void LazyPrintGraph(LazyVariable& in);
 // 
-// void LazyPrintInputs();
+void LazyPrintAllInputs();
 // 
 // void LazyPrintOutputGraph(uint index, uint cpt);
 // 

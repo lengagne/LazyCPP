@@ -40,8 +40,6 @@ public:
     
     void operator = (const double & d);
 
-        
-private:
     std::string name_;
 };
 

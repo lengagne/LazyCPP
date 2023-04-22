@@ -4,7 +4,7 @@
 LazyCosinus::LazyCosinus(LazyValue* a)
 {
     a_ = a;
-    value_ = cos(a_->value_);
+    compute();
 }
     
 inline void LazyCosinus::compute()

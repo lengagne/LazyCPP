@@ -5,7 +5,7 @@
 
 class LazyMultiplicationX : public LazyOperatorX {
 public:
-    LazyMultiplicationX(double d,std::list<LazyValue*>& a);
+    LazyMultiplicationX(std::list<LazyValue*>& a);
     
     inline void compute();
     
