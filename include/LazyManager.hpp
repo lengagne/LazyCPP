@@ -59,7 +59,7 @@ public:
 //     
 
 //     
-    bool is_input( LazyValue* in) const;
+    
 //     
 //     bool is_multiplication(LazyValue* in) const;
 //     
@@ -79,11 +79,10 @@ public:
 //         return in == minus_one_;
 //     }    
 //     
-//     inline bool is_one(LazyValue * in) const
-//     {
-//         return in == one_;
-//     }    
-//     
+    bool is_input( LazyValue* in) const;
+    
+    bool is_one(LazyValue * in) const;
+
     bool is_zero(LazyValue * in) const;
 //     {
 //         return in == zero_;

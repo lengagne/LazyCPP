@@ -16,7 +16,7 @@ LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
     if (is_additionX(a))
     {
         LazyAdditionX *A = (LazyAdditionX*) a;
-        for (auto iter : A->p_)
+        for (auto iter : A->p_) if (! is_zero(iter))
             vec.push_back(iter);
     }else
         vec.push_back(a);
@@ -24,7 +24,7 @@ LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
     if (is_additionX(b))
     {
         LazyAdditionX *B = (LazyAdditionX*) b;
-        for (auto iter : B->p_)
+        for (auto iter : B->p_)if (! is_zero(iter))
             vec.push_back(iter);    
     }else
         vec.push_back(b);
@@ -80,11 +80,20 @@ LazyValue* LazyManager::add_cosinus( LazyValue* a)
 
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 {
+    if ( is_zero(a) || is_zero(b))
+        return zero_;
+    
+    if ( is_one(a))
+        return b;
+    
+    if ( is_one(b))
+        return a;    
+    
     std::list<LazyValue*> vec;
     if (is_multiplicationX(a))
     {
         LazyMultiplicationX *A = (LazyMultiplicationX*) a;
-        for (auto iter : A->p_)
+        for (auto iter : A->p_) if (! is_one(iter))
             vec.push_back(iter);
     }else
         vec.push_back(a);
@@ -92,7 +101,7 @@ LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
     if (is_multiplicationX(b))
     {
         LazyMultiplicationX *B = (LazyMultiplicationX*) b;
-        for (auto iter : B->p_)
+        for (auto iter : B->p_) if (! is_one(iter))
             vec.push_back(iter);    
     }else
         vec.push_back(b);
@@ -191,6 +200,11 @@ bool LazyManager::is_input( LazyValue* in) const
         if (iter == in)
             return true;
     return false;
+}
+
+bool LazyManager::is_one(LazyValue * in) const
+{
+    return in == one_;
 }
 
 bool LazyManager::is_zero(LazyValue * in) const
