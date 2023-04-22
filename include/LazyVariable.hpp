@@ -11,6 +11,8 @@ class LazyVariable
 public:
     LazyVariable();
     
+    LazyVariable(const LazyVariable& a);
+    
     LazyVariable(const uint & a);
 
     LazyVariable(const int & a);
@@ -30,12 +32,15 @@ public:
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v);
     
     bool operator != (const LazyVariable& b) const;
+  
+    LazyVariable operator + (const LazyVariable& b) const;
     
 private:
     LazyValue* ref_;
     
     friend class LazyManager;
-       
+    
+    LazyVariable(LazyValue* in);
 };
 
 

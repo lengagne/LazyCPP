@@ -5,6 +5,11 @@ LazyVariable::LazyVariable()
 {
     ref_ = LMANAGER.get_zero();
 }
+
+LazyVariable::LazyVariable(const LazyVariable& a)//:ref_(a.ref_)
+{
+    ref_ = a.ref_;
+}
     
 LazyVariable::LazyVariable(const uint & a)
 {
@@ -23,16 +28,13 @@ LazyVariable::LazyVariable(const double & a)
     
 LazyVariable::LazyVariable(const double &a, const std::string& name)
 {
-//     ref_ = new LazyInput(a,name);
     ref_ = LMANAGER.add_input(a,name);
 }
     
-LazyVariable::LazyVariable(const std::string& name) : LazyVariable(0,name)
+LazyVariable::LazyVariable(const std::string& name) 
 {
-    
+    ref_ = LMANAGER.add_input(0,name);
 }
-    
-// LazyVariable::LazyVariable(LazyValue & a): ref_(&a){}
         
 LazyVariable::~LazyVariable(){}
     
@@ -47,13 +49,39 @@ bool LazyVariable::is_null() const
     return LMANAGER.is_zero(ref_);
 }
 
+/////////////////////////////////////////////////////
+//////////////////// operators ////// ///////////////
+/////////////////////////////////////////////////////
+ 
+LazyVariable LazyVariable::operator + (const LazyVariable& b) const
+{
+    LazyVariable out( LMANAGER.add_additionX(ref_,b.ref_));
+    return out;    
+}
+
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-    v.ref_->print_equation();
+    std::cout<<"pointeur = "<< v.ref_<<std::endl;
+    std::cout<<"equation = ";    v.ref_->print_equation();
     return stream;
-}   
+}
+   
     
 bool LazyVariable::operator != (const LazyVariable& b) const
 {
     return ref_ != b.ref_;
+}
+
+
+/////////////////////////////////////////////////////
+////////////////////Private functions ///////////////
+/////////////////////////////////////////////////////
+
+
+LazyVariable::LazyVariable(LazyValue* in):ref_(in)
+{
+    std::cout<<"Constructor a partir de pointeur"<<std::endl;
+    ref_->print_equation();
+    std::cout<<"Constructor a partir de pointeur"<<std::endl;
+    std::cout<<" moi meme = "<< *this <<std::endl;
 }

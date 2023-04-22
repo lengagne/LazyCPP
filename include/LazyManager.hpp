@@ -27,6 +27,8 @@ public:
 //     
 //     ///  basis operation   
 //     LazyValue* add_addition( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_additionX( LazyValue* a , LazyValue *b);
 //     
     LazyValue* add_constant(double d);
     
@@ -54,9 +56,9 @@ public:
 //     
 //     bool is_addition(LazyValue* in) const;
 //     
-// //     bool is_additionX(LazyValue* in) const;
+    
 //     
-//     bool is_constant( LazyValue* in) const;
+
 //     
 //     bool is_input( LazyValue* in) const;
 //     
@@ -123,7 +125,7 @@ private:
 //     std::vector<LazyOpposite*> opposites_;
 //     
 //     std::vector<LazyMultiplicationX*> multiplicationsX_;
-//     std::vector<LazyAdditionX*> additionsX_;
+    std::vector<LazyAdditionX*> additionsX_;
 //     
     
 //     std::vector<LazyMultiplication*> multiplications_;        
@@ -134,7 +136,12 @@ private:
     
     void init_basic_constant();    
     
+    bool is_additionX(LazyValue* in) const;    
+    
+    bool is_constant( LazyValue* in) const;    
 };
+
+
 
 
 extern LazyManager LMANAGER;

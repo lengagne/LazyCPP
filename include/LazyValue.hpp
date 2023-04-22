@@ -10,7 +10,7 @@ public:
     
     virtual ~LazyValue(){}
     
-    virtual void add_to_list(std::vector<LazyValue*>& vec) = 0;
+//     virtual void add_to_list(std::vector<LazyValue*>& vec) = 0;
     
     virtual inline void compute()
     {

@@ -10,6 +10,59 @@ LazyManager::LazyManager()
     init_basic_constant();
 }
 
+LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
+{
+    std::cout<<" add_addition \n";
+    a->print_equation();
+    std::cout<<"\n + \n ";
+    b->print_equation();
+    std::list<LazyValue*> vec;
+    double c = 0;
+    if (is_additionX(a))
+    {
+        LazyAdditionX *A = (LazyAdditionX*) a;
+        for (auto iter : A->p_)
+        {
+            std::cout<<" A add one"<<std::endl;
+            vec.push_back(iter);
+        }
+        c += A->constant_;
+    }else if (is_constant(a))
+    {
+        c += a->value_;
+    }else
+        vec.push_back(a);
+        
+    if (is_additionX(b))
+    {
+        LazyAdditionX *B = (LazyAdditionX*) b;
+        for (auto iter : B->p_)
+        {
+            std::cout<<" B add one"<<std::endl;
+            vec.push_back(iter);    
+        }
+        c += B->constant_;
+    }else if (is_constant(b))
+    {
+        c += b->value_;
+        
+    }else
+        vec.push_back(b);
+    
+    // creation of the new object
+    LazyAdditionX* out = new LazyAdditionX(c,vec);
+    
+    // check if does not already exist
+    for (auto iter : additionsX_)
+        if (*iter == *out)
+            return iter;
+    additionsX_.push_back(out);
+    std::cout<<"\n out \n";
+    out->print_equation();
+    std::cout<<"\n out affiché ? \n";
+    return out;
+}
+
 LazyValue* LazyManager::add_constant( double d)
 {
     for (auto iter : constants_)
@@ -327,22 +380,7 @@ bool LazyManager::is_addition(LazyValue* in) const
     return false;    
 }
 
-// bool LazyManager::is_additionX(LazyValue* in) const
-// {
-//     for (int i=0;i<additionsX_.size();i++)
-//         if( in == additionsX_[i])
-//             return true;
-//     return false;    
-// }
 
-bool LazyManager::is_constant( LazyValue* in) const
-{
-    for (int i=0;i<constants_.size();i++)
-        if( in == constants_[i])
-            return true;
-    return false;
-}
-    
 
 bool LazyManager::is_input( LazyValue* in) const
 {
@@ -585,3 +623,20 @@ void LazyManager::init_basic_constant()
     constants_.push_back(one_);
     constants_.push_back(minus_one_);        
 }
+
+bool LazyManager::is_additionX(LazyValue* in) const
+{
+    for (auto iter : additionsX_)
+        if (iter == in)
+            return true;
+    return false;    
+}
+
+bool LazyManager::is_constant( LazyValue* in) const
+{
+    for (auto iter : constants_)
+        if (iter == in)
+            return true;
+    return false;    
+}
+    

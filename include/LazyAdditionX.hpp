@@ -5,38 +5,13 @@
 
 class LazyAdditionX : public LazyOperatorX {
 public:
-    LazyAdditionX(std::vector<LazyValue*>& a) 
-    {
-        p_ = a;
-        compute();
-    }
+    LazyAdditionX(double d, std::list<LazyValue*>& a);
     
-    inline void compute()
-    {
-        value_ = 0.0;
-        for (int i=0;i<p_.size();i++)
-            value_ += p_[i]->value_;
-    }    
+    inline void compute();
     
-    virtual void print( const std::string& tab ="",uint index=0) 
-    {
-        
-        std::cout<<tab<<"("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;
-        for (int i=0;i<p_.size();i++)
-            p_[i]->print(tab+"\t",index);
-
-    }   
+    virtual void print( const std::string& tab ="",uint index=0);
     
-    virtual void print_equation()
-    {
-        std::cout<<"(";
-        for (int i=0;i<p_.size();i++)
-        {
-            p_[i]->print_equation();
-            if (i != p_.size()-1)   std::cout<<" PLUS ";   
-        }
-        std::cout<<")";
-    }
+    virtual void print_equation();
     
 private:
 
