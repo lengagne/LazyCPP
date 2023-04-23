@@ -56,6 +56,17 @@ LazyValue* LazyManager::add_constant( double d)
     return out;    
 }
 
+LazyValue* LazyManager::add_cosinus( LazyValue* a)
+{
+    LazyCosinus* out = new LazyCosinus(a);
+    // check if does not already exist
+    for (auto iter : cosinus_)
+        if (*iter == *out)
+            return iter;
+    cosinus_.push_back(out);
+    return out;
+}
+
 LazyInput* LazyManager::add_input( const double &a, const std::string& name)
 {
     for (auto iter : inputs_)
@@ -69,18 +80,6 @@ LazyInput* LazyManager::add_input( const double &a, const std::string& name)
     inputs_.push_back(out);
     return out;
 }
-
-LazyValue* LazyManager::add_cosinus( LazyValue* a)
-{
-    LazyCosinus* out = new LazyCosinus(a);
-    // check if does not already exist
-    for (auto iter : cosinus_)
-        if (*iter == *out)
-            return iter;
-    cosinus_.push_back(out);
-    return out;
-}
-
 
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 {
@@ -134,11 +133,12 @@ LazyValue* LazyManager::add_opposite(LazyValue* a )
 
 void LazyManager::add_output( LazyValue* in, uint index, uint rank )
 {
+    // FIXME : on ne dit rien si ca existe deja
     if (dependances_.find(index) == dependances_.end())
     { // there is no such element, we create it
         dependances_[index] = OutDependance();    
     }    
-    dependances_[index].outputs[rank] = in;
+    dependances_[index].outputs[rank] = compact(in);
 }
 
 LazyValue* LazyManager::add_sinus( LazyValue* a)
@@ -227,6 +227,20 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     }  
     
     return 0;
+}
+
+LazyValue* LazyManager::compact( LazyValue* a)
+{
+    if ( is_additionX(a))
+    {
+        return compact_additionX( (LazyAdditionX*) a);
+    }
+    
+    if ( is_multiplicationX(a))
+    {
+        return compact_multiplicationX( (LazyMultiplicationX*) a);
+    }    
+    return a;
 }
 
 uint LazyManager::get_nb_inputs() const
@@ -704,6 +718,16 @@ void LazyManager::update_all()
 /////////////////////////////////////////////////////
 ////////////////////Private functions ///////////////
 /////////////////////////////////////////////////////
+
+LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
+{
+    return a;
+}
+
+LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
+{
+    return a;
+}
 
 void LazyManager::init_basic_constant()
 {             

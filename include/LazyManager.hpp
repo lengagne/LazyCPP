@@ -54,6 +54,8 @@ public:
 
     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
     
+    LazyValue* compact( LazyValue* a);
+    
 //     
     uint get_nb_inputs() const;
 //     
@@ -143,7 +145,10 @@ private:
 //     std::vector<LazyAddition*> additions_;
     
     std::map<uint,OutDependance> dependances_;
-
+    
+    LazyValue * compact_additionX (LazyAdditionX *a );
+    
+    LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
     
     void init_basic_constant();    
     
