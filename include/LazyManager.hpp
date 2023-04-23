@@ -5,80 +5,139 @@
 #include <vector>
 #include <map>
 
-struct OutDependance
+// struct OutDependance
+// {
+//     uint index=0;
+//     uint nb_outputs_ = 0;
+//     std::map< uint, LazyValue* > outputs;
+//     std::map< uint, std::vector< LazyValue* > > output_dependances;
+// };
+
+#define Change std::list<LazyValue*>
+
+class Dependance
 {
-    uint index=0;
-    uint nb_outputs_ = 0;
-    std::map< uint, LazyValue* > outputs;
-    std::map< uint, std::vector< LazyValue* > > output_dependances;
+public:
+    Dependance()
+    {
+        index_output_ = 42;
+        nb_sub_output_ = 0;
+    };
+
+    Dependance(uint index)
+    {
+        index_output_ = index;
+        nb_sub_output_ = 0;
+    };
+    
+    void add_suboutput( LazyValue * in, uint nb)
+    {
+        sub_outputs_[nb] = in;
+    }
+    
+    void compute_dependances()
+    {
+        uint cpt = 0;
+        std::vector< LazyValue* > vec;
+        for (auto out : sub_outputs_)
+        {
+            out.second->add_to_list(vec);
+            output_dependances_[cpt++] = vec;
+        }
+    }
+    
+    void compute_dependances( Change & c)
+    {
+        uint cpt = 0;
+        // assume is new is set and updated
+        for (auto out : output_dependances_)
+        {
+            std::vector< LazyValue* > &subout = out.second;
+            std::cout<<"on a "<< subout.size()<<" valeur"<<std::endl;
+            std::vector< LazyValue* > vec;
+            for (auto v : subout)
+            {
+                v->propag_update();
+                if (v->update_)
+                {
+                    vec.push_back(v);
+                }
+            }
+            std::cout<<"on en considère que "<< vec.size()<<" valeurs"<<std::endl;
+            sub_output_dependances_[cpt][c] = vec;
+            cpt++;
+        }
+    }
+//     
+    void print()
+    {
+        for (auto idep : sub_outputs_)
+        {
+            std::cout<<"output : ";
+            idep.second->print();
+            std::cout<<"\n";
+        }        
+    }
+    
+    double update( uint cpt , Change & c)
+    {        
+//         auto suboutput = sub_output_dependances_[cpt];
+//         auto vec = suboutput[c];
+//         for (auto i : vec)
+//         {
+//             i->compute();
+//         }
+        auto suboutput = output_dependances_[cpt];
+        for (auto& i : suboutput)
+        {
+           i->compute();
+        }
+        return sub_outputs_[cpt]->get_value();
+    }
+    
+    
+    uint index_output_ = 0;
+    uint nb_sub_output_ = 0;    
+    std::map< uint, LazyValue* > sub_outputs_;
+    std::map< uint, std::vector< LazyValue* > > output_dependances_; // in case we have the value changes    
+    std::map< uint , std::map<  Change, std::vector< LazyValue* > > > sub_output_dependances_;
 };
+
+
+
 
 class LazyManager
 {
 public:
     LazyManager();
     
-//     virtual ~LazyManager(){}
-//     
-    
-//     
     // add an instance as output
-    void add_output( LazyValue* in, uint index, uint rank );
-//     
-//     ///  basis operation   
-
+    LazyValue* add_output( LazyValue* in, uint index, uint rank );
+    
+    uint affect();
     
     LazyValue* add_additionX( LazyValue* a , LazyValue *b);
-//     
+
     LazyValue* add_constant(double d);
     
     LazyInput* add_input( const double &a, const std::string& name);
-//     
+
     LazyValue* add_cosinus( LazyValue* a);
-//  
+
     LazyValue* add_multiplicationX( LazyValue* a , LazyValue *b);
 
     LazyValue* add_sinus( LazyValue* a);
-//     
+
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
-//     
-// //     void affect_value( LazyValue* in, double value);
-//     
-// //     double evaluate( LazyVariable&a);
-    
+
     LazyValue* check_addition( LazyValue*a , LazyValue*b);
 
     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
-    
-    
-    
-//     
+
     uint get_nb_inputs() const;
-//     
-//     bool is_addition(LazyValue* in) const;
-//     
-    
-//     
 
-//     
-    
-//     
-
-//     
-// //     bool is_multiplicationX(LazyValue* in) const;
-//     
-    
-//     
-// //     void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
-//     
-//     
     LazyValue* get_zero() const;
-//     
-//     inline bool is_minus_one(LazyValue * in) const
-//     {
-//         return in == minus_one_;
-//     }    
-//     
+
     bool is_input( LazyValue* in) const;
     
     bool is_minus_one(LazyValue * in) const;
@@ -86,22 +145,13 @@ public:
     bool is_one(LazyValue * in) const;
     
     bool is_zero(LazyValue * in) const;
-//     {
-//         return in == zero_;
-//     }
-//     
-//     void plot_info() const;
-//     
+
     void prepare();
     
     void print_all_inputs() const;
-//     
-// //     void print_inputs();
-//     
-// //     void print_output_graph(uint index, uint cpt);
-    
+
     void print_all_output_equations();
-//     
+
     void re_init_known();
     
     void reset();
@@ -114,12 +164,6 @@ private:
 
     LazyConstant * zero_, *one_, *minus_one_;
     
-
-//     
-    
-//     
-//     
-//     
     std::vector<LazyConstant*> constants_;
     std::vector<LazyInput*> inputs_;        
     
@@ -134,8 +178,7 @@ private:
     std::vector<LazyAddition*> additions_;
     std::vector<LazyMultiplication*> multiplications_;        
 
-    
-    std::map<uint,OutDependance> dependances_;
+    std::map<uint,Dependance> dependances_;    
 
     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
@@ -152,6 +195,8 @@ private:
     
     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
 
+    void detect_input_change();
+    
     LazyValue * explose( LazyValue * in);
     
     void init_basic_constant();    
@@ -167,6 +212,14 @@ private:
     bool is_multiplication(LazyValue* in) const;    
     
     bool is_sinus( LazyValue* in) const;
+    
+    
+    bool affect_ = true;
+    uint counter_ = 0;
+    
+    Change current_change_;
+
+    
 };
 
 extern LazyManager LMANAGER;

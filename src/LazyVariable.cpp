@@ -40,6 +40,14 @@ void LazyVariable::operator = (double d)
 {
     if (LMANAGER.is_input(ref_))
     {
+        if (ref_->value_ != d)
+        {
+            ref_->set_time(LMANAGER.affect());
+            
+//             std::cout<<"New value for ("<< LMANAGER.affect()<<")"; 
+//             ref_->print();
+//             std::cout<<std::endl;
+        }
         ref_->value_ = d;
     }else
         ref_ = LMANAGER.add_constant(d);

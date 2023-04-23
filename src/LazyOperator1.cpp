@@ -16,6 +16,11 @@ void LazyOperator1::check_known()
         a_->check_known();
     known_ = true;
 }
+
+void LazyOperator1::propag_update()
+{
+    update_ = a_->update_;
+}
    
 bool LazyOperator1::operator == (const LazyOperator1& A) const
 {

@@ -24,7 +24,7 @@ int main()
     LazyVariable lz = test_function<LazyVariable>(X,Y);
     LazyVariable lz1 = lz*lz;
     LazyAddOutput(lz,0,0);
-    LazyAddOutput(lz1,0,1);
+//     LazyAddOutput(lz1,0,1);
     
     LazyPrepare();
     

@@ -20,6 +20,13 @@ void LazyOperatorX::check_known()
     }
     known_ = true;
 }    
+
+void LazyOperatorX::propag_update()
+{
+    update_ = false;
+    for (auto iter : p_)
+        update_ = update_ || iter->update_;
+}
        
 bool LazyOperatorX::operator == (const LazyOperatorX& A) const
 {

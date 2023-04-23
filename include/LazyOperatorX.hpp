@@ -13,6 +13,8 @@ public:
     virtual void check_known();
     
     virtual inline void compute() = 0;
+    
+    virtual void propag_update();
        
     virtual bool operator == (const LazyOperatorX& A) const;
 

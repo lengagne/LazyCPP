@@ -27,7 +27,17 @@ void LazyInput::print_equation()
     std::cout<<name_;
 }
 
+void LazyInput::propag_update()
+{
+    /// nothing to do
+}
+
 void LazyInput::re_init_known()
 {
     known_ = true;
+}
+
+void LazyInput::set_update(bool i)
+{
+    update_ = i;
 }

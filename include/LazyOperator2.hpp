@@ -13,6 +13,8 @@ public:
     
     virtual inline void compute() = 0;
     
+    virtual void propag_update();
+    
     virtual bool operator == (const LazyOperator2& A) const;
 
     LazyValue* a_=nullptr;

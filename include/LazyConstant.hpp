@@ -16,6 +16,8 @@ public:
 
     virtual void print_equation();
     
+    virtual void propag_update();
+    
     virtual void re_init_known();
     
     void operator = (const double & d);

@@ -29,15 +29,20 @@ public:
         return value_;
     }
     
-//     virtual double evaluate(uint index=0) = 0;
-    
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
     virtual void print_equation() = 0;
     
+    virtual void propag_update()=0;
+    
     virtual void re_init_known()
     {
         known_ = false;
+    }
+    
+    void set_time( uint time)
+    {
+        time_ = time;
     }
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
@@ -47,10 +52,11 @@ public:
     }
     
     double value_;
-//     uint index_=0;
+    uint time_=0;
     
     // defined if the value is already known;
     bool known_=false;
+    bool update_ = false;
 };
 
 #endif // __LAZYVALUE_HPP__

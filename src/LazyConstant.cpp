@@ -31,6 +31,11 @@ void LazyConstant::print_equation()
     std::cout<< value_;
 }    
 
+void LazyConstant::propag_update()
+{
+    update_ = false;
+}
+
 void LazyConstant::re_init_known()
 {
     // nothing to do
