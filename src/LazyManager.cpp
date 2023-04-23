@@ -104,31 +104,7 @@ LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
     }else
         vec.push_back(b);
     
-    // creation of the new object
-    LazyMultiplicationX* out = new LazyMultiplicationX(vec);
-    
-    // check if does not already exist
-    for (auto iter : multiplicationsX_)
-        if (*iter == *out)
-            return iter;
-    multiplicationsX_.push_back(out);
-    return out;
-}
-
-
-LazyValue* LazyManager::add_opposite(LazyValue* a )
-{
-    LazyOpposite* out = new LazyOpposite(a);
-    for (int i=0;i<opposites_.size();i++)
-    {
-        if (*opposites_[i] == *out)
-        {
-            delete out;
-            return opposites_[i];
-        }
-    }
-    opposites_.push_back(out);
-    return out;      
+    return add_multiplicationX(vec);
 }
 
 void LazyManager::add_output( LazyValue* in, uint index, uint rank )
@@ -137,8 +113,10 @@ void LazyManager::add_output( LazyValue* in, uint index, uint rank )
     if (dependances_.find(index) == dependances_.end())
     { // there is no such element, we create it
         dependances_[index] = OutDependance();    
-    }    
+    }   
+    
     dependances_[index].outputs[rank] = compact(in);
+//     std::cout<<"ajout de "<< in <<" avec compactage : "<< dependances_[index].outputs[rank] <<std::endl;
 }
 
 LazyValue* LazyManager::add_sinus( LazyValue* a)
@@ -167,7 +145,7 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
 
     if (is_zero(a))
     {
-        return add_opposite(b);
+        return add_multiplicationX(b,minus_one_);
     }    
     
     LazySoustraction* out = new LazySoustraction(a,b);
@@ -215,22 +193,17 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     
     if ( is_one(b))
         return a;
-
-    if (is_minus_one(a))
+    
+    if (is_constant(a) && is_constant(b))
     {
-        return add_opposite(b);
+        return add_constant( a->value_*b->value_);
     }
-
-    if (is_minus_one(b))
-    {
-        return add_opposite(a);
-    }  
     
     return 0;
 }
 
 LazyValue* LazyManager::compact( LazyValue* a)
-{
+{   
     if ( is_additionX(a))
     {
         return compact_additionX( (LazyAdditionX*) a);
@@ -271,14 +244,6 @@ bool LazyManager::is_one(LazyValue * in) const
     return in == one_;
 }
 
-bool LazyManager::is_opposite(LazyValue* in) const
-{
-   for (auto iter : opposites_)
-        if (iter == in)
-            return true;
-    return false;    
-}
-
 bool LazyManager::is_zero(LazyValue * in) const
 {
     return in == zero_;
@@ -290,147 +255,8 @@ bool LazyManager::is_zero(LazyValue * in) const
 // }
 // 
 // 
-// LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
-// {
-//     if (is_zero(a))
-//     {
-//         return b;
-//     }
-//     if (is_zero(b))
-//     {
-//         return a;    
-//     }
-//     
-// //     if (contract_add)
-// //     {
-// //         if ( is_addition(a) || is_addition(b) ||  is_additionX(a) || is_additionX(b))
-// //         {
-// //             std::vector<LazyValue*> vec;
-// //             uint nb_opposite = 0;
-// //             get_addition(a,vec);
-// //             get_addition(b,vec);
-// //             
-// //             double constante = 0.0;
-// //             for (int i=0;i<vec.size();i++) 
-// //             {
-// //                 if (is_constant(vec[i]))
-// //                 {
-// //                     constante += vec[i]->value_;
-// //                     vec.erase (vec.begin()+i);
-// //                 }
-// //             }
-// //             vec.push_back(new LazyConstant(constante));            
-// //             LazyAdditionX* out = new LazyAdditionX(vec);
-// //             {
-// //                 for (int i=0;i<additionsX_.size();i++)
-// //                 {
-// //                     if (*additionsX_[i] == *out)
-// //                     {
-// //                         delete out;
-// //                         return additionsX_[i];
-// //                     }
-// //                 }    
-// //                 additionsX_.push_back(out);                
-// //             }
-// //             return out;
-// //         }    
-// //     }
-//     
-//     LazyAddition* out = new LazyAddition(a,b);
-//     for (int i=0;i<additions_.size();i++)
-//     {
-//         if (*additions_[i] == *out)
-//         {
-//             delete out;
-//             return additions_[i];
-//         }
-//     }
-//     additions_.push_back(out);
-//     return out;
-// }
-// 
 
  /*
-
-LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b,bool check_contraction )
-{
-    if (is_zero(a) || is_zero(b))
-    {
-        return zero_;
-    }
-    
-    if (is_one(a))
-    {
-        return b;
-    }
-
-    if (is_one(b))
-    {
-        return a;
-    }    
-
-    if (is_minus_one(a))
-    {
-        return add_opposite(b);
-    }
-
-    if (is_minus_one(b))
-    {
-        return add_opposite(a);
-    }  
-    
-    if (is_constant(a) && is_constant(b))
-    {
-        return add_constant(a->value_ * b-> value_);
-    }
-    
-//     if (contract && check_contraction)
-//     {
-//         if ( is_multiplicationX(a) || is_multiplication(a) || is_multiplication(b) || is_multiplicationX(b))
-//         {
-//             std::vector<LazyValue*> vec;
-//             uint nb_opposite = 0;
-//             get_multiplication(a,vec,nb_opposite);
-//             get_multiplication(b,vec,nb_opposite);
-//             
-//             double constante = 1.0;
-//             if (nb_opposite%2 == 1)    constante = -1.0;
-//             for (int i=0;i<vec.size();i++) 
-//             {
-//                 if (is_constant(vec[i]))
-//                 {
-//                     constante *= vec[i]->value_;
-//                     vec.erase (vec.begin()+i);
-//                 }
-//             }
-//             vec.push_back(new LazyConstant(constante));            
-//             LazyMultiplicationX* out = new LazyMultiplicationX(vec);
-//             {
-//                 for (int i=0;i<multiplicationsX_.size();i++)
-//                 {
-//                     if (*multiplicationsX_[i] == *out)
-//                     {
-//                         delete out;
-//                         return multiplicationsX_[i];
-//                     }
-//                 }    
-//                 multiplicationsX_.push_back(out);                
-//             }
-//             return out;
-//         }    
-//     }
-    LazyMultiplication* out = new LazyMultiplication(a,b);
-    for (int i=0;i<multiplications_.size();i++)
-    {
-        if (*multiplications_[i] == *out)
-        {
-            delete out;
-            return multiplications_[i];
-        }
-    }    
-    multiplications_.push_back(out);
-    return out;
-}
 
 
 LazyValue* LazyManager::add_sinus( LazyValue* a)
@@ -470,50 +296,7 @@ LazyValue* LazyManager::add_sinus( LazyValue* a)
 //     
 // }
 
-// void LazyManager::get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite)
-// {
-//     if (is_opposite(a))
-//     {
-//         nb_opposite++;
-//         LazyOpposite* v = (LazyOpposite*) a;
-//         get_multiplication(v->a_,vec,nb_opposite);
-//     }else 
-//     if (is_multiplication(a))
-//     {
-//         LazyMultiplication* v = (LazyMultiplication*) a;
-//         get_multiplication(v->a_,vec,nb_opposite);
-//         get_multiplication(v->b_,vec,nb_opposite);
-//     }
-// //     else
-// //     if (is_multiplicationX(a))
-// //     {
-// //         LazyMultiplicationX* v = (LazyMultiplicationX*) a;
-// //         for (int i=0;i<v->p_.size();i++)
-// //             get_multiplication(v->p_[i],vec,nb_opposite);
-// //     }
-//     else        
-//         vec.push_back(a);
-// }
 
-bool LazyManager::is_addition(LazyValue* in) const
-{
-    for (int i=0;i<additions_.size();i++)
-        if( in == additions_[i])
-            return true;
-    return false;    
-}
-
-
-
-
-
-bool LazyManager::is_multiplication( LazyValue* in) const
-{
-    for (int i=0;i<multiplications_.size();i++)
-        if( in == multiplications_[i])
-            return true;
-    return false;
-}
 
 // bool LazyManager::is_multiplicationX( LazyValue* in) const
 // {
@@ -629,7 +412,6 @@ void LazyManager::re_init_known()
     for (auto iter : multiplicationsX_)   iter->re_init_known();
     for (auto iter : cosinus_)   iter->re_init_known();
     for (auto iter : sinus_)   iter->re_init_known();
-    for (auto iter : opposites_)   iter->re_init_known();
 }
 
 void LazyManager::reset()
@@ -642,7 +424,6 @@ void LazyManager::reset()
     multiplicationsX_.clear();
     sinus_.clear();
     soustractions_.clear();
-    opposites_.clear();
     constants_.clear();
     init_basic_constant();
     
@@ -719,14 +500,140 @@ void LazyManager::update_all()
 ////////////////////Private functions ///////////////
 /////////////////////////////////////////////////////
 
+LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
+{
+    LazyValue* check = check_addition(a,b);
+    if (check)
+        return check;
+    
+    LazyAddition* out = new LazyAddition(a,b);
+    for (auto iter : additions_)
+    {
+        if (*iter == *out)
+        {
+            delete out;
+            return iter;
+        }
+    }
+    additions_.push_back(out);
+    return out;
+}
+
+LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
+{
+    // creation of the new object
+    LazyAdditionX* out = new LazyAdditionX(v);
+    
+    // check if does not already exist
+    for (auto iter : additionsX_)
+        if (*iter == *out)
+            return iter;
+    additionsX_.push_back(out);
+    return out;    
+}
+
+LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
+{
+    // creation of the new object
+    LazyMultiplicationX* out = new LazyMultiplicationX(v);
+    
+    // check if does not already exist
+    for (auto iter : multiplicationsX_)
+        if (*iter == *out)
+            return iter;
+    multiplicationsX_.push_back(out);
+    return out;    
+}
+
+LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
+{
+    LazyValue* check = check_multiplication(a,b);
+    if (check)
+        return check;
+    
+    LazyMultiplication* out = new LazyMultiplication(a,b);
+    for (auto iter : multiplications_)
+    {
+        if (*iter == *out)
+        {
+            delete out;
+            return iter;
+        }
+    }    
+    multiplications_.push_back(out);
+    return out;
+}
+
+
+
 LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
 {
-    return a;
+    LazyValue* cst = zero_;
+    std::list<LazyValue*> vec;
+    
+    for ( auto iter : a->p_)
+    {
+        LazyValue * tmp = compact(iter);
+ 
+        if ( is_constant(tmp))
+        {
+            cst = add_addition(cst,tmp);
+        }else if (is_additionX(iter))
+        {
+            LazyAdditionX *v = (LazyAdditionX*) iter;
+            for (auto iter1 : v->p_)
+                vec.push_back( compact(iter1));
+        }else 
+        {
+//         if (is_opposite(tmp))
+//         {
+//             cst = add_multiplication(cst,minus_one_);
+//             LazyOpposite * v = (LazyOpposite*) tmp;
+//             vec.push_back( compact(v->a_));
+//         }
+//         else
+            vec.push_back( compact(tmp));
+        }
+    }
+    if ( !is_zero(cst))
+        vec.push_back(cst);
+    
+    return add_additionX(vec);
+    
 }
 
 LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
 {
-    return a;
+    LazyValue* cst = one_;
+    std::list<LazyValue*> vec;
+    
+    for ( auto iter : a->p_)
+    {     
+        if ( is_constant(iter))
+        {
+            cst = add_multiplication(cst,iter);
+
+//         }else if (is_multiplication(iter))
+//         {
+//             LazyMultiplication *v = (LazyMultiplication*) iter;
+//             vec.push_back( v->a_);
+//             vec.push_back( v->b_);
+//             
+        }else if (is_multiplicationX(iter))
+        {
+            LazyMultiplicationX *v = (LazyMultiplicationX*) iter;
+            for (auto iter1 : v->p_)
+                vec.push_back( compact(iter1));
+        }
+        else
+            vec.push_back( compact(iter));
+    }
+    if ( !is_one(cst))
+        vec.push_back(cst);
+    
+    return add_multiplicationX(vec);
+    
+//     return a;
 }
 
 void LazyManager::init_basic_constant()
@@ -751,7 +658,15 @@ bool LazyManager::is_constant( LazyValue* in) const
             return true;
     return false;    
 }
-    
+
+bool LazyManager::is_multiplication( LazyValue* in) const
+{
+    for (auto iter : multiplications_)
+        if (iter == in)
+            return true;
+    return false;    
+}
+
 bool LazyManager::is_multiplicationX(LazyValue* in) const
 {
     for (auto iter : multiplicationsX_)

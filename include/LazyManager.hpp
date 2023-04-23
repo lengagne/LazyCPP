@@ -26,7 +26,7 @@ public:
     void add_output( LazyValue* in, uint index, uint rank );
 //     
 //     ///  basis operation   
-//     LazyValue* add_addition( LazyValue* a , LazyValue *b);
+
     
     LazyValue* add_additionX( LazyValue* a , LazyValue *b);
 //     
@@ -35,13 +35,9 @@ public:
     LazyInput* add_input( const double &a, const std::string& name);
 //     
     LazyValue* add_cosinus( LazyValue* a);
-//     
-//     LazyValue* add_multiplication( LazyValue* a , LazyValue *b, bool check_contraction = true);
 //  
     LazyValue* add_multiplicationX( LazyValue* a , LazyValue *b);
-    
-    LazyValue* add_opposite(LazyValue* a );
-//     
+
     LazyValue* add_sinus( LazyValue* a);
 //     
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
@@ -67,15 +63,13 @@ public:
 //     
     
 //     
-//     bool is_multiplication(LazyValue* in) const;
+
 //     
 // //     bool is_multiplicationX(LazyValue* in) const;
 //     
     
 //     
 // //     void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
-//     
-// //     void get_multiplication(LazyValue * a, std::vector<LazyValue*>& vec, uint &nb_opposite);
 //     
 //     
     LazyValue* get_zero() const;
@@ -90,8 +84,6 @@ public:
     bool is_minus_one(LazyValue * in) const;
     
     bool is_one(LazyValue * in) const;
-
-    bool is_opposite(LazyValue* in) const;
     
     bool is_zero(LazyValue * in) const;
 //     {
@@ -131,7 +123,6 @@ private:
     std::vector<LazyConstant*> constants_;
     std::vector<LazyInput*> inputs_;        
     
-    std::vector<LazyOpposite*> opposites_;
     std::vector<LazySinus*> sinus_;
     std::vector<LazyCosinus*> cosinus_;
 
@@ -139,12 +130,20 @@ private:
     
     std::vector<LazyMultiplicationX*> multiplicationsX_;
     std::vector<LazyAdditionX*> additionsX_;
-//     
-    
-//     std::vector<LazyMultiplication*> multiplications_;        
-//     std::vector<LazyAddition*> additions_;
+
+    std::vector<LazyAddition*> additions_;
+    std::vector<LazyMultiplication*> multiplications_;        
+
     
     std::map<uint,OutDependance> dependances_;
+
+    LazyValue* add_addition( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_additionX( std::list<LazyValue*> v);
+    
+    LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+    
+    LazyValue* add_multiplicationX( std::list<LazyValue*> v);
     
     LazyValue * compact_additionX (LazyAdditionX *a );
     
@@ -157,6 +156,8 @@ private:
     bool is_constant( LazyValue* in) const;    
     
     bool is_multiplicationX(LazyValue* in) const;    
+    
+    bool is_multiplication(LazyValue* in) const;    
 };
 
 

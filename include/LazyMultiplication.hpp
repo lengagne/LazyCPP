@@ -5,33 +5,13 @@
 
 class LazyMultiplication : public LazyOperator2 {
 public:
-    LazyMultiplication(LazyValue* a, LazyValue* b) {
-        a_ = a;
-        b_ = b;
-        value_ = a->value_*b->value_;        
-    }
+    LazyMultiplication(LazyValue* a, LazyValue* b);
     
-    inline void compute()
-    {
-//         std::cout<<"Multiplication Compute a("<<a_->value_<<")*b("<<b_->value_<<")" <<std::endl;
-        value_ = a_->value_ * b_->value_;
-    }    
+    inline void compute();
     
-    virtual void print( const std::string& tab ="",uint index=0) 
-    {
-        std::cout<<tab<<"("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
-        a_->print(tab+"\t",index);
-        b_->print(tab+"\t",index);
-    }   
+    virtual void print( const std::string& tab ="",uint index=0);
     
-    virtual void print_equation()
-    {
-        std::cout<<"(";
-        a_->print_equation();
-        std::cout<<"*";
-        b_->print_equation();
-        std::cout<<")";
-    }
+    virtual void print_equation();
     
 private:
 

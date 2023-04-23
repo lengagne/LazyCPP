@@ -5,15 +5,14 @@
 #include "LazyInput.hpp"
 #include "LazyConstant.hpp"
 
-// #include "LazyAddition.hpp"
-// #include "LazyMultiplication.hpp"
+#include "LazyAddition.hpp"
+#include "LazyMultiplication.hpp"
 
 
 #include "LazyMultiplicationX.hpp"
 #include "LazyAdditionX.hpp"
 #include "LazySoustraction.hpp"
 
-#include "LazyOpposite.hpp"
 #include "LazyCosinus.hpp"
 #include "LazySinus.hpp"
 
