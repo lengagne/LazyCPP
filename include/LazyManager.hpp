@@ -49,7 +49,11 @@ public:
 // //     void affect_value( LazyValue* in, double value);
 //     
 // //     double evaluate( LazyVariable&a);
+    
+    LazyValue* check_addition( LazyValue*a , LazyValue*b);
 
+    LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
+    
 //     
     uint get_nb_inputs() const;
 //     
@@ -65,7 +69,7 @@ public:
 //     
 // //     bool is_multiplicationX(LazyValue* in) const;
 //     
-//     bool is_opposite(LazyValue* in) const;
+    
 //     
 // //     void get_addition(LazyValue * a, std::vector<LazyValue*>& vec);
 //     
@@ -81,8 +85,12 @@ public:
 //     
     bool is_input( LazyValue* in) const;
     
+    bool is_minus_one(LazyValue * in) const;
+    
     bool is_one(LazyValue * in) const;
 
+    bool is_opposite(LazyValue* in) const;
+    
     bool is_zero(LazyValue * in) const;
 //     {
 //         return in == zero_;

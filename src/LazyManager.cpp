@@ -12,6 +12,10 @@ LazyManager::LazyManager()
 
 LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
 {
+    LazyValue* check = check_addition(a,b);
+    if (check)
+        return check;    
+    
     std::list<LazyValue*> vec;
     if (is_additionX(a))
     {
@@ -80,14 +84,9 @@ LazyValue* LazyManager::add_cosinus( LazyValue* a)
 
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 {
-    if ( is_zero(a) || is_zero(b))
-        return zero_;
-    
-    if ( is_one(a))
-        return b;
-    
-    if ( is_one(b))
-        return a;    
+    LazyValue* check = check_multiplication(a,b);
+    if (check)
+        return check;
     
     std::list<LazyValue*> vec;
     if (is_multiplicationX(a))
@@ -184,6 +183,52 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     return out;
 }
 
+LazyValue* LazyManager::check_addition( LazyValue*a , LazyValue*b)
+{            
+    if ( is_zero(a))
+        return b;
+    
+    if ( is_zero(b))
+        return a;
+
+    if (is_minus_one(a))
+    {
+        return add_soustraction(b,a);
+    }
+
+    if (is_minus_one(b))
+    {
+        return add_soustraction(a,b);
+    }  
+    
+    return 0;
+}
+
+
+LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
+{        
+    if ( is_zero(a) || is_zero(b))
+        return zero_;
+    
+    if ( is_one(a))
+        return b;
+    
+    if ( is_one(b))
+        return a;
+
+    if (is_minus_one(a))
+    {
+        return add_opposite(b);
+    }
+
+    if (is_minus_one(b))
+    {
+        return add_opposite(a);
+    }  
+    
+    return 0;
+}
+
 uint LazyManager::get_nb_inputs() const
 {
     return inputs_.size();
@@ -202,9 +247,22 @@ bool LazyManager::is_input( LazyValue* in) const
     return false;
 }
 
+bool LazyManager::is_minus_one(LazyValue * in) const
+{
+    return in == minus_one_;
+}    
+
 bool LazyManager::is_one(LazyValue * in) const
 {
     return in == one_;
+}
+
+bool LazyManager::is_opposite(LazyValue* in) const
+{
+   for (auto iter : opposites_)
+        if (iter == in)
+            return true;
+    return false;    
 }
 
 bool LazyManager::is_zero(LazyValue * in) const
@@ -450,15 +508,9 @@ bool LazyManager::is_multiplication( LazyValue* in) const
 //             return true;
 //     return false;
 // }
+*/
 
-bool LazyManager::is_opposite(LazyValue* in) const
-{
-    for (int i=0;i<opposites_.size();i++)
-        if( in == opposites_[i])
-            return true;
-    return false;    
-}
-
+/*
 void LazyManager::plot_info() const
 {
     std::cout<<"GetLazyInfo()"<<std::endl;
@@ -506,7 +558,7 @@ void LazyManager::prepare()
             cpt += vec.size();
         }        
     }
-//     print_all_output_equations();
+    print_all_output_equations();
 }
 
 void LazyManager::print_all_inputs() const
