@@ -13,7 +13,7 @@
 //     std::map< uint, std::vector< LazyValue* > > output_dependances;
 // };
 
-#define Change std::list<LazyValue*>
+#define Change std::vector<LazyInput*>
 
 class Dependance
 {
@@ -49,24 +49,48 @@ public:
     void compute_dependances( Change & c)
     {
         uint cpt = 0;
+
+        for (auto i : all_inputs_)
+        {                        
+            i->set_update(false);            
+        }
+        
+//         std::cout<<"new change "<<std::endl;
+        for (auto i : c)
+        {            
+            i->set_update(true);
+//             std::cout<<index_output_<<" new_input"<< i->name_<<std::endl;
+        }
+        
+//         for (auto i : all_inputs_)
+//         {
+//             std::cout<< i->update_<<"\t"; i->print();
+//         }
+//         uint cpt1 = 0;
+//         uint cpt2 = 0;
         // assume is new is set and updated
         for (auto out : output_dependances_)
         {
             std::vector< LazyValue* > &subout = out.second;
-            std::cout<<"on a "<< subout.size()<<" valeur"<<std::endl;
+//             std::cout<<"on a "<< subout.size()<<" valeurs.";
+//             cpt1 +=  subout.size();
             std::vector< LazyValue* > vec;
             for (auto v : subout)
             {
                 v->propag_update();
+//                 std::cout<< v->update_<<"\t"<<v; v->print();
                 if (v->update_)
                 {
                     vec.push_back(v);
                 }
             }
-            std::cout<<"on en considère que "<< vec.size()<<" valeurs"<<std::endl;
+//             std::cout<<" On en considère que "<< vec.size()<<" valeurs"<<std::endl;
+//             cpt2 +=  vec.size();
             sub_output_dependances_[cpt][c] = vec;
             cpt++;
         }
+//         std::cout<<"gain de "<< 100.0*(cpt1-cpt2)/cpt1<<"%"<<std::endl;
+//         std::cout<<"****************"<<std::endl;
     }
 //     
     void print()
@@ -79,15 +103,29 @@ public:
         }        
     }
     
+    void set_all_inputs( const Change& c)
+    {
+        all_inputs_ = c;
+    }
+    
     double update( uint cpt , Change & c)
     {        
-//         auto suboutput = sub_output_dependances_[cpt];
-//         auto vec = suboutput[c];
-//         for (auto i : vec)
+
+        auto& s = sub_output_dependances_[cpt];
+        if (s.find(c) == s.end())
+        { // there is no such element, we create it
+//             std::cout<<"on a jamais eu ce changement on évalue : "<<std::endl;
+            compute_dependances(c);
+        }
+//         else
 //         {
-//             i->compute();
+// //             std::cout<<"on a deja eu ce changement "<<std::endl;
 //         }
-        auto suboutput = output_dependances_[cpt];
+
+        auto suboutput = sub_output_dependances_[cpt][c];
+
+//         auto suboutput = output_dependances_[cpt];
+//         
         for (auto& i : suboutput)
         {
            i->compute();
@@ -101,6 +139,8 @@ public:
     std::map< uint, LazyValue* > sub_outputs_;
     std::map< uint, std::vector< LazyValue* > > output_dependances_; // in case we have the value changes    
     std::map< uint , std::map<  Change, std::vector< LazyValue* > > > sub_output_dependances_;
+    
+    Change all_inputs_;
 };
 
 

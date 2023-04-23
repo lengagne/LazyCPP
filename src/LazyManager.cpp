@@ -249,6 +249,7 @@ void LazyManager::prepare()
     for (auto& iter : dependances_)
     {
         re_init_known();  
+        iter.second.set_all_inputs(inputs_);
         iter.second.compute_dependances();
 /*        
         OutDependance& dep = iter->second;
@@ -514,18 +515,18 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
 void LazyManager::detect_input_change()
 {
 //     std::cout<<" time = "<< counter_<<std::endl;
-//     current_change_.clear();
-//     for (auto& iter : inputs_)
-//     {
-//         if (counter_ == iter->time_)
-//         {
+    current_change_.clear();
+    for (auto& iter : inputs_)
+    {
+        if (counter_ == iter->time_)
+        {
 //             std::cout<<" changement pour = "<< iter->name_<<std::endl;
-//             current_change_.push_back(iter);
-//         }else
-//         {
-// //             std::cout<<" idem pour = "<< iter->name_<<std::endl;
-//         }        
-//     }
+            current_change_.push_back(iter);
+        }else
+        {
+//             std::cout<<" idem pour = "<< iter->name_<<std::endl;
+        }        
+    }
 }
 
 LazyValue * LazyManager::explose( LazyValue * in)
