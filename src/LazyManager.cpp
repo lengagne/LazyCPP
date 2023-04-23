@@ -355,7 +355,7 @@ void LazyManager::prepare()
             cpt += vec.size();
         }        
     }
-    print_all_output_equations();
+//     print_all_output_equations();
 }
 
 void LazyManager::print_all_inputs() const
