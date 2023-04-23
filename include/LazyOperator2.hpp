@@ -11,6 +11,8 @@ public:
         
     virtual void check_known();
     
+    virtual inline void compute() = 0;
+    
     virtual bool operator == (const LazyOperator2& A) const;
 
     LazyValue* a_=nullptr;

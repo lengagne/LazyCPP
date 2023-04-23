@@ -8,35 +8,15 @@ class LazyInput : public LazyValue {
 public:
     LazyInput(double value, const std::string name="not_defined"); 
     
-    void add_to_list(std::vector<LazyValue*>& vec)
-    {
-        /// nothing to do
-    }    
-        
-    virtual void check_known()
-    {
-        /// nothing to do
-    }
-        
-    double evaluate(uint index) 
-    {
-        return value_;         
-    }
+    virtual void add_to_list(std::vector<LazyValue*>& vec);
+            
+    virtual void check_known();
 
-    virtual void print( const std::string& tab ="",uint index=0) 
-    {
-        std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
-    }
+    virtual void print( const std::string& tab ="",uint index=0) ;
     
-    virtual void print_equation()
-    {
-        std::cout<<name_;
-    }
+    virtual void print_equation();
     
-    virtual void re_init_known()
-    {
-        known_ = true;
-    }
+    virtual void re_init_known();
     
     void operator = (const double & d);
 

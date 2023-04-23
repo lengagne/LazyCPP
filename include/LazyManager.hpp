@@ -50,7 +50,7 @@ public:
 
     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
     
-    LazyValue* compact( LazyValue* a);
+    
     
 //     
     uint get_nb_inputs() const;
@@ -145,23 +145,29 @@ private:
     
     LazyValue* add_multiplicationX( std::list<LazyValue*> v);
     
+    // simplify the equation
+    LazyValue* compact( LazyValue* a);
+    
     LazyValue * compact_additionX (LazyAdditionX *a );
     
     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
+
+    LazyValue * explose( LazyValue * in);
     
     void init_basic_constant();    
     
     bool is_additionX(LazyValue* in) const;    
     
-    bool is_constant( LazyValue* in) const;    
+    bool is_constant( LazyValue* in) const;
+    
+    bool is_cosinus( LazyValue* in) const;
     
     bool is_multiplicationX(LazyValue* in) const;    
     
     bool is_multiplication(LazyValue* in) const;    
+    
+    bool is_sinus( LazyValue* in) const;
 };
-
-
-
 
 extern LazyManager LMANAGER;
 

@@ -115,8 +115,7 @@ void LazyManager::add_output( LazyValue* in, uint index, uint rank )
         dependances_[index] = OutDependance();    
     }   
     
-    dependances_[index].outputs[rank] = compact(in);
-//     std::cout<<"ajout de "<< in <<" avec compactage : "<< dependances_[index].outputs[rank] <<std::endl;
+    dependances_[index].outputs[rank] = explose(compact(in));
 }
 
 LazyValue* LazyManager::add_sinus( LazyValue* a)
@@ -200,20 +199,6 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     }
     
     return 0;
-}
-
-LazyValue* LazyManager::compact( LazyValue* a)
-{   
-    if ( is_additionX(a))
-    {
-        return compact_additionX( (LazyAdditionX*) a);
-    }
-    
-    if ( is_multiplicationX(a))
-    {
-        return compact_multiplicationX( (LazyMultiplicationX*) a);
-    }    
-    return a;
 }
 
 uint LazyManager::get_nb_inputs() const
@@ -564,7 +549,19 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     return out;
 }
 
-
+LazyValue* LazyManager::compact( LazyValue* a)
+{   
+    if ( is_additionX(a))
+    {
+        return compact_additionX( (LazyAdditionX*) a);
+    }
+    
+    if ( is_multiplicationX(a))
+    {
+        return compact_multiplicationX( (LazyMultiplicationX*) a);
+    }    
+    return a;
+}
 
 LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
 {
@@ -612,13 +609,6 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
         if ( is_constant(iter))
         {
             cst = add_multiplication(cst,iter);
-
-//         }else if (is_multiplication(iter))
-//         {
-//             LazyMultiplication *v = (LazyMultiplication*) iter;
-//             vec.push_back( v->a_);
-//             vec.push_back( v->b_);
-//             
         }else if (is_multiplicationX(iter))
         {
             LazyMultiplicationX *v = (LazyMultiplicationX*) iter;
@@ -634,6 +624,48 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
     return add_multiplicationX(vec);
     
 //     return a;
+}
+
+LazyValue * LazyManager::explose( LazyValue * in)
+{
+    if (is_additionX(in))
+    {
+        LazyAdditionX* v = (LazyAdditionX*) in;
+        LazyValue* m = zero_;
+        for (auto iter : v->p_)
+            m = add_addition( m,explose(iter));
+        return m;
+    }    
+
+    if (is_cosinus(in))
+    {
+        LazyCosinus* v = (LazyCosinus*) in;
+        return add_cosinus( explose(v->a_));
+    }
+    
+    if (is_constant(in))   return in;
+
+    if (is_input(in))   return in;
+
+    
+    if (is_multiplicationX(in))
+    {
+        LazyMultiplicationX* v = (LazyMultiplicationX*) in;
+        LazyValue* m = one_;
+        for (auto iter : v->p_)
+            m = add_multiplication( m,explose(iter));
+        return m;
+    }
+    
+    if (is_sinus(in))
+    {
+        LazySinus* v = (LazySinus*) in;
+        return add_sinus( explose(v->a_));
+    }
+            
+    std::cerr<<"Error in "<< __FILE__<<" at line : "<< __LINE__<<" the case of value ";
+    in->print();
+    exit(63);
 }
 
 void LazyManager::init_basic_constant()
@@ -659,6 +691,14 @@ bool LazyManager::is_constant( LazyValue* in) const
     return false;    
 }
 
+bool LazyManager::is_cosinus( LazyValue* in) const
+{
+    for (auto iter : cosinus_)
+        if (iter == in)
+            return true;
+    return false;    
+}
+
 bool LazyManager::is_multiplication( LazyValue* in) const
 {
     for (auto iter : multiplications_)
@@ -670,6 +710,15 @@ bool LazyManager::is_multiplication( LazyValue* in) const
 bool LazyManager::is_multiplicationX(LazyValue* in) const
 {
     for (auto iter : multiplicationsX_)
+        if (iter == in)
+            return true;
+
+    return false;    
+}
+
+bool LazyManager::is_sinus( LazyValue* in) const
+{
+    for (auto iter : sinus_)
         if (iter == in)
             return true;
     return false;    

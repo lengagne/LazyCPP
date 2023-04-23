@@ -11,6 +11,8 @@ public:
     virtual void add_to_list(std::vector<LazyValue*>& vec);    
     
     virtual void check_known();
+    
+    virtual inline void compute() = 0;
        
     virtual bool operator == (const LazyOperatorX& A) const;
 
