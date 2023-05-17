@@ -68,27 +68,32 @@ public:
 //         }
 //         uint cpt1 = 0;
 //         uint cpt2 = 0;
-        // assume is new is set and updated
-        for (auto out : output_dependances_)
-        {
-            std::vector< LazyValue* > &subout = out.second;
-//             std::cout<<"on a "<< subout.size()<<" valeurs.";
-//             cpt1 +=  subout.size();
-            std::vector< LazyValue* > vec;
-            for (auto v : subout)
-            {
-                v->propag_update();
-//                 std::cout<< v->update_<<"\t"<<v; v->print();
-                if (v->update_)
-                {
-                    vec.push_back(v);
-                }
-            }
-//             std::cout<<" On en considère que "<< vec.size()<<" valeurs"<<std::endl;
-//             cpt2 +=  vec.size();
-            sub_output_dependances_[cpt][c] = vec;
-            cpt++;
-        }
+
+
+//         // assume is new is set and updated
+//         for (auto out : output_dependances_)
+//         {
+//             std::vector< LazyValue* > &subout = out.second;
+// //             std::cout<<"on a "<< subout.size()<<" valeurs.";
+// //             cpt1 +=  subout.size();
+//             std::vector< LazyValue* > vec;
+//             for (auto v : subout)
+//             {
+//                 v->propag_update();
+// //                 std::cout<< v->update_<<"\t"<<v; v->print();
+//                 if (v->update_)
+//                 {
+//                     vec.push_back(v);
+//                 }
+//             }
+// //             std::cout<<" On en considère que "<< vec.size()<<" valeurs"<<std::endl;
+// //             cpt2 +=  vec.size();
+//             sub_output_dependances_[cpt][c] = vec;
+//             cpt++;
+//         }
+//         
+//         
+//         
 //         std::cout<<"gain de "<< 100.0*(cpt1-cpt2)/cpt1<<"%"<<std::endl;
 //         std::cout<<"****************"<<std::endl;
     }
@@ -111,20 +116,20 @@ public:
     inline double update( uint cpt , Change & c)
     {        
 
-        auto& s = sub_output_dependances_[cpt];
-        if (s.find(c) == s.end())
-        { // there is no such element, we create it
-//             std::cout<<"on a jamais eu ce changement on évalue : "<<std::endl;
-            compute_dependances(c);
-        }
-//         else
-//         {
-// //             std::cout<<"on a deja eu ce changement "<<std::endl;
+//         auto& s = sub_output_dependances_[cpt];
+//         if (s.find(c) == s.end())
+//         { // there is no such element, we create it
+// //             std::cout<<"on a jamais eu ce changement on évalue : "<<std::endl;
+//             compute_dependances(c);
 //         }
+// //         else
+// //         {
+// // //             std::cout<<"on a deja eu ce changement "<<std::endl;
+// //         }
+// 
+//         auto suboutput = sub_output_dependances_[cpt][c];
 
-        auto suboutput = sub_output_dependances_[cpt][c];
-
-//         auto suboutput = output_dependances_[cpt];
+        auto suboutput = output_dependances_[cpt];
 //         
         for (auto& i : suboutput)
         {
@@ -138,7 +143,7 @@ public:
     uint nb_sub_output_ = 0;    
     std::map< uint, LazyValue* > sub_outputs_;
     std::map< uint, std::vector< LazyValue* > > output_dependances_; // in case we have the value changes    
-    std::map< uint , std::map<  Change, std::vector< LazyValue* > > > sub_output_dependances_;
+//     std::map< uint , std::map<  Change, std::vector< LazyValue* > > > sub_output_dependances_;
     
     Change all_inputs_;
 };
