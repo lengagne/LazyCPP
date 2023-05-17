@@ -249,19 +249,8 @@ void LazyManager::prepare()
     for (auto& iter : dependances_)
     {
         re_init_known();  
-        iter.second.set_all_inputs(inputs_);
         iter.second.compute_dependances();
-/*        
-        OutDependance& dep = iter->second;
-        for (auto idep =dep.outputs.begin(); idep != dep.outputs.end(); idep++)
-        {
-            std::vector<LazyValue*> vec;
-            idep->second->add_to_list(vec);
-            dep.output_dependances[idep->first] = vec;
-            cpt += vec.size();
-        }        */
     }
-//     print_all_output_equations();
 }
 
 void LazyManager::print_all_inputs() const
