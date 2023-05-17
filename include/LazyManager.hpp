@@ -108,7 +108,7 @@ public:
         all_inputs_ = c;
     }
     
-    double update( uint cpt , Change & c)
+    inline double update( uint cpt , Change & c)
     {        
 
         auto& s = sub_output_dependances_[cpt];
