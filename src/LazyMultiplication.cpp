@@ -7,7 +7,7 @@ LazyMultiplication::LazyMultiplication(LazyValue* a, LazyValue* b)
     value_ = a->value_*b->value_;        
 }
     
-void LazyMultiplication::compute()
+inline void LazyMultiplication::compute()
 {
     value_ = a_->value_ * b_->value_;
 }    

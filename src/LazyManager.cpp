@@ -317,23 +317,6 @@ double LazyManager::update(uint index, uint cpt)
     }
     
     return dependances_[index].update(cpt,current_change_);
-//     // on regarde si on a deja eu le changement 
-//     std::map<Change,OutDependance>::iterator it = memory_computation_.find(current_change_);
-//     if ( it==memory_computation_.end())
-//     {
-//         std::cout<<"Structure non encore vue : on l'ajoute"<<std::endl;
-//         memory_computation_[current_change_] = OutDependance();
-//     }else
-//     {
-//         std::cout<<"Strucutre deja vue "<<std::endl;
-//     }
-    
-//     OutDependance& dep = dependances_[index];
-//     for(auto i = dep.output_dependances[cpt].begin(); i != dep.output_dependances[cpt].end();++i)
-//     {
-//         (*i)->compute();        
-//     }
-//     return dep.outputs[cpt]->get_value();
 }
 
 void LazyManager::update_all()

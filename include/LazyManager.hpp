@@ -60,7 +60,7 @@ public:
     inline double update( uint cpt , Change & c)
     {        
         std::vector<LazyValue*>& suboutput = output_dependances_[cpt];
-        for (auto& i : suboutput)
+        for (LazyValue * i : suboutput)
         {
            i->compute();
         }
