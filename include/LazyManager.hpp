@@ -18,54 +18,17 @@
 class Dependance
 {
 public:
-    Dependance()
-    {
-        index_output_ = 42;
-        nb_sub_output_ = 0;
-    };
+    Dependance();
 
-    Dependance(uint index)
-    {
-        index_output_ = index;
-        nb_sub_output_ = 0;
-    };
+    Dependance(uint index);
     
-    void add_suboutput( LazyValue * in, uint nb)
-    {
-        sub_outputs_[nb] = in;
-    }
+    void add_suboutput( LazyValue * in, uint nb);
     
-    void compute_dependances()
-    {
-        uint cpt = 0;
-        std::vector< LazyValue* > vec;
-        for (auto out : sub_outputs_)
-        {
-            out.second->add_to_list(vec);
-            output_dependances_[cpt++] = vec;
-        }
-    }
+    void compute_dependances();
     
-//     
-    void print()
-    {
-        for (auto idep : sub_outputs_)
-        {
-            std::cout<<"output : ";
-            idep.second->print();
-            std::cout<<"\n";
-        }        
-    }
-       
-    inline double update( uint cpt , Change & c)
-    {        
-        std::vector<LazyValue*>& suboutput = output_dependances_[cpt];
-        for (LazyValue * i : suboutput)
-        {
-           i->compute();
-        }
-        return sub_outputs_[cpt]->get_value();
-    }
+    void print();
+    
+    double update( uint cpt , Change & c);
     
     
     uint index_output_ = 0;
