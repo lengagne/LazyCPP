@@ -28,7 +28,7 @@ public:
     
     void print();
     
-    double update( uint cpt , Change & c);
+    double update( uint cpt );
     
     
     uint index_output_ = 0;

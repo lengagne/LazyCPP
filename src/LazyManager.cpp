@@ -39,7 +39,7 @@ void Dependance::print()
     }        
 }
 
-inline double Dependance::update( uint cpt , Change & c)
+inline double Dependance::update( uint cpt )
 {        
     std::vector<LazyValue*>& suboutput = output_dependances_[cpt];
     for (LazyValue * i : suboutput)
@@ -364,7 +364,7 @@ double LazyManager::update(uint index, uint cpt)
         counter_ ++;
     }
     
-    return dependances_[index].update(cpt,current_change_);
+    return dependances_[index].update(cpt);
 }
 
 void LazyManager::update_all()
