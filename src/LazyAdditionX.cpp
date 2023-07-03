@@ -14,6 +14,14 @@ inline void LazyAdditionX::compute()
         value_ += iter->value_;
 }    
 
+std::string LazyAdditionX::file_print( const std::string& varname)
+{
+    std::string cmd = varname+"["+ std::to_string(id_)+"] =";
+    for (auto iter : p_)
+        cmd += "+ " + iter->file_subname(varname) ;
+    return   cmd;
+}
+
 void LazyAdditionX::print( const std::string& tab,uint index) 
 {
     std::cout<<tab<<"("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;

@@ -44,6 +44,10 @@ SET(LazyCPP_FOUND "TRUE" CACHE INTERNAL "")
 
 configure_file(LazyCPPConfig.cmake.in "${PROJECT_BINARY_DIR}/LazyCPPConfig.cmake" @ONLY)
 
+configure_file ("${PROJECT_SOURCE_DIR}/config_LazyCPP.h.in"
+                "${PROJECT_SOURCE_DIR}/include/config_LazyCPP.h" )
+
+
 # configure_file ("${PROJECT_SOURCE_DIR}/config_LazyCPP.h.in"
 #                 "${PROJECT_SOURCE_DIR}/include/config_LazyCPP.h" )
 

@@ -11,6 +11,12 @@ inline void LazyCosinus::compute()
 {
     value_ = cos(a_->value_);
 }
+
+std::string LazyCosinus::file_print( const std::string& varname)
+{
+    return varname+"["+ std::to_string(id_)+"] = cos(" + a_->file_subname(varname) + ")";
+}
+
         
 void LazyCosinus::print( const std::string& tab,uint index) 
 {

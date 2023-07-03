@@ -22,10 +22,12 @@ int main()
     LazyVariable X(x,"X"), Y(y,"Y");
     
     LazyVariable lz = test_function<LazyVariable>(X,Y);
-    LazyVariable lz1 = lz*lz;
+//     LazyVariable lz1 = lz*lz;
     LazyAddOutput(lz,0,0);
 //     LazyAddOutput(lz1,0,1);
     
+    lz.print_equation();
+    std::cout<<std::endl;
     LazyPrepare();
     
     std::cout<<"X = "<< x <<std::endl;

@@ -1,0 +1,8 @@
+#ifndef LAZYCONFIG_CONFIG_H
+#define LAZYCONFIG_CONFIG_H
+
+#define INCLUDE_DIR "@CMAKE_CURRENT_SOURCE_DIR@/include"
+#define COMPILE_FLAGS "@CMAKE_CXX_FLAGS@"
+
+#endif
+

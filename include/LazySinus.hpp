@@ -9,6 +9,8 @@ public:
     
     inline void compute();
     
+    virtual std::string file_print( const std::string& varname="x");
+    
     virtual void print( const std::string& tab ="",uint index=0);
     
     virtual void print_equation();    

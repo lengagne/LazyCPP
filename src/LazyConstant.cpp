@@ -15,6 +15,11 @@ void LazyConstant::check_known()
 {
     /// nothing to do
 }    
+
+std::string LazyConstant::file_print( const std::string& varname)
+{
+    return std::to_string(value_);
+}
     
 void LazyConstant::print( const std::string& tab ,uint index) 
 {

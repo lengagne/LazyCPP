@@ -29,6 +29,13 @@ public:
         return value_;
     }
     
+    virtual std::string file_print( const std::string& varname="x") = 0;
+    
+    virtual std::string file_subname( const std::string& varname="x")
+    {
+        return varname + "[" + std::to_string(id_)+"]";
+    }
+    
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
     virtual void print_equation() = 0;
@@ -57,6 +64,7 @@ public:
     // defined if the value is already known;
     bool known_=false;
     bool update_ = false;
+    int id_= -1;
 };
 
 #endif // __LAZYVALUE_HPP__

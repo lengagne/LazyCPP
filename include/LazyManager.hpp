@@ -5,16 +5,7 @@
 #include <vector>
 #include <map>
 
-// struct OutDependance
-// {
-//     uint index=0;
-//     uint nb_outputs_ = 0;
-//     std::map< uint, LazyValue* > outputs;
-//     std::map< uint, std::vector< LazyValue* > > output_dependances;
-// };
-
-#define Change std::vector<LazyInput*>
-
+// #define Change std::vector<LazyInput*>
 class Dependance
 {
 public:
@@ -34,7 +25,7 @@ public:
     uint index_output_ = 0;
     uint nb_sub_output_ = 0;    
     std::map< uint, LazyValue* > sub_outputs_;
-    std::map< uint, std::vector< LazyValue* > > output_dependances_; // in case we have the value changes    
+    std::map< uint, std::vector< LazyValue* > > dependances_; // in case we have the value changes    
 };
 
 
@@ -112,7 +103,7 @@ private:
     std::vector<LazyAddition*> additions_;
     std::vector<LazyMultiplication*> multiplications_;        
 
-    std::map<uint,Dependance> dependances_;    
+    std::map<uint,Dependance> outputs_;    
 
     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
@@ -129,7 +120,7 @@ private:
     
     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
 
-    void detect_input_change();
+//     void detect_input_change();
     
     LazyValue * explose( LazyValue * in);
     
@@ -151,7 +142,7 @@ private:
     bool affect_ = true;
     uint counter_ = 0;
     
-    Change current_change_;
+//     Change current_change_;
 
     
 };

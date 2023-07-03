@@ -11,6 +11,11 @@ public:
     virtual void add_to_list(std::vector<LazyValue*>& vec);
             
     virtual void check_known();
+    
+    virtual std::string file_print( const std::string& varname="x")
+    {
+        
+    }
 
     virtual void print( const std::string& tab ="",uint index=0) ;
     
