@@ -16,9 +16,15 @@ void LazyConstant::check_known()
     /// nothing to do
 }    
 
+std::string LazyConstant::file_subname( const std::string& varname)
+{
+    return to_string_with_precision(value_,30);
+}    
+
+
 std::string LazyConstant::file_print( const std::string& varname)
 {
-    return std::to_string(value_);
+    return file_subname(varname);
 }
     
 void LazyConstant::print( const std::string& tab ,uint index) 

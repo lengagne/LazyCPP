@@ -2,6 +2,16 @@
 #define __LAZYCONSTANT_HPP__
 
 #include "LazyValue.hpp"
+#include <sstream>
+
+template <typename T>
+std::string to_string_with_precision(const T a_value, const int n = 30)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return std::move(out).str();
+}
 
 class LazyConstant : public LazyValue {
 public:
@@ -14,10 +24,7 @@ public:
     
     virtual std::string file_print( const std::string& varname="x");
     
-    virtual std::string file_subname( const std::string& varname="x")
-    {
-        return std::to_string(value_);
-    }    
+    virtual std::string file_subname( const std::string& varname="x");
     
     virtual void print( const std::string& tab ="",uint index=0) ;
 

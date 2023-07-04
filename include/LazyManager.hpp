@@ -1,7 +1,10 @@
 #ifndef __LAZYMANAGER_HPP__
 #define __LAZYMANAGER_HPP__
 
+
 #include "LazyCPP.hpp"
+
+#include "LazyGeneratedCode.hpp"
 #include <vector>
 #include <map>
 
@@ -83,7 +86,7 @@ public:
     
     double update(uint index, uint cpt);
     
-    void update_all();
+//     void update_all();
     
 private:
 
@@ -143,7 +146,10 @@ private:
     uint counter_ = 0;
     
 //     Change current_change_;
-
+    
+    create_code* creator_;
+    destroy_code* destructor_;
+    LazyGeneratedCode* lazycode_ = nullptr;
     
 };
 

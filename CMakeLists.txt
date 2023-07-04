@@ -25,7 +25,8 @@ file( GLOB_RECURSE LazyCPP_SOURCES src/*.cpp )
 add_library(LazyCPP SHARED ${LazyCPP_SOURCES} )
 
 target_link_libraries(LazyCPP
-                        ${TCMALLOC_LIBRARIES})
+                        ${TCMALLOC_LIBRARIES}
+                        dl)
 
 add_executable (Test apps/test.cpp)
 

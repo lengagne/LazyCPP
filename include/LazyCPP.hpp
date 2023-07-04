@@ -21,8 +21,6 @@
 
 #include "LazyVariable.hpp"
 
-#include "LazyGeneratedCode.hpp"
-
 class LazyVariable;
 
 // LazyManager LMANAGER;
@@ -47,6 +45,6 @@ void LazyReset();
 
 double LazyUpdate(uint index, uint cpt);
 
-void LazyUpdateAll();
+// void LazyUpdateAll();
 
 #endif // __LAZYCPP_H__

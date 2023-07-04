@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <fstream>
 #include "config_LazyCPP.h"
+#include <dlfcn.h>
+#include <unistd.h>
 
 Dependance::Dependance()
 {
@@ -27,13 +29,13 @@ void Dependance::compute_dependances()
     std::vector< LazyValue* > vec;
     for (auto out : sub_outputs_)
     {
-        std::cout<<"Sub output  ";
+//         std::cout<<"Sub output  ";
         out.second->add_to_list(vec);
-        std::cout<<" add "<< vec.size()<<std::endl;
+//         std::cout<<" add "<< vec.size()<<std::endl;
         dependances_[cpt++] = vec;
         counter += vec.size();
     }
-    std::cout<<" counter = "<< counter <<std::endl;
+//     std::cout<<" counter = "<< counter <<std::endl;
 }
 
 void Dependance::print()
@@ -306,7 +308,7 @@ void LazyManager::prepare()
         iter.second.compute_dependances();
     }
     
-    std::cout<<"LazyManager::prepare() creating files"<<std::endl;
+//     std::cout<<"LazyManager::prepare() creating files"<<std::endl;
     std::string filename = "LazyCPPGenerated.cpp";
     std::string command = "rm -f "+ filename;
     int dummy = system ( command.c_str() );
@@ -345,12 +347,8 @@ void LazyManager::prepare()
             }
         }
     }
-    
-    
-    
-    
-    std::cout<<"on a " << nb_in <<" entrées "<<std::endl;
-    std::cout<<"on a " << LazyCounter <<" variables "<<std::endl;
+//     std::cout<<"on a " << nb_in <<" entrées "<<std::endl;
+//     std::cout<<"on a " << LazyCounter <<" variables "<<std::endl;
     
     
     f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
@@ -363,25 +361,33 @@ void LazyManager::prepare()
     }
     f<<"\t}\n\n";
     
-    f<<"\t"<< RealName<<" function(unsigned int index, unsigned int out=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
+    f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
     
-        for (auto& iter : outputs_)
+    for (auto& iter : outputs_)
+    {
+        // on remet à zéro la mémoire des variables
+        for ( auto& it2 : iter.second.dependances_)
+            for(auto & it3 : it2.second)
+                it3->update_ = true;
+    
+        
+        
+        f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
+        f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
+        for ( auto& it2 : iter.second.dependances_)
         {
-            f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
-            f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
-            for ( auto& it2 : iter.second.dependances_)
+            f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
+            for(auto & it3 : it2.second)    if (it3->update_)
             {
-                f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
-                for(auto & it3 : it2.second)
-                {
-                    f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
-                }
-                
-                f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
+                f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
+                it3->update_ = false;
             }
-            f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
-            f<<"\t\t\t\tbreak;\n";            
-        }    
+            
+            f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
+        }
+        f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
+        f<<"\t\t\t\tbreak;\n";            
+    }    
     f<<"\t\t\tdefault: return 0.;\n";
     f<<"\n\t\t}\n\t}\n};\n\n";
     f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
@@ -389,22 +395,57 @@ void LazyManager::prepare()
 
     f.close();   
     
-    std::cout<<"LazyManager::prepare() compilation"<<std::endl;
+//     std::cout<<"LazyManager::prepare() compilation"<<std::endl;
     
-//     std::cout<< 
     // Create the library
     command = "g++ -O3 -ggdb -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
-   std::cout<<"Compilation command is : "<< command<<std::endl;
+//    std::cout<<"Compilation command is : "<< command<<std::endl;
     dummy = system ( command.c_str() );
 //    std::cout<<"ComputedTreeList::prepare_file step 6"<<std::endl;    
     
     
+//     std::cout<<"LazyManager::prepare() Load compiled library"<<std::endl;
     
+    std::string lib;
+//     if (libname =="")
+        lib = "./lib"+class_name_ +".so";
+//     else
+//         lib = libname;
+
+    unsigned int count = 0;
+    void* library;
+    do{
+        count++;
+        library =dlopen(lib.c_str(), RTLD_LAZY);
+        if (!library) {
+            std::cerr <<"Error1 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load library ("<< lib <<"), with the error : " << dlerror() << '\n';
+            if(count>10)
+            {
+                std::cerr<<"Cannot load the library, stopping program"<<std::endl;
+                std::cerr<<"Sometimes the following line solve the issue : \n export LD_LIBRARY_PATH=."<<std::endl;
+                exit(0);
+            }
+            sleep(1);
+        }
+    }while(!library);
+    // load the symbols
+    count = 0;
+    do{
+        count++;
+        creator_ = (create_code*) dlsym(library, "create");
+        destructor_ = (destroy_code*) dlsym(library, "destroy");
+        if (!creator_ || !destructor_)
+        {
+            std::cerr <<"Error2 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load symbols of ("<< lib <<"), with the error : " << dlerror() << '\n';
+            if(count>10)
+                exit(0);
+            sleep(1);
+        }
+    }while(!creator_ || ! destructor_);
+
+    lazycode_ = creator_(); 
     
-    
-    
-    
-    std::cout<<"LazyManager::prepare() end"<<std::endl;
+//     std::cout<<"LazyManager::prepare() end"<<std::endl;
 }
 
 void LazyManager::print_all_inputs() const
@@ -463,34 +504,25 @@ void LazyManager::reset()
 
 double LazyManager::update(uint index, uint cpt)
 {
-    if (affect_)
-    {        
-        affect_ = false;        
-//         detect_input_change();
-        counter_ ++;
+//     if (affect_)
+//     {        
+//         affect_ = false;        
+// //         detect_input_change();
+//         counter_ ++;
+//     }
+//     
+    
+    std::vector<double> inputs(inputs_.size());
+    for (auto & iter : inputs_)
+    {
+        inputs[iter->id_] = iter->value_;
+//         std::cout<<"inputs["<<iter->id_<<"] = "<< inputs[iter->id_] <<std::endl;
     }
     
-    return outputs_[index].update(cpt);
-}
+    lazycode_->set_input(inputs);
+    return lazycode_->function(index,cpt);
 
-void LazyManager::update_all()
-{
-    if (affect_)
-    {
-        counter_ ++;
-        affect_ = false;
-    }
-
-    // FIXME
-//     for (auto& iter = outputs_.begin(); iter != outputs_.end(); ++iter)
-//     {
-//         OutDependance& dep = iter->second;
-//         for (int i=0;i<dep.outputs.size();i++)
-//         {
-//             for (int j =0;j<dep.output_dependances[i].size();j++)
-//                 dep.output_dependances[i][j]->compute();
-//         }
-//     }
+//     return outputs_[index].update(cpt);
 }
 
 /////////////////////////////////////////////////////
