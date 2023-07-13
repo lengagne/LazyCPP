@@ -141,6 +141,8 @@ private:
     
     bool is_sinus( LazyValue* in) const;
     
+    bool is_soustraction( LazyValue* in) const;
+    
     
     bool affect_ = true;
     uint counter_ = 0;

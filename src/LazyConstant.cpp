@@ -34,7 +34,7 @@ void LazyConstant::print( const std::string& tab ,uint index)
 //         else
 //             std::cout<<"\x1B[32m";
 
-    std::cout<<tab<<"("<<this<<") Constante : "<< value_<<std::endl;
+    std::cout<<tab<<"LazyConstant:("<<this<<") Constante : "<< value_<<std::endl;
 }    
 
 void LazyConstant::print_equation()

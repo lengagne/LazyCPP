@@ -25,7 +25,7 @@ void LazySinus::print( const std::string& tab ,uint index)
 //         else
 //             std::cout<<"\x1B[32m";
     
-    std::cout<<tab<<"("<<this<<"): SINUS ("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazySinus:("<<this<<"): SINUS ("<<value_<<")"<<std::endl;
     a_->print(tab+"\t",index);
 }
 

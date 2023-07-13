@@ -24,7 +24,7 @@ std::string LazyAdditionX::file_print( const std::string& varname)
 
 void LazyAdditionX::print( const std::string& tab,uint index) 
 {
-    std::cout<<tab<<"("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyAdditionX:("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t",index);
 }   

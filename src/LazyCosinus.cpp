@@ -25,7 +25,7 @@ void LazyCosinus::print( const std::string& tab,uint index)
 //         else
 //             std::cout<<"\x1B[32m";
     
-    std::cout<<tab<<"("<<this<<"): COSINUS ("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyCosinus:("<<this<<"): COSINUS ("<<value_<<")"<<std::endl;
     a_->print(tab+"\t",index);
 }
 

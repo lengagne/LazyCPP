@@ -19,7 +19,7 @@ void LazyInput::check_known()
 
 void LazyInput::print( const std::string& tab,uint index) 
 {
-    std::cout<<tab<<"("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyInput:("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
 }
 
 void LazyInput::print_equation()

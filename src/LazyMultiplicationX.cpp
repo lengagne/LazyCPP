@@ -26,7 +26,7 @@ std::string LazyMultiplicationX::file_print( const std::string& varname)
 void LazyMultiplicationX::print( const std::string& tab,uint index) 
 {
     
-    std::cout<<tab<<"("<<this<<"): MultiplicationX ("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): MultiplicationX ("<<value_<<")"<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t",index);
 

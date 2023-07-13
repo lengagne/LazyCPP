@@ -705,6 +705,8 @@ LazyValue * LazyManager::explose( LazyValue * in)
     }
     
     if (is_constant(in))   return in;
+    
+    if (is_soustraction(in))   return in;
 
     if (is_input(in))   return in;
 
@@ -780,6 +782,14 @@ bool LazyManager::is_multiplicationX(LazyValue* in) const
 bool LazyManager::is_sinus( LazyValue* in) const
 {
     for (auto& iter : sinus_)
+        if (iter == in)
+            return true;
+    return false;    
+}
+
+bool LazyManager::is_soustraction( LazyValue* in) const
+{
+    for (auto& iter : soustractions_)
         if (iter == in)
             return true;
     return false;    

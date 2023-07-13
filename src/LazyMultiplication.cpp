@@ -20,7 +20,7 @@ std::string LazyMultiplication::file_print( const std::string& varname)
     
 void LazyMultiplication::print( const std::string& tab,uint index) 
 {
-    std::cout<<tab<<"("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyMultiplication:("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
     a_->print(tab+"\t",index);
     b_->print(tab+"\t",index);
 }   
