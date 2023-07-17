@@ -4,6 +4,19 @@
 #include <iostream>
 #include <vector>
 
+typedef enum LazyType{
+    LAZYADDITION,
+    LAZYADDITIONX,
+    LAZYCONSTANT,
+    LAZYCOSINUS,
+    LAZYMULTIPLICATION,
+    LAZYMULTIPLICATIONX,
+    LAZYSINUS,
+    LAZYSOUSTRACTION,
+    LAZYUNDEFINED    
+} LazyType;
+
+
 class LazyValue
 {
 public:
@@ -65,6 +78,8 @@ public:
     bool known_=false;
     bool update_ = false;
     int id_= -1;
+    
+    LazyType type_ = LAZYUNDEFINED;
 };
 
 #endif // __LAZYVALUE_HPP__

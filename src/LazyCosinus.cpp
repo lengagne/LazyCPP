@@ -3,6 +3,7 @@
 
 LazyCosinus::LazyCosinus(LazyValue* a)
 {
+    type_ = LAZYCOSINUS;
     a_ = a;
     compute();
 }

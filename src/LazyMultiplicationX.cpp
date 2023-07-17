@@ -2,6 +2,7 @@
 
 LazyMultiplicationX::LazyMultiplicationX(std::list<LazyValue*>& a)
 {
+    type_ = LAZYMULTIPLICATIONX;
     p_ = a;
     p_.sort();
     compute();

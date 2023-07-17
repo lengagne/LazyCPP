@@ -3,8 +3,16 @@
 
 LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
 {
-    a_ = a;
-    b_ = b;
+    type_ = LAZYADDITION;
+    if (a<b)
+    {
+        a_ = a;
+        b_ = b; 
+    }else
+    {
+        b_ = a;
+        a_ = b;
+    }
     value_ = a->value_+b->value_;        
 }
     

@@ -3,10 +3,14 @@
 
 
 #include "LazyCPP.hpp"
+#include "LazyStorage.hpp"
 
 #include "LazyGeneratedCode.hpp"
 #include <vector>
 #include <map>
+
+#define TEST_STORAGE 1
+#define COUNTER 1
 
 // #define Change std::vector<LazyInput*>
 class Dependance
@@ -103,9 +107,15 @@ private:
     std::vector<LazyMultiplicationX*> multiplicationsX_;
     std::vector<LazyAdditionX*> additionsX_;
 
-    std::vector<LazyAddition*> additions_;
+#ifdef TEST_STORAGE
+    LazyStorage additions_;
+    LazyStorage multiplications_;
+#else
+    std::vector<LazyAddition*> additions_;    
     std::vector<LazyMultiplication*> multiplications_;        
 
+#endif
+    
     std::map<uint,Dependance> outputs_;    
 
     LazyValue* add_addition( LazyValue* a , LazyValue *b);
@@ -136,9 +146,7 @@ private:
     bool is_cosinus( LazyValue* in) const;
     
     bool is_multiplicationX(LazyValue* in) const;    
-    
-    bool is_multiplication(LazyValue* in) const;    
-    
+      
     bool is_sinus( LazyValue* in) const;
     
     bool is_soustraction( LazyValue* in) const;

@@ -1,7 +1,9 @@
 
 #include "LazyConstant.hpp"
 
-LazyConstant::LazyConstant(double value){
+LazyConstant::LazyConstant(double value)
+{
+    type_ = LAZYCONSTANT;
     value_ = value;
     known_ = true;
 }    

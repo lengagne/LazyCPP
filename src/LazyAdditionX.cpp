@@ -2,6 +2,7 @@
 
 LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 {
+    type_ = LAZYADDITIONX;
     p_ = a;
     p_.sort();
     compute();

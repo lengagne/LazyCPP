@@ -3,6 +3,7 @@
 
 LazySoustraction::LazySoustraction(LazyValue* a, LazyValue* b) 
 {
+    type_ = LAZYSOUSTRACTION;
     a_ =a;
     b_ = b;
     value_ = a->value_-b->value_;        

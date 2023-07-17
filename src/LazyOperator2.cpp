@@ -30,5 +30,6 @@ void LazyOperator2::propag_update()
 bool LazyOperator2::operator == (const LazyOperator2& A) const
 {
     return (a_ == A.a_ && b_ == A.b_) || (a_ == A.b_ && b_ == A.a_);
+//     return (a_ == A.a_ && b_ == A.b_);
 }
 
