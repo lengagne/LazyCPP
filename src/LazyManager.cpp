@@ -6,15 +6,6 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#ifdef COUNTER
-static uint nb_add_addition = 0;
-static uint nb_add_additionX = 0;
-static uint nb_add_multiplication = 0;
-static uint nb_add_multiplicationX = 0;
-static uint nb_compact_additionX = 0;
-static uint nb_compact_multiplicationX = 0;
-#endif
-
 double get_cpu_time(){
     struct timeval t;
     gettimeofday(&t, NULL);
@@ -464,17 +455,6 @@ void LazyManager::prepare()
 
     lazycode_ = creator_(); 
     
-#ifdef COUNTER
-    std::cout<<"nb_add_addition = "<< nb_add_addition<<std::endl;
-    std::cout<<"nb_add_additionX = "<< nb_add_additionX<<std::endl;
-    std::cout<<"nb_add_multiplication = "<< nb_add_multiplication<<std::endl;
-    std::cout<<"nb_add_multiplicationX = "<< nb_add_multiplicationX<<std::endl;    
-    std::cout<<"nb_compact_additionX = "<< nb_add_additionX<<std::endl;
-    std::cout<<"nb_compact_multiplicationX = "<< nb_add_multiplicationX<<std::endl;
-    
-#endif    
-    
-//     std::cout<<"LazyManager::prepare() end"<<std::endl;
 }
 
 void LazyManager::print_all_inputs() const
@@ -551,15 +531,11 @@ double LazyManager::update(uint index, uint cpt)
 
 LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 {
-#ifdef COUNTER
-    nb_add_addition ++;
-#endif    
     LazyValue* check = check_addition(a,b);
     if (check)
         return check;
     
     LazyAddition* out = new LazyAddition(a,b);
-#ifdef TEST_STORAGE    
     LazyOperator2* tmp = (LazyOperator2*) out;
     if ( additions_.look_for (&tmp) )
     {
@@ -568,24 +544,10 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
     }
     additions_.store(tmp);
     return tmp;
-#else
-    for (auto& iter : additions_)
-        if (*iter == *out)
-        {
-//             std::cout<<"already found addition"<<std::endl;
-            delete out;
-            return iter;
-        }
-    additions_.push_back(out);    
-    return out;
-#endif
 }
 
 LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
 {
-#ifdef COUNTER
-    nb_add_additionX ++;
-#endif        
     // creation of the new object
     LazyAdditionX* out = new LazyAdditionX(v);
     
@@ -599,15 +561,12 @@ LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
 {
-#ifdef COUNTER
-    nb_add_multiplication ++;
-#endif            
+            
     LazyValue* check = check_multiplication(a,b);
     if (check)
         return check;
     
     LazyMultiplication* out = new LazyMultiplication(a,b);
-#ifdef TEST_STORAGE    
     LazyOperator2* tmp = (LazyOperator2*) out;
     if ( multiplications_.look_for (&tmp) )
     {
@@ -616,26 +575,10 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     }
     multiplications_.store(tmp);    
     return tmp;
-#else
-    for (auto& iter : multiplications_)
-    {
-        if (*iter == *out)
-        {
-//             std::cout<<"already found multplication"<<std::endl;
-            delete out;
-            return iter;
-        }
-    }    
-    multiplications_.push_back(out);
-    return out;
-#endif
 }
 
 LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
 {
-#ifdef COUNTER
-    nb_add_multiplicationX ++;
-#endif        
     // creation of the new object
     LazyMultiplicationX* out = new LazyMultiplicationX(v);
     
@@ -665,9 +608,6 @@ LazyValue* LazyManager::compact( LazyValue* a)
 
 LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
 {
-#ifdef COUNTER
-    nb_compact_additionX ++;
-#endif          
     LazyValue* cst = zero_;
     std::list<LazyValue*> vec;
     
@@ -696,9 +636,6 @@ LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
 
 LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
 {
-#ifdef COUNTER
-    nb_compact_multiplicationX ++;
-#endif              
     LazyValue* cst = one_;
     std::list<LazyValue*> vec;
     

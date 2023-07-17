@@ -9,9 +9,6 @@
 #include <vector>
 #include <map>
 
-#define TEST_STORAGE 1
-#define COUNTER 1
-
 // #define Change std::vector<LazyInput*>
 class Dependance
 {
@@ -107,14 +104,8 @@ private:
     std::vector<LazyMultiplicationX*> multiplicationsX_;
     std::vector<LazyAdditionX*> additionsX_;
 
-#ifdef TEST_STORAGE
     LazyStorage additions_;
     LazyStorage multiplications_;
-#else
-    std::vector<LazyAddition*> additions_;    
-    std::vector<LazyMultiplication*> multiplications_;        
-
-#endif
     
     std::map<uint,Dependance> outputs_;    
 
