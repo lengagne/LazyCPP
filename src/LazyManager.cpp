@@ -425,7 +425,6 @@ void LazyManager::prepare()
     }while(!creator_ || ! destructor_);
 
     lazycode_ = creator_(); 
-    lazycode_->print_time();
 }
 
 void LazyManager::print_all_inputs() const
