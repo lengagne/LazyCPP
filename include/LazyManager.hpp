@@ -9,7 +9,6 @@
 #include <vector>
 #include <map>
 
-// #define Change std::vector<LazyInput*>
 class Dependance
 {
 public:
@@ -31,8 +30,6 @@ public:
     std::map< uint, LazyValue* > sub_outputs_;
     std::map< uint, std::vector< LazyValue* > > dependances_; // in case we have the value changes    
 };
-
-
 
 
 class LazyManager
@@ -86,9 +83,7 @@ public:
     void reset();
     
     double update(uint index, uint cpt);
-    
-//     void update_all();
-    
+        
 private:
 
     LazyConstant * zero_, *one_, *minus_one_;
@@ -123,8 +118,6 @@ private:
     LazyValue * compact_additionX (LazyAdditionX *a );
     
     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
-
-//     void detect_input_change();
     
     LazyValue * explose( LazyValue * in);
     
@@ -147,9 +140,7 @@ private:
     
     bool affect_ = true;
     uint counter_ = 0;
-    
-//     Change current_change_;
-    
+       
     create_code* creator_;
     destroy_code* destructor_;
     LazyGeneratedCode* lazycode_ = nullptr;

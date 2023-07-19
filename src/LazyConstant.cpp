@@ -31,11 +31,6 @@ std::string LazyConstant::file_print( const std::string& varname)
     
 void LazyConstant::print( const std::string& tab ,uint index) 
 {
-//         if (index > index_)
-//             std::cout<<"\x1B[35m";
-//         else
-//             std::cout<<"\x1B[32m";
-
     std::cout<<tab<<"LazyConstant:("<<this<<") Constante : "<< value_<<std::endl;
 }    
 

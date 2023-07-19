@@ -34,7 +34,5 @@ bool LazyOperatorX::operator == (const LazyOperatorX& A) const
         return false;
        
     return p_ == A.p_;
-    // FIXME
-    return false;
 }
 

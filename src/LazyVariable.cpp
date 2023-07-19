@@ -6,7 +6,7 @@ LazyVariable::LazyVariable()
     ref_ = LMANAGER.get_zero();
 }
 
-LazyVariable::LazyVariable(const LazyVariable& a)//:ref_(a.ref_)
+LazyVariable::LazyVariable(const LazyVariable& a)
 {
     ref_ = a.ref_;
 }
@@ -43,10 +43,6 @@ void LazyVariable::operator = (double d)
         if (ref_->value_ != d)
         {
             ref_->set_time(LMANAGER.affect());
-            
-//             std::cout<<"New value for ("<< LMANAGER.affect()<<")"; 
-//             ref_->print();
-//             std::cout<<std::endl;
         }
         ref_->value_ = d;
     }else
@@ -81,7 +77,6 @@ LazyVariable LazyVariable::operator - (const LazyVariable& b) const
     LazyVariable out( LMANAGER.add_soustraction(ref_, b.ref_));
     return out;    
 }
-
 
 LazyVariable LazyVariable::operator * (const LazyVariable& b) const
 {

@@ -22,11 +22,6 @@ std::string LazySoustraction::file_print( const std::string& varname)
     
 void LazySoustraction::print( const std::string& tab ,uint index) 
 {
-//         if (index > index_)
-//             std::cout<<"\x1B[35m";
-//         else
-//             std::cout<<"\x1B[32m";
-    
     std::cout<<tab<<"LazySoustraction:("<<this<<") Soustraction ("<<value_<<")"<<std::endl;
     a_->print(tab+"\t",index);
     b_->print(tab+"\t",index);

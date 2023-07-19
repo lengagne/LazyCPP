@@ -33,7 +33,3 @@ double LazyUpdate(uint index, uint cpt)
     return LMANAGER.update(index,cpt);
 }
 
-// void LazyUpdateAll()
-// {
-//     LMANAGER.update_all();
-// }

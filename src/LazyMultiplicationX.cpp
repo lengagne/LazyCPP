@@ -23,7 +23,6 @@ std::string LazyMultiplicationX::file_print( const std::string& varname)
     return   cmd;
 }
 
-
 void LazyMultiplicationX::print( const std::string& tab,uint index) 
 {
     

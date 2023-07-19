@@ -10,7 +10,6 @@ double get_cpu_time(){
     struct timeval t;
     gettimeofday(&t, NULL);
     return t.tv_sec + 1e-6 * t.tv_usec;
-//    return (double)clock() / CLOCKS_PER_SEC;
 }
 
 Dependance::Dependance()
@@ -305,16 +304,13 @@ bool LazyManager::is_zero(LazyValue * in) const
 
 void LazyManager::prepare()
 {
-//     print_all_inputs();
     for (auto& iter : outputs_)
     {
         re_init_known();  
         iter.second.compute_dependances();
     }
 
-    std::string class_name_ = get_unique_name();
-    
-
+    std::string class_name_ = get_unique_name();  
     std::string filename = class_name_ + ".cpp";  
     std::ofstream f (filename );
     f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
@@ -322,7 +318,6 @@ void LazyManager::prepare()
     f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
     f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
     f<<"\t // intermediate variables\n";
-
 
     uint LazyCounter = 0;
     
@@ -367,8 +362,6 @@ void LazyManager::prepare()
             for(auto & it3 : it2.second)
                 it3->update_ = true;
     
-        
-        
         f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
         f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
         for ( auto& it2 : iter.second.dependances_)
@@ -398,11 +391,7 @@ void LazyManager::prepare()
     int dummy = system ( command.c_str() );
     double compilation_time = get_cpu_time() - tsart;
        
-    std::string lib;
-//     if (libname =="")
-        lib = "./lib"+class_name_ +".so";
-//     else
-//         lib = libname;
+    std::string lib = "./lib"+class_name_ +".so";
 
     unsigned int count = 0;
     void* library;
@@ -457,10 +446,11 @@ void LazyManager::print_all_output_equations()
 
 void LazyManager::re_init_known()
 {
-//     for (auto iter : additions_)   iter->re_init_known();
+    additions_.re_init_known();
+    multiplications_.re_init_known();
+    
     for (auto& iter : additionsX_)   iter->re_init_known();
     for (auto& iter : soustractions_)   iter->re_init_known();
-//     for (auto& iter : multiplications_)   iter->re_init_known();
     for (auto& iter : multiplicationsX_)   iter->re_init_known();
     for (auto& iter : cosinus_)   iter->re_init_known();
     for (auto& iter : sinus_)   iter->re_init_known();
@@ -708,54 +698,29 @@ void LazyManager::init_basic_constant()
 bool LazyManager::is_additionX(LazyValue* in) const
 {
     return (in->type_ == LAZYADDITIONX);
-//     for (auto& iter : additionsX_)
-//         if (iter == in)
-//             return true;
-//     return false;    
 }
 
 bool LazyManager::is_constant( LazyValue* in) const
 {
     return (in->type_ == LAZYCONSTANT);
-//     for (auto& iter : constants_)
-//         if (iter == in)
-//             return true;
-//     return false;    
 }
 
 bool LazyManager::is_cosinus( LazyValue* in) const
 {
     return (in->type_ == LAZYCOSINUS);
-//     for (auto& iter : cosinus_)
-//         if (iter == in)
-//             return true;
-//     return false;    
 }
 
 bool LazyManager::is_multiplicationX(LazyValue* in) const
 {
     return (in->type_ == LAZYMULTIPLICATIONX);
-//     for (auto& iter : multiplicationsX_)
-//         if (iter == in)
-//             return true;
-// 
-//     return false;    
 }
 
 bool LazyManager::is_sinus( LazyValue* in) const
 {
     return (in->type_ == LAZYSINUS);
-//     for (auto& iter : sinus_)
-//         if (iter == in)
-//             return true;
-//     return false;    
 }
 
 bool LazyManager::is_soustraction( LazyValue* in) const
 {
     return (in->type_ == LAZYSOUSTRACTION);
-//     for (auto& iter : soustractions_)
-//         if (iter == in)
-//             return true;
-//     return false;    
 }
