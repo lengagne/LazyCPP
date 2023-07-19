@@ -32,7 +32,9 @@ bool LazyOperatorX::operator == (const LazyOperatorX& A) const
 {
     if (p_.size() != A.p_.size())
         return false;
-    
+       
     return p_ == A.p_;
+    // FIXME
+    return false;
 }
 

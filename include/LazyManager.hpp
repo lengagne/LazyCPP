@@ -128,6 +128,8 @@ private:
     
     LazyValue * explose( LazyValue * in);
     
+    std::string get_unique_name() const;
+    
     void init_basic_constant();    
     
     bool is_additionX(LazyValue* in) const;    

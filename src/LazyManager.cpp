@@ -37,13 +37,10 @@ void Dependance::compute_dependances()
     std::vector< LazyValue* > vec;
     for (auto out : sub_outputs_)
     {
-//         std::cout<<"Sub output  ";
         out.second->add_to_list(vec);
-//         std::cout<<" add "<< vec.size()<<std::endl;
         dependances_[cpt++] = vec;
         counter += vec.size();
     }
-//     std::cout<<" counter = "<< counter <<std::endl;
 }
 
 void Dependance::print()
@@ -174,14 +171,13 @@ LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 
 LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
 {
-    // FIXME : on ne dit rien si ca existe deja
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
-
     LazyValue *output = explose(compact(in));
     outputs_[index].add_suboutput(output,rank);
+    
     return output;
 }
 
@@ -315,19 +311,15 @@ void LazyManager::prepare()
         re_init_known();  
         iter.second.compute_dependances();
     }
-    
-//     std::cout<<"LazyManager::prepare() creating files"<<std::endl;
-    std::string filename = "LazyCPPGenerated.cpp";
-    std::string command = "rm -f "+ filename;
-    int dummy = system ( command.c_str() );
-    
-    std::ofstream f (filename );
 
-    std::string class_name_  = filename;
-    class_name_.erase(class_name_.find_last_of("."), std::string::npos);
+    std::string class_name_ = get_unique_name();
+    
+
+    std::string filename = class_name_ + ".cpp";  
+    std::ofstream f (filename );
     f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
     f<<"class "<<class_name_<<": public LazyGeneratedCode\n{\npublic:\n";
-
+    f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
     f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
     f<<"\t // intermediate variables\n";
 
@@ -355,9 +347,6 @@ void LazyManager::prepare()
             }
         }
     }
-//     std::cout<<"on a " << nb_in <<" entrées "<<std::endl;
-//     std::cout<<"on a " << LazyCounter <<" variables "<<std::endl;
-    
     
     f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
     f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
@@ -403,19 +392,12 @@ void LazyManager::prepare()
 
     f.close();   
     
-//     std::cout<<"LazyManager::prepare() compilation"<<std::endl;
-    
     double tsart  = get_cpu_time();
     // Create the library
-    command = "g++ -O3 -ggdb -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
-//    std::cout<<"Compilation command is : "<< command<<std::endl;
-    dummy = system ( command.c_str() );
-//    std::cout<<"ComputedTreeList::prepare_file step 6"<<std::endl;    
+    std::string command = "g++ -O3 -ggdb -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+    int dummy = system ( command.c_str() );
     double compilation_time = get_cpu_time() - tsart;
-    std::cout<<"compilation_time = " << compilation_time <<std::endl;
-    
-//     std::cout<<"LazyManager::prepare() Load compiled library"<<std::endl;
-    
+       
     std::string lib;
 //     if (libname =="")
         lib = "./lib"+class_name_ +".so";
@@ -454,7 +436,7 @@ void LazyManager::prepare()
     }while(!creator_ || ! destructor_);
 
     lazycode_ = creator_(); 
-    
+    lazycode_->print_time();
 }
 
 void LazyManager::print_all_inputs() const
@@ -467,17 +449,9 @@ void LazyManager::print_all_inputs() const
 
 void LazyManager::print_all_output_equations()
 {
-//     for (auto iter = outputs_.begin(); iter != outputs_.end(); ++iter)
     for (auto& iter : outputs_)
     {
         iter.second.print();
-//         Dependance& dep = iter.second;
-//         for (auto idep =dep.outputs.begin(); idep != dep.outputs.end(); idep++)
-//         {
-//             std::cout<<"output : ";
-//             idep->second->print();
-//             std::cout<<"\n";
-//         }
     }
 }
 
@@ -496,9 +470,9 @@ void LazyManager::reset()
 {
     inputs_.clear();
     additionsX_.clear();
-//     additions_.clear();
+    additions_.clear();
     cosinus_.clear();
-//     multiplications_.clear();
+    multiplications_.clear();
     multiplicationsX_.clear();
     sinus_.clear();
     soustractions_.clear();
@@ -506,8 +480,8 @@ void LazyManager::reset()
     init_basic_constant();
     counter_ = 0;
     affect_ = false;
-    
-    
+    if (lazycode_)  destroy_code(lazycode_);
+    lazycode_ = nullptr;
     outputs_.clear();
 }
 
@@ -518,7 +492,6 @@ double LazyManager::update(uint index, uint cpt)
     {
         inputs[iter->id_] = iter->value_;
     }
-    
     lazycode_->set_input(inputs);
     return lazycode_->function(index,cpt);
 
@@ -539,7 +512,6 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
     LazyOperator2* tmp = (LazyOperator2*) out;
     if ( additions_.look_for (&tmp) )
     {
-//         std::cout<<"already found addition"<<std::endl;
         return tmp;
     }
     additions_.store(tmp);
@@ -570,7 +542,6 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     LazyOperator2* tmp = (LazyOperator2*) out;
     if ( multiplications_.look_for (&tmp) )
     {
-//         std::cout<<"already found multplication"<<std::endl;
         return tmp;
     }
     multiplications_.store(tmp);    
@@ -581,19 +552,19 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
 {
     // creation of the new object
     LazyMultiplicationX* out = new LazyMultiplicationX(v);
-    
     // check if does not already exist
     for (auto& iter : multiplicationsX_)
+    {
         if (*iter == *out)
             return iter;
+    }
     multiplicationsX_.push_back(out);
     return out;    
 }
 
-
-
 LazyValue* LazyManager::compact( LazyValue* a)
 {      
+    
     if ( is_additionX(a))
     {
         return compact_additionX( (LazyAdditionX*) a);
@@ -638,7 +609,6 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
 {
     LazyValue* cst = one_;
     std::list<LazyValue*> vec;
-    
     for ( auto iter : a->p_)
     {     
         if ( is_constant(iter))
@@ -651,20 +621,18 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
                 vec.push_back( compact(iter1));
         }
         else
+        {
             vec.push_back( compact(iter));
+        }
     }
     if ( !is_one(cst))
         vec.push_back(cst);
     return add_multiplicationX(vec);
     
-//     return a;
 }
 
 LazyValue * LazyManager::explose( LazyValue * in)
 {
-//     // we do nothing
-//     return in;
-    
     if (is_additionX(in))
     {
         LazyAdditionX* v = (LazyAdditionX*) in;
@@ -680,11 +648,20 @@ LazyValue * LazyManager::explose( LazyValue * in)
         return add_cosinus( explose(v->a_));
     }
     
-    if (is_constant(in))   return in;
+    if (is_constant(in))
+    {
+        return in;
+    }
     
-    if (is_soustraction(in))   return in;
+    if (is_soustraction(in)) 
+    {
+        return in;
+    }
 
-    if (is_input(in))   return in;
+    if (is_input(in))
+    {
+        return in;
+    }
 
     
     if (is_multiplicationX(in))
@@ -706,6 +683,20 @@ LazyValue * LazyManager::explose( LazyValue * in)
     in->print();
     exit(63);
 }
+
+std::string LazyManager::get_unique_name()const
+{
+    srand(time(NULL));
+    std::string out;
+    bool found;
+    do{
+        out = "LazyCPPGenerated_"+ std::to_string(rand());
+        std::ifstream infile(out+".cpp");
+        found = infile.good();
+    }while(found);
+    return out;
+}
+
 
 void LazyManager::init_basic_constant()
 {             

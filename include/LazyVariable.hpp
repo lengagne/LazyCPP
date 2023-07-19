@@ -45,6 +45,11 @@ public:
     void operator -= (const LazyVariable& b);
     
     void operator *= (const LazyVariable& b);
+
+    void print_detail()
+    {
+        ref_->print();
+    }
     
     void print_equation()
     {

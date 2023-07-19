@@ -12,6 +12,12 @@ public:
     {
         storage_.clear();
     }
+    
+    void clear()
+    {
+        storage_.clear();
+    }
+    
    
     bool look_for (LazyOperator2* * item) const
     {

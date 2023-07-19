@@ -12,6 +12,10 @@ public:
 	virtual void set_input(std::vector<Real> & in) = 0;
 
 	virtual Real function(unsigned int index, unsigned int out=0) = 0;
+    
+    virtual void print_time() = 0;
+    
+    
 };
 // the types of the class factories
 typedef LazyGeneratedCode* create_code();
