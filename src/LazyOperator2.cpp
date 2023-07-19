@@ -21,6 +21,27 @@ void LazyOperator2::check_known()
     known_ = true;
 }
 
+void LazyOperator2::compact()
+{
+    if (!compacted_)
+    {
+        compacted_ = true;    
+        a_->compact();
+        b_->compact();
+    }
+}
+
+LazyValue* LazyOperator2::explose()
+{
+    if (!explosed_)
+    {
+        explosed_ = true;
+        a_ = a_->explose();
+        b_ = b_->explose();
+    }
+    return this;
+}
+
 void LazyOperator2::propag_update()
 {
     update_ = a_->update_ || b_->update_;

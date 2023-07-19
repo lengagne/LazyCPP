@@ -24,7 +24,6 @@ public:
     
     double update( uint cpt );
     
-    
     uint index_output_ = 0;
     uint nb_sub_output_ = 0;    
     std::map< uint, LazyValue* > sub_outputs_;
@@ -112,24 +111,28 @@ private:
     
     LazyValue* add_multiplicationX( std::list<LazyValue*> v);
     
-    // simplify the equation
-    LazyValue* compact( LazyValue* a);
+//     // simplify the equation
+//     LazyValue* compact( LazyValue* a);
+//     
+//     LazyValue * compact_additionX (LazyAdditionX *a );
+//     
+//     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
     
-    LazyValue * compact_additionX (LazyAdditionX *a );
-    
-    LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
-    
-    LazyValue * explose( LazyValue * in);
+//     LazyValue * explose( LazyValue * in);
     
     std::string get_unique_name() const;
     
     void init_basic_constant();    
+    
+    bool is_addition(LazyValue* in) const;    
     
     bool is_additionX(LazyValue* in) const;    
     
     bool is_constant( LazyValue* in) const;
     
     bool is_cosinus( LazyValue* in) const;
+    
+    bool is_multiplication(LazyValue* in) const;    
     
     bool is_multiplicationX(LazyValue* in) const;    
       

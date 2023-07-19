@@ -33,6 +33,10 @@ public:
     
     virtual void check_known() = 0;
     
+    virtual void compact() = 0;
+    
+    virtual LazyValue* explose() = 0;
+    
     void define_as_output();
     
     void get_multiplication( std::vector<LazyValue*> vec);
@@ -77,6 +81,8 @@ public:
     // defined if the value is already known;
     bool known_=false;
     bool update_ = false;
+    bool explosed_ = false;
+    bool compacted_ = false;
     int id_= -1;
     
     LazyType type_ = LAZYUNDEFINED;

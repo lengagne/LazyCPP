@@ -14,11 +14,17 @@ public:
     
     virtual inline void compute() = 0;
     
+    virtual void compact() = 0;
+    
+    virtual LazyValue* explose() = 0;
+    
     virtual void propag_update();
        
     virtual bool operator == (const LazyOperatorX& A) const;
 
     std::list<LazyValue*> p_;
+    
+    LazyValue* exploded_ptr_ = nullptr;
 };
 
 #endif //  __LAZYADDITION_HPP__

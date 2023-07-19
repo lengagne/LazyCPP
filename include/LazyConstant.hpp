@@ -22,6 +22,16 @@ public:
         
     virtual void check_known();
     
+    void compact()
+    {
+        
+    }
+    
+    LazyValue* explose()
+    {
+        return this;
+    }
+    
     virtual std::string file_print( const std::string& varname="x");
     
     virtual std::string file_subname( const std::string& varname="x");

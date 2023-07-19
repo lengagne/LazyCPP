@@ -174,9 +174,10 @@ LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
-    LazyValue *output = explose(compact(in));
+    in->compact();
+    LazyValue *output = in->explose();
+
     outputs_[index].add_suboutput(output,rank);
-    
     return output;
 }
 
@@ -550,7 +551,7 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
     multiplicationsX_.push_back(out);
     return out;    
 }
-
+/*
 LazyValue* LazyManager::compact( LazyValue* a)
 {      
     
@@ -618,60 +619,93 @@ LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
         vec.push_back(cst);
     return add_multiplicationX(vec);
     
-}
+}*/
 
-LazyValue * LazyManager::explose( LazyValue * in)
-{
-    if (is_additionX(in))
-    {
-        LazyAdditionX* v = (LazyAdditionX*) in;
-        LazyValue* m = zero_;
-        for (auto& iter : v->p_)
-            m = add_addition( m,explose(iter));
-        return m;
-    }    
-
-    if (is_cosinus(in))
-    {
-        LazyCosinus* v = (LazyCosinus*) in;
-        return add_cosinus( explose(v->a_));
-    }
-    
-    if (is_constant(in))
-    {
-        return in;
-    }
-    
-    if (is_soustraction(in)) 
-    {
-        return in;
-    }
-
-    if (is_input(in))
-    {
-        return in;
-    }
-
-    
-    if (is_multiplicationX(in))
-    {
-        LazyMultiplicationX* v = (LazyMultiplicationX*) in;
-        LazyValue* m = one_;
-        for (auto& iter : v->p_)
-            m = add_multiplication( m,explose(iter));
-        return m;
-    }
-    
-    if (is_sinus(in))
-    {
-        LazySinus* v = (LazySinus*) in;
-        return add_sinus( explose(v->a_));
-    }
-            
-    std::cerr<<"Error in "<< __FILE__<<" at line : "<< __LINE__<<" the case of value ";
-    in->print();
-    exit(63);
-}
+// LazyValue * LazyManager::explose( LazyValue * in)
+// {
+// //     std::cout<<"explose in"<< in <<std::endl;
+//     if (in->explosed_) return in;   
+//     in->explosed_ = true;    
+//     std::cout<<"Need to explose "<<in<<std::endl;
+//     if (is_addition(in) || is_multiplication(in) || is_soustraction(in))
+//     {
+//         std::cout<<" Explosing Operator2"<<std::endl;
+//         in->print();
+//         LazyOperator2* t = (LazyOperator2*) in;
+//         std::cout<<"t->a_ : "<< t->a_ <<std::endl;
+//         std::cout<<"t->b_ : "<< t->b_ <<std::endl;
+//         t->a_ = explose(t->a_);        
+//         t->b_ = explose(t->b_);
+//         std::cout<<"end"<<std::endl;
+//         in->print();
+//         return in;
+//     }       
+//     
+//     if (is_additionX(in))
+//     {
+//         std::cout<<"explose additionX in"<< in <<std::endl;
+// //         in->print();
+//         LazyAdditionX* v = (LazyAdditionX*) in;
+//         LazyValue* m = zero_;
+//                 
+//         for (auto& iter : v->p_)
+//         {
+//             iter = explose(iter);
+//             m = add_addition( m,iter);
+// //             m = add_addition( m,explose(iter));
+//         }
+//         
+// //         std::cout<<"explose additionX out"<< m <<std::endl;
+// //         m->print();
+//         std::cout<<" explose addtionX "<< in <<" return "<< m <<std::endl;
+//         return m;
+//     }    
+// 
+//     if (is_cosinus(in))
+//     {
+//         LazyCosinus* v = (LazyCosinus*) in;
+//         v->a_ = explose(v->a_);
+//         return add_cosinus(v->a_);
+// //         return add_cosinus( explose(v->a_));
+//     }
+//     
+//     if (is_constant(in))
+//     {
+//         return in;
+//     }
+// 
+// 
+//     if (is_input(in))
+//     {
+//         return in;
+//     }
+// 
+//     
+//     if (is_multiplicationX(in))
+//     {
+//         LazyMultiplicationX* v = (LazyMultiplicationX*) in;
+//         LazyValue* m = one_;
+//         for (auto& iter : v->p_)
+//         {
+//             iter = explose(iter);
+//             m = add_multiplication( m,iter);
+// //             m = add_multiplication( m,explose(iter));
+//         }            
+//         return m;
+//     }
+//     
+//     if (is_sinus(in))
+//     {
+//         LazySinus* v = (LazySinus*) in;
+//         v->a_ = explose(v->a_);
+//         return add_sinus(v->a_);        
+// //         return add_sinus( explose(v->a_));
+//     }
+//             
+//     std::cerr<<"Error in "<< __FILE__<<" at line : "<< __LINE__<<" the case of value ";
+//     in->print();
+//     exit(63);
+// }
 
 std::string LazyManager::get_unique_name()const
 {
@@ -694,6 +728,11 @@ void LazyManager::init_basic_constant()
     constants_.push_back(minus_one_);        
 }
 
+bool LazyManager::is_addition(LazyValue* in) const
+{
+    return (in->type_ == LAZYADDITION);
+}
+
 bool LazyManager::is_additionX(LazyValue* in) const
 {
     return (in->type_ == LAZYADDITIONX);
@@ -707,6 +746,11 @@ bool LazyManager::is_constant( LazyValue* in) const
 bool LazyManager::is_cosinus( LazyValue* in) const
 {
     return (in->type_ == LAZYCOSINUS);
+}
+
+bool LazyManager::is_multiplication(LazyValue* in) const
+{
+    return (in->type_ == LAZYMULTIPLICATION);
 }
 
 bool LazyManager::is_multiplicationX(LazyValue* in) const

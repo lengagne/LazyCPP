@@ -13,6 +13,10 @@ public:
     
     virtual inline void compute() = 0;
     
+    virtual void compact();
+    
+    virtual LazyValue* explose();
+    
     virtual void propag_update();
     
     virtual bool operator == (const LazyOperator2& A) const;

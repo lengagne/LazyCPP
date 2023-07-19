@@ -9,6 +9,10 @@ public:
     
     inline void compute();
     
+    virtual void compact();
+    
+    virtual LazyValue* explose();
+    
     virtual std::string file_print( const std::string& varname="x");
     
     virtual void print( const std::string& tab ="",uint index=0);

@@ -21,6 +21,8 @@ inline void LazyAddition::compute()
     value_ = a_->value_ + b_->value_;
 }
 
+
+
 std::string LazyAddition::file_print( const std::string& varname)
 {
     return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "+" + b_->file_subname(varname);

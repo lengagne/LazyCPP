@@ -17,6 +17,25 @@ void LazyOperator1::check_known()
     known_ = true;
 }
 
+void LazyOperator1::compact()
+{
+    if (!compacted_)
+    {
+        compacted_ = true;
+        a_->compact();
+    }
+}
+
+LazyValue* LazyOperator1::explose()
+{
+    if (!explosed_)
+    {
+        explosed_ = true;
+        a_ = a_->explose();
+    }
+    return this;
+}
+
 void LazyOperator1::propag_update()
 {
     update_ = a_->update_;
