@@ -17,11 +17,8 @@ class LazyConstant : public LazyValue {
 public:
     LazyConstant(double value);
     
-    /// update the list of the dependancies
-    virtual void add_to_list(std::vector<LazyValue*>& vec);
-        
-    virtual void check_known();
-    
+    ~ LazyConstant();
+       
     void compact()
     {
         
@@ -40,9 +37,10 @@ public:
 
     virtual void print_equation();
     
-    virtual void propag_update();
-    
-    virtual void re_init_known();
+    virtual void propag_update(int v=-1);
+       
+        /// update the list of the dependancies
+    virtual void update_list(std::vector<LazyValue*>& vec, int current);
     
     void operator = (const double & d);
         

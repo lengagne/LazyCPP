@@ -1,25 +1,5 @@
 #include "LazyOperator2.hpp"
 
-void LazyOperator2::add_to_list(std::vector<LazyValue*>& vec)
-{
-    if (!known_)
-    {
-        a_->add_to_list(vec);
-        b_->add_to_list(vec);
-        vec.push_back(this);            
-    }
-    known_ =true;
-}    
-
-void LazyOperator2::check_known()
-{
-    if(!known_)
-    {
-        a_->check_known();
-        b_->check_known();
-    }
-    known_ = true;
-}
 
 void LazyOperator2::compact()
 {
@@ -42,9 +22,46 @@ LazyValue* LazyOperator2::explose()
     return this;
 }
 
-void LazyOperator2::propag_update()
+void LazyOperator2::update_list(std::vector<LazyValue*>& vec, int current)
 {
-    update_ = a_->update_ || b_->update_;
+//     if (update_ < current)
+//     {
+//         a_->update_list(vec,current);
+//         b_->update_list(vec,current);
+//         vec.push_back(this);            
+//     }
+//     update_ = current;
+//     std::cout<<"\t update_list of "<<std::endl;
+//     print_equation();
+//     std::cout<<"\nupdate_ = " << update_ <<std::endl;
+//     std::cout<<"current = " << current <<std::endl;
+    if (update_ < current)
+    {
+//         std::cout<<"update sons"<<std::endl;
+        a_->update_list(vec,current);
+        b_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+//     else
+//     {
+//         std::cout<<"Do not update sons"<<std::endl;
+//     }
+    update_ = current;
+//     std::cout<<"\t end update_list of "<<std::endl;
+//     print_equation();        
+    
+}    
+
+
+void LazyOperator2::propag_update(int v)
+{
+    if (update_ < v)
+    {
+        update_ = v;
+        a_->propag_update(v);
+        b_->propag_update(v);
+    }    
+//     update_ = a_->update_ || b_->update_;
 }
        
 bool LazyOperator2::operator == (const LazyOperator2& A) const

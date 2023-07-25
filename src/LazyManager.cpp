@@ -36,11 +36,24 @@ void Dependance::compute_dependances()
     std::vector< LazyValue* > vec;
     for (auto out : sub_outputs_)
     {
-        out.second->add_to_list(vec);
+        out.second->update_list(vec,index_output_);
         dependances_[cpt++] = vec;
         counter += vec.size();
     }
 }
+
+// void Dependance::re_init_known()
+// {
+//     uint cpt = 0;
+//     uint counter = 0;
+//     std::vector< LazyValue* > vec;
+//     for (auto out : sub_outputs_)
+//     {
+//         out.second->re_init(vec);
+//         dependances_[cpt++] = vec;
+//         counter += vec.size();
+//     }
+// }
 
 void Dependance::print()
 {
@@ -211,14 +224,9 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     }    
     
     LazySoustraction* out = new LazySoustraction(a,b);
-    for (int i=0;i<soustractions_.size();i++)
-    {
-        if (*soustractions_[i] == *out)
-        {
-            delete out;
-            return soustractions_[i];
-        }
-    }        
+    for (auto& iter : soustractions_)
+        if (*iter == *out)
+            return iter;    
     soustractions_.push_back(out);
     return out;
 }
@@ -307,10 +315,8 @@ void LazyManager::prepare()
 {
     for (auto& iter : outputs_)
     {
-        re_init_known();  
         iter.second.compute_dependances();
     }
-
     std::string class_name_ = get_unique_name();  
     std::string filename = class_name_ + ".cpp";  
     std::ofstream f (filename );
@@ -327,7 +333,6 @@ void LazyManager::prepare()
     {
         iter->id_ = LazyCounter++;
     }
-    
     uint nb_in = LazyCounter;
     // on numerote les variables intermédiaires.
     for (auto& iter : outputs_) // pour toutes les sorties
@@ -343,7 +348,6 @@ void LazyManager::prepare()
             }
         }
     }
-    
     f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
     f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
     
@@ -373,14 +377,28 @@ void LazyManager::prepare()
                 f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
                 it3->update_ = false;
             }
+//             else
+//             {
+//                 f<< "\t\t\t\t\t//"<<   it3->file_print("x")  <<";\n";
+//                 it3->update_ = false;                
+//             }
             
             f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
         }
         f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
-        f<<"\t\t\t\tbreak;\n";            
+        f<<"\t\t\t\tbreak;\n";          
+        
     }    
     f<<"\t\t\tdefault: return 0.;\n";
-    f<<"\n\t\t}\n\t}\n};\n\n";
+    f<<"\n\t\t}\n\t}";
+    
+    f<<"\n\nvoid print_all()\n{\n";
+    f<<"\tfor (int i=0;i<"<< LazyCounter<<";i++)\n"; 
+    f<<"\t\tprintf(\"x[%d] = %f   \\n\",i,x[i]);\n"; 
+    f<<"}\n\n";
+    f<<"\n};\n\n";
+       
+    
     f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
     f<<"extern \"C\" void destroy(" + class_name_ +"* p)\n{\n\tdelete p;\n}\n\n";
 
@@ -428,11 +446,16 @@ void LazyManager::prepare()
     lazycode_ = creator_(); 
 }
 
+void LazyManager::print_all() const
+{
+    lazycode_->print_all();
+}
+
 void LazyManager::print_all_inputs() const
 {
     for (auto& iter : inputs_)
     {
-        std::cout<<" input : "<< iter->name_<<std::endl;
+        std::cout<<" input : "<< iter->name_<<" : "<< iter->value_<<std::endl;
     }
 }
 
@@ -442,18 +465,6 @@ void LazyManager::print_all_output_equations()
     {
         iter.second.print();
     }
-}
-
-void LazyManager::re_init_known()
-{
-    additions_.re_init_known();
-    multiplications_.re_init_known();
-    
-    for (auto& iter : additionsX_)   iter->re_init_known();
-    for (auto& iter : soustractions_)   iter->re_init_known();
-    for (auto& iter : multiplicationsX_)   iter->re_init_known();
-    for (auto& iter : cosinus_)   iter->re_init_known();
-    for (auto& iter : sinus_)   iter->re_init_known();
 }
 
 void LazyManager::reset()
@@ -470,7 +481,12 @@ void LazyManager::reset()
     init_basic_constant();
     counter_ = 0;
     affect_ = false;
-    if (lazycode_)  destroy_code(lazycode_);
+    
+    if (lazycode_)  
+    {
+        lazycode_->delete_files();
+        destroy_code(lazycode_);
+    }
     lazycode_ = nullptr;
     outputs_.clear();
 }
@@ -551,161 +567,6 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
     multiplicationsX_.push_back(out);
     return out;    
 }
-/*
-LazyValue* LazyManager::compact( LazyValue* a)
-{      
-    
-    if ( is_additionX(a))
-    {
-        return compact_additionX( (LazyAdditionX*) a);
-    }
-    
-    if ( is_multiplicationX(a))
-    {
-        return compact_multiplicationX( (LazyMultiplicationX*) a);
-    }    
-    return a;
-}
-
-LazyValue * LazyManager::compact_additionX (LazyAdditionX *a )
-{
-    LazyValue* cst = zero_;
-    std::list<LazyValue*> vec;
-    
-    for ( auto iter : a->p_)
-    {
-        LazyValue * tmp = compact(iter);
- 
-        if ( is_constant(tmp))
-        {
-            cst = add_addition(cst,tmp);
-        }else if (is_additionX(iter))
-        {
-            LazyAdditionX *v = (LazyAdditionX*) iter;
-            for (auto& iter1 : v->p_)
-                vec.push_back( compact(iter1));
-        }else 
-        {
-            vec.push_back( compact(tmp));
-        }
-    }
-    if ( !is_zero(cst))
-        vec.push_back(cst);
-    return add_additionX(vec);
-    
-}
-
-LazyValue * LazyManager::compact_multiplicationX (LazyMultiplicationX *a )
-{
-    LazyValue* cst = one_;
-    std::list<LazyValue*> vec;
-    for ( auto iter : a->p_)
-    {     
-        if ( is_constant(iter))
-        {
-            cst = add_multiplication(cst,iter);
-        }else if (is_multiplicationX(iter))
-        {
-            LazyMultiplicationX *v = (LazyMultiplicationX*) iter;
-            for (auto& iter1 : v->p_)
-                vec.push_back( compact(iter1));
-        }
-        else
-        {
-            vec.push_back( compact(iter));
-        }
-    }
-    if ( !is_one(cst))
-        vec.push_back(cst);
-    return add_multiplicationX(vec);
-    
-}*/
-
-// LazyValue * LazyManager::explose( LazyValue * in)
-// {
-// //     std::cout<<"explose in"<< in <<std::endl;
-//     if (in->explosed_) return in;   
-//     in->explosed_ = true;    
-//     std::cout<<"Need to explose "<<in<<std::endl;
-//     if (is_addition(in) || is_multiplication(in) || is_soustraction(in))
-//     {
-//         std::cout<<" Explosing Operator2"<<std::endl;
-//         in->print();
-//         LazyOperator2* t = (LazyOperator2*) in;
-//         std::cout<<"t->a_ : "<< t->a_ <<std::endl;
-//         std::cout<<"t->b_ : "<< t->b_ <<std::endl;
-//         t->a_ = explose(t->a_);        
-//         t->b_ = explose(t->b_);
-//         std::cout<<"end"<<std::endl;
-//         in->print();
-//         return in;
-//     }       
-//     
-//     if (is_additionX(in))
-//     {
-//         std::cout<<"explose additionX in"<< in <<std::endl;
-// //         in->print();
-//         LazyAdditionX* v = (LazyAdditionX*) in;
-//         LazyValue* m = zero_;
-//                 
-//         for (auto& iter : v->p_)
-//         {
-//             iter = explose(iter);
-//             m = add_addition( m,iter);
-// //             m = add_addition( m,explose(iter));
-//         }
-//         
-// //         std::cout<<"explose additionX out"<< m <<std::endl;
-// //         m->print();
-//         std::cout<<" explose addtionX "<< in <<" return "<< m <<std::endl;
-//         return m;
-//     }    
-// 
-//     if (is_cosinus(in))
-//     {
-//         LazyCosinus* v = (LazyCosinus*) in;
-//         v->a_ = explose(v->a_);
-//         return add_cosinus(v->a_);
-// //         return add_cosinus( explose(v->a_));
-//     }
-//     
-//     if (is_constant(in))
-//     {
-//         return in;
-//     }
-// 
-// 
-//     if (is_input(in))
-//     {
-//         return in;
-//     }
-// 
-//     
-//     if (is_multiplicationX(in))
-//     {
-//         LazyMultiplicationX* v = (LazyMultiplicationX*) in;
-//         LazyValue* m = one_;
-//         for (auto& iter : v->p_)
-//         {
-//             iter = explose(iter);
-//             m = add_multiplication( m,iter);
-// //             m = add_multiplication( m,explose(iter));
-//         }            
-//         return m;
-//     }
-//     
-//     if (is_sinus(in))
-//     {
-//         LazySinus* v = (LazySinus*) in;
-//         v->a_ = explose(v->a_);
-//         return add_sinus(v->a_);        
-// //         return add_sinus( explose(v->a_));
-//     }
-//             
-//     std::cerr<<"Error in "<< __FILE__<<" at line : "<< __LINE__<<" the case of value ";
-//     in->print();
-//     exit(63);
-// }
 
 std::string LazyManager::get_unique_name()const
 {
@@ -719,7 +580,6 @@ std::string LazyManager::get_unique_name()const
     }while(found);
     return out;
 }
-
 
 void LazyManager::init_basic_constant()
 {             

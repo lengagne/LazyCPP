@@ -35,15 +35,15 @@ bool LazyStorage::look_for (LazyOperator2* * item) const
     
 }
     
-void LazyStorage::re_init_known()
-{
-    for (auto& iter : storage_)
-    {
-        for (auto& lazy : iter.second)
-            lazy.first->re_init_known();
-    }
-}
-    
+// void LazyStorage::re_init_known()
+// {
+//     for (auto& iter : storage_)
+//     {
+//         for (auto& lazy : iter.second)
+//             lazy.first->re_init_known();
+//     }
+// }
+//     
 void LazyStorage::store( LazyOperator2* item)
 {
     storage_[item->a_][item->b_] = item;

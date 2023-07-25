@@ -8,9 +8,9 @@ class LazyOperatorX : public LazyValue {
 public:
     
     /// update the list of the dependancies
-    virtual void add_to_list(std::vector<LazyValue*>& vec);    
+//     virtual void add_to_list(std::vector<LazyValue*>& vec);    
     
-    virtual void check_known();
+//     virtual void check_known();
     
     virtual inline void compute() = 0;
     
@@ -18,7 +18,9 @@ public:
     
     virtual LazyValue* explose() = 0;
     
-    virtual void propag_update();
+    virtual void propag_update(int up =-1);
+    
+    virtual void update_list(std::vector<LazyValue*>& vec, int current);
        
     virtual bool operator == (const LazyOperatorX& A) const;
 

@@ -21,11 +21,15 @@ uint LazyGetNbInputs();
 
 void LazyPrepare();
 
+void LazyPrintAll();
+
 void LazyPrintAllInputs();
 
 void LazyReset();
 
 double LazyUpdate(uint index, uint cpt);
+
+// LazyValue* LazyAddMultiplication( LazyValue* a , LazyValue *b)
 
 
 #endif // __LAZYCPP_H__

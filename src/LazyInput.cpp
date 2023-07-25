@@ -4,18 +4,9 @@
 LazyInput::LazyInput(double value, const std::string name):name_(name) 
 {            
     value_ = value;
-    known_ = true;
+    update_ = -1;
 }
     
-void LazyInput::add_to_list(std::vector<LazyValue*>& vec)
-{
-    /// nothing to do
-}
-    
-void LazyInput::check_known()
-{
-    /// nothing to do
-}
 
 void LazyInput::print( const std::string& tab,uint index) 
 {
@@ -27,17 +18,12 @@ void LazyInput::print_equation()
     std::cout<<name_;
 }
 
-void LazyInput::propag_update()
+void LazyInput::propag_update(int i)
 {
     /// nothing to do
 }
 
-void LazyInput::re_init_known()
+void LazyInput::update_list(std::vector<LazyValue*>& vec, int current)
 {
-    known_ = true;
-}
-
-void LazyInput::set_update(bool i)
-{
-    update_ = i;
+//     std::cout<<"no update I am an input"<<std::endl;
 }

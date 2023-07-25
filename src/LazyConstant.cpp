@@ -5,22 +5,19 @@ LazyConstant::LazyConstant(double value)
 {
     type_ = LAZYCONSTANT;
     value_ = value;
-    known_ = true;
+    update_ = -1;
+}    
+
+LazyConstant::~LazyConstant()
+{
 }    
     
-void LazyConstant::add_to_list(std::vector<LazyValue*>& vec)
-{
-    /// nothing to do
-}
-    
-void LazyConstant::check_known()
-{
-    /// nothing to do
-}    
+
 
 std::string LazyConstant::file_subname( const std::string& varname)
 {
-    return to_string_with_precision(value_,30);
+    return to_string_with_precision(value_,20);
+//     return std::to_string(value_);
 }    
 
 
@@ -39,16 +36,15 @@ void LazyConstant::print_equation()
     std::cout<< value_;
 }    
 
-void LazyConstant::propag_update()
+void LazyConstant::propag_update(int v)
 {
-    update_ = false;
+    update_ = -1;
 }
 
-void LazyConstant::re_init_known()
+void LazyConstant::update_list(std::vector<LazyValue*>& vec, int current)
 {
-    // nothing to do
+//     std::cout<<"no update I am a constant"<<std::endl;
 }
-
 
 void LazyConstant::operator = (const double & d)
 {

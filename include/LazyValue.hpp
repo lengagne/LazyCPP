@@ -21,18 +21,14 @@ class LazyValue
 {
 public:
     
-    virtual ~LazyValue(){}
+//     virtual ~LazyValue(){}
 
-    /// update the list of the dependancies
-    virtual void add_to_list(std::vector<LazyValue*>& vec) = 0;
-    
+   
     virtual inline void compute()
     {
         
     }
-    
-    virtual void check_known() = 0;
-    
+       
     virtual void compact() = 0;
     
     virtual LazyValue* explose() = 0;
@@ -57,17 +53,16 @@ public:
     
     virtual void print_equation() = 0;
     
-    virtual void propag_update()=0;
-    
-    virtual void re_init_known()
-    {
-        known_ = false;
-    }
+    virtual void propag_update(int v =-1)=0;
     
     void set_time( uint time)
     {
         time_ = time;
     }
+    
+    /// update the list of the dependancies
+    virtual void update_list(std::vector<LazyValue*>& vec, int current) = 0;
+    
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
     {
@@ -79,8 +74,9 @@ public:
     uint time_=0;
     
     // defined if the value is already known;
-    bool known_=false;
-    bool update_ = false;
+    int update_ = -1;
+    
+    
     bool explosed_ = false;
     bool compacted_ = false;
     int id_= -1;

@@ -22,6 +22,8 @@ public:
     
     void print();
     
+//     void re_init_known();    
+    
     double update( uint cpt );
     
     uint index_output_ = 0;
@@ -41,6 +43,8 @@ public:
     
     uint affect();
     
+    LazyValue* add_addition( LazyValue* a , LazyValue *b);
+    
     LazyValue* add_additionX( LazyValue* a , LazyValue *b);
 
     LazyValue* add_constant(double d);
@@ -48,6 +52,8 @@ public:
     LazyInput* add_input( const double &a, const std::string& name);
 
     LazyValue* add_cosinus( LazyValue* a);
+    
+    LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
 
     LazyValue* add_multiplicationX( LazyValue* a , LazyValue *b);
 
@@ -73,11 +79,11 @@ public:
 
     void prepare();
     
+    void print_all() const;
+    
     void print_all_inputs() const;
 
     void print_all_output_equations();
-
-    void re_init_known();
     
     void reset();
     
@@ -85,29 +91,31 @@ public:
         
 private:
 
-    LazyConstant * zero_, *one_, *minus_one_;
+    LazyConstant* zero_ = nullptr;
+    LazyConstant*one_ = nullptr;
+    LazyConstant*minus_one_ = nullptr;
     
-    std::vector<LazyConstant*> constants_;
-    std::vector<LazyInput*> inputs_;        
+    std::list<LazyConstant*> constants_;
+    std::list<LazyInput*> inputs_;        
     
-    std::vector<LazySinus*> sinus_;
-    std::vector<LazyCosinus*> cosinus_;
+    std::list<LazySinus*> sinus_;
+    std::list<LazyCosinus*> cosinus_;
 
-    std::vector<LazySoustraction*> soustractions_;
+    std::list<LazySoustraction*> soustractions_;
     
-    std::vector<LazyMultiplicationX*> multiplicationsX_;
-    std::vector<LazyAdditionX*> additionsX_;
+    std::list<LazyMultiplicationX*> multiplicationsX_;
+    std::list<LazyAdditionX*> additionsX_;
 
     LazyStorage additions_;
     LazyStorage multiplications_;
     
     std::map<uint,Dependance> outputs_;    
 
-    LazyValue* add_addition( LazyValue* a , LazyValue *b);
+//     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
     LazyValue* add_additionX( std::list<LazyValue*> v);
     
-    LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+//     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
     
     LazyValue* add_multiplicationX( std::list<LazyValue*> v);
     
@@ -147,7 +155,7 @@ private:
     create_code* creator_;
     destroy_code* destructor_;
     LazyGeneratedCode* lazycode_ = nullptr;
-    
+       
 };
 
 extern LazyManager LMANAGER;

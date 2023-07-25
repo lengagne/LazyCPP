@@ -1,32 +1,35 @@
 #include "LazyOperatorX.hpp"
 
-void LazyOperatorX::add_to_list(std::vector<LazyValue*>& vec)
-{
-    if (!known_)
-    {
-        for (auto iter : p_)
-            iter->add_to_list(vec);
-        vec.push_back(this);            
-    }
-    known_ =true;
-}    
-    
-void LazyOperatorX::check_known()
-{
-    if(!known_)
-    {
-        for (auto iter : p_)
-            iter->check_known();
-    }
-    known_ = true;
-}    
+ 
 
-void LazyOperatorX::propag_update()
+void LazyOperatorX::propag_update(int v)
 {
-    update_ = false;
+    update_ = v;
     for (auto iter : p_)
+    {
+        iter->propag_update(v);
         update_ = update_ || iter->update_;
+    }
 }
+
+
+void LazyOperatorX::update_list(std::vector<LazyValue*>& vec, int current)
+{
+    std::cerr<<"FILE : "<< __FILE__<<" line : "<< __LINE__<<std::endl;
+    std::cerr<<"THIS FONCTION SHOULD NOT BE CALLED"<<std::endl;
+    std::exit(1234);
+    
+    if (update_ < current)
+    {
+        update_ = current;
+        for (auto iter : p_)
+        {
+            update_list(vec,update_);
+        }
+    }
+    
+}   
+
        
 bool LazyOperatorX::operator == (const LazyOperatorX& A) const
 {

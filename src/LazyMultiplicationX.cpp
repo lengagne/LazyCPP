@@ -1,6 +1,7 @@
 #include "LazyMultiplicationX.hpp"
 #include "LazyMultiplication.hpp"
 #include "LazyConstant.hpp"
+#include "LazyCPP.hpp"
 
 LazyMultiplicationX::LazyMultiplicationX(std::list<LazyValue*>& a)
 {
@@ -53,7 +54,8 @@ void LazyMultiplicationX::compact()
         
     if ( cst)
     {
-        p_.push_back(new LazyConstant(cst));
+        p_.push_back(LMANAGER.add_constant(cst));
+//     p_.push_back(new LazyConstant(cst));
     }   
 }
 
@@ -73,7 +75,8 @@ LazyValue* LazyMultiplicationX::explose()
                 m = iter->explose();
             }else
             {
-                m = new LazyMultiplication(m,iter->explose());
+                m = LMANAGER.add_multiplication(m,iter->explose());
+//                 m = new LazyMultiplication(m,iter->explose());
             }
         }        
         exploded_ptr_ = m;

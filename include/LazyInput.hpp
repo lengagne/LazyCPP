@@ -7,11 +7,7 @@
 class LazyInput : public LazyValue {
 public:
     LazyInput(double value, const std::string name="not_defined"); 
-    
-    virtual void add_to_list(std::vector<LazyValue*>& vec);
-            
-    virtual void check_known();
-    
+        
     void compact()
     {
         
@@ -31,11 +27,10 @@ public:
     
     virtual void print_equation();
     
-    virtual void propag_update();
+    virtual void propag_update(int v =-1);
     
-    virtual void re_init_known();
-    
-    void set_update(bool i);    
+        /// update the list of the dependancies
+    virtual void update_list(std::vector<LazyValue*>& vec, int current);
     
     void operator = (const double & d);
 

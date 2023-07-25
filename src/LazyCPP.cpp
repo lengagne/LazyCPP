@@ -18,6 +18,11 @@ void LazyPrepare()
     LMANAGER.prepare();
 }
 
+void LazyPrintAll()
+{
+    LMANAGER.print_all();
+}
+
 void LazyPrintAllInputs()
 {
     LMANAGER.print_all_inputs();

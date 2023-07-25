@@ -1,6 +1,7 @@
 #include "LazyAdditionX.hpp"
 #include "LazyAddition.hpp"
 #include "LazyConstant.hpp"
+#include "LazyCPP.hpp"
 
 LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 {
@@ -55,7 +56,8 @@ void LazyAdditionX::compact()
         
     if ( cst)
     {
-        p_.push_back(new LazyConstant(cst));
+//         p_.push_back(new LazyConstant(cst));
+        p_.push_back(LMANAGER.add_constant(cst));
     }   
 }
 
@@ -73,7 +75,8 @@ LazyValue* LazyAdditionX::explose()
                 m = iter->explose();
             }else
             {
-                m = new LazyAddition(m,iter->explose());
+                m = LMANAGER.add_addition(m,iter->explose());                
+//                 m = new LazyAddition(m,iter->explose());
             }
         }        
         exploded_ptr_ = m;
