@@ -444,6 +444,7 @@ void LazyManager::prepare()
     }while(!creator_ || ! destructor_);
 
     lazycode_ = creator_(); 
+    lazycode_->set_class_name(class_name_);
 }
 
 void LazyManager::print_all() const
