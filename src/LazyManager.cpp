@@ -539,8 +539,7 @@ LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
 }
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
-{
-            
+{   
     LazyValue* check = check_multiplication(a,b);
     if (check)
         return check;

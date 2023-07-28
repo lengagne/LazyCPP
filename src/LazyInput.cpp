@@ -13,6 +13,12 @@ void LazyInput::print( const std::string& tab,uint index)
     std::cout<<tab<<"LazyInput:("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
 }
 
+std::string LazyInput::get_string( )
+{
+    return name_; 
+}
+
+
 void LazyInput::print_equation()
 {
     std::cout<<name_;

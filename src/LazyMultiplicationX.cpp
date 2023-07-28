@@ -100,6 +100,19 @@ std::string LazyMultiplicationX::file_print( const std::string& varname)
     return   cmd;
 }
 
+std::string LazyMultiplicationX::get_string( )
+{
+    std::string cmd = "(";
+    uint cpt = 0;
+    for (auto iter : p_)
+    {
+        if (cpt++)  cmd = cmd +"*";
+        cmd = cmd+ iter->get_string();
+    }
+    cmd = cmd +")";
+    return cmd;
+}
+
 void LazyMultiplicationX::print( const std::string& tab,uint index) 
 {
     
@@ -115,7 +128,7 @@ void LazyMultiplicationX::print_equation()
     for (auto iter : p_)
     {
         iter->print_equation();
-        std::cout<<" FOIS ";   
+        std::cout<<" * ";   
     }
     std::cout<<1<<")";
 }

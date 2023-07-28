@@ -27,6 +27,11 @@ std::string LazyAddition::file_print( const std::string& varname)
 {
     return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "+" + b_->file_subname(varname);
 }
+
+std::string LazyAddition::get_string( )
+{
+    return "(" + a_->get_string() + "+" + b_->get_string() + ")";
+}
     
 void LazyAddition::print( const std::string& tab ,uint index) 
 {

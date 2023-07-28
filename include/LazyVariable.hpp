@@ -46,6 +46,16 @@ public:
     
     void operator *= (const LazyVariable& b);
 
+    std::string get_string()
+    {
+        return ref_->get_string();
+    }   
+    
+    std::string file_print( const std::string& varname="x")
+    {
+        return ref_->file_print(varname);
+    }
+    
     void print_detail()
     {
         ref_->print();
@@ -56,7 +66,7 @@ public:
         ref_->print_equation();
     }
     
-private:
+// private:
     LazyValue* ref_;
     
     friend class LazyManager;
@@ -66,7 +76,7 @@ private:
     friend LazyVariable sin (const LazyVariable& a);    
     
     friend void LazyAddOutput(LazyVariable& in,uint index,uint rank);
-    
+        
     LazyVariable(LazyValue* in);
 };
 

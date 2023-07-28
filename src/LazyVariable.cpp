@@ -102,7 +102,8 @@ void LazyVariable::operator *= (const LazyVariable& b)
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
 //     v.ref_->print_equation();
-    stream << v.ref_->value_;
+//     stream << v.ref_->value_;
+    stream <<  v.ref_->get_string();
     return stream;
 }
    

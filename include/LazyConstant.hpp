@@ -29,6 +29,8 @@ public:
         return this;
     }
     
+    virtual std::string get_string( );
+    
     virtual std::string file_print( const std::string& varname="x");
     
     virtual std::string file_subname( const std::string& varname="x");

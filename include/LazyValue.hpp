@@ -49,6 +49,8 @@ public:
         return varname + "[" + std::to_string(id_)+"]";
     }
     
+    virtual std::string get_string( ) = 0;
+    
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
     virtual void print_equation() = 0;

@@ -103,6 +103,19 @@ std::string LazyAdditionX::file_print( const std::string& varname)
     return   cmd;
 }
 
+std::string LazyAdditionX::get_string( )
+{
+    std::string cmd = "(";
+    uint cpt = 0;
+    for (auto iter : p_)
+    {
+        if (cpt++)  cmd = cmd +"+";
+        cmd = cmd+ iter->get_string();
+    }
+    cmd = cmd +")";
+    return cmd;
+}
+
 void LazyAdditionX::print( const std::string& tab,uint index) 
 {
     std::cout<<tab<<"LazyAdditionX:("<<this<<"): AdditionX ("<<value_<<")"<<std::endl;
@@ -117,7 +130,7 @@ void LazyAdditionX::print_equation()
     for (auto iter : p_)
     {
         if (cpt++)
-            std::cout<<" PLUS ";   
+            std::cout<<" + ";   
         iter->print_equation();
         
     }
