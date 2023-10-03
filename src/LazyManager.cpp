@@ -481,7 +481,7 @@ void LazyManager::reset()
     constants_.clear();
     init_basic_constant();
     counter_ = 0;
-    affect_ = false;
+    affect_ = true;
     
     if (lazycode_)  
     {
