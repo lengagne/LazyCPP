@@ -17,6 +17,8 @@ class LazyVariable;
 
 void LazyAddOutput(const LazyVariable& in,uint index,uint rank);
 
+void LazyCleanFiles();
+
 uint LazyGetNbInputs();
 
 void LazyPrepare();
@@ -24,6 +26,8 @@ void LazyPrepare();
 void LazyPrintAll();
 
 void LazyPrintAllInputs();
+
+void LazyPrintAllOutputs();
 
 void LazyReset();
 

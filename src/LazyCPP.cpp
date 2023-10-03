@@ -13,6 +13,11 @@ uint LazyGetNbInputs()
     return LMANAGER.get_nb_inputs();
 }
 
+void LazyCleanFiles()
+{
+    LMANAGER.clean_files();
+}
+
 void LazyPrepare()
 {
     LMANAGER.prepare();
@@ -26,6 +31,11 @@ void LazyPrintAll()
 void LazyPrintAllInputs()
 {
     LMANAGER.print_all_inputs();
+}
+
+void LazyPrintAllOutputs()
+{
+    LMANAGER.print_all_output_equations();
 }
 
 void LazyReset()

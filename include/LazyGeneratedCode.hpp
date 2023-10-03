@@ -1,5 +1,6 @@
 #include <vector>
 #include <math.h>
+#include <unistd.h>    
 
 typedef double Real;
 const std::string RealName = "double";
@@ -10,7 +11,7 @@ public:
     
     virtual ~LazyGeneratedCode()
     {
-        delete_files();
+//         delete_files();
     }
     
 	virtual unsigned int get_nb_in()const  = 0;
@@ -29,6 +30,7 @@ public:
         std::string libname = "lib" + class_name_ + ".so";  
         std::string cmd = "rm " + filename + " " + libname;
         int dummy = system(cmd.c_str());
+        sleep(1);
     }
     
     void set_class_name( std::string name)

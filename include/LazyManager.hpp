@@ -65,6 +65,8 @@ public:
 
     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
 
+    void clean_files();
+    
     uint get_nb_inputs() const;
 
     LazyValue* get_zero() const;

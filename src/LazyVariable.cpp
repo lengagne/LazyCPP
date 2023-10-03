@@ -49,7 +49,10 @@ void LazyVariable::operator = (double d)
         ref_ = LMANAGER.add_constant(d);
 }
         
-LazyVariable::~LazyVariable(){}
+LazyVariable::~LazyVariable()
+{
+    
+}
     
     
 double LazyVariable::get_value() const

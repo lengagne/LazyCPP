@@ -16,12 +16,14 @@ Dependance::Dependance()
 {
     index_output_ = 42;
     nb_sub_output_ = 0;
+    sub_outputs_.clear();
 };
 
 Dependance::Dependance(uint index)
 {
     index_output_ = index;
     nb_sub_output_ = 0;
+    sub_outputs_.clear();
 };
 
 void Dependance::add_suboutput( LazyValue * in, uint nb)
@@ -41,19 +43,6 @@ void Dependance::compute_dependances()
         counter += vec.size();
     }
 }
-
-// void Dependance::re_init_known()
-// {
-//     uint cpt = 0;
-//     uint counter = 0;
-//     std::vector< LazyValue* > vec;
-//     for (auto out : sub_outputs_)
-//     {
-//         out.second->re_init(vec);
-//         dependances_[cpt++] = vec;
-//         counter += vec.size();
-//     }
-// }
 
 void Dependance::print()
 {
@@ -191,6 +180,9 @@ LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
     LazyValue *output = in->explose();
 
     outputs_[index].add_suboutput(output,rank);
+    
+//     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
+//     std::cout<<"outputs_.size() "<< outputs_.size() <<std::endl;
     return output;
 }
 
@@ -318,6 +310,7 @@ void LazyManager::prepare()
         iter.second.compute_dependances();
     }
     std::string class_name_ = get_unique_name();  
+    std::cout<<"class_name = "<< class_name_ <<std::endl;
     std::string filename = class_name_ + ".cpp";  
     std::ofstream f (filename );
     f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
@@ -470,16 +463,40 @@ void LazyManager::print_all_output_equations()
 
 void LazyManager::reset()
 {
+//     for ( auto & v : inputs_)
+//         delete v;
     inputs_.clear();
+
+//     for ( auto & v : additionsX_)
+//         delete v;    
     additionsX_.clear();
-    additions_.clear();
+        
+//     for ( auto & v : cosinus_)
+//         delete v;    
     cosinus_.clear();
-    multiplications_.clear();
+    
+//     for ( auto & v : multiplicationsX_)
+//         delete v;
     multiplicationsX_.clear();
+    
+//     for ( auto & v : sinus_)
+//         delete v;
     sinus_.clear();
+    
+//     for ( auto & v : soustractions_)
+//         delete v;
     soustractions_.clear();
+    
+//     for ( auto & v : constants_)
+//         delete v;
     constants_.clear();
+    
+    additions_.clear();    
+    multiplications_.clear();
+    
+    
     init_basic_constant();
+    
     counter_ = 0;
     affect_ = true;
     
@@ -489,6 +506,7 @@ void LazyManager::reset()
         destroy_code(lazycode_);
     }
     lazycode_ = nullptr;
+    
     outputs_.clear();
 }
 
@@ -496,13 +514,10 @@ double LazyManager::update(uint index, uint cpt)
 {
     std::vector<double> inputs(inputs_.size());
     for (auto & iter : inputs_)
-    {
         inputs[iter->id_] = iter->value_;
-    }
+    
     lazycode_->set_input(inputs);
     return lazycode_->function(index,cpt);
-
-//     return outputs_[index].update(cpt);
 }
 
 /////////////////////////////////////////////////////
@@ -566,6 +581,12 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
     }
     multiplicationsX_.push_back(out);
     return out;    
+}
+
+void LazyManager::clean_files()
+{
+    if (lazycode_)
+        lazycode_->delete_files();
 }
 
 std::string LazyManager::get_unique_name()const
