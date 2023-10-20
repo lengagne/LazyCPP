@@ -26,8 +26,7 @@ void LazyOperatorX::update_list(std::vector<LazyValue*>& vec, int current)
         {
             update_list(vec,update_);
         }
-    }
-    
+    }    
 }   
 
        

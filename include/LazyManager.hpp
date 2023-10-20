@@ -8,6 +8,7 @@
 #include "LazyGeneratedCode.hpp"
 #include <vector>
 #include <map>
+#include <set>
 
 class Dependance
 {
@@ -32,6 +33,46 @@ public:
     std::map< uint, std::vector< LazyValue* > > dependances_; // in case we have the value changes    
 };
 
+
+struct PtrComparer {
+    bool operator()(const LazyOperator1* a, const LazyOperator1* b) const {
+        return a < b; 
+    }
+    
+    bool operator()(const LazyConstant* a, const LazyConstant* b) const {
+        return a < b; 
+    }    
+    
+    bool operator()(const LazyInput* a, const LazyInput* b) const {
+        return a < b; 
+    }        
+    
+    
+    bool operator()(const LazyOperator2* a, const LazyOperator2* b) const {
+        if (a->a_ < b->a_)  return true;
+        if (a->a_ > b->a_)  return false;
+        
+        if (a->b_ < b->b_)  return true;
+        return false;
+    }
+    
+     bool operator()(const LazyOperatorX* a, const LazyOperatorX* b) const {
+        if (a->p_.size() < b->p_.size())  return true;
+        if (a->p_.size() > b->p_.size())  return false;
+        return a->p_ < b->p_;
+/*         
+        if (a->p_.size() < b->p_.size())  return true;
+        if (a->p_.size() > b->p_.size())  return false;
+        
+        for (int i=0;i<a->p_.size();i++)
+        {
+            if (a->p_[i] < b->p_[i])  return true;
+            if (a->p_[i] > b->p_[i])  return false;            
+        }
+        return false;*/
+    }   
+    
+};
 
 class LazyManager
 {
@@ -70,6 +111,8 @@ public:
     uint get_nb_inputs() const;
 
     LazyValue* get_zero() const;
+    
+    bool is_constant( LazyValue* in) const;
 
     bool is_input( LazyValue* in) const;
     
@@ -97,16 +140,16 @@ private:
     LazyConstant*one_ = nullptr;
     LazyConstant*minus_one_ = nullptr;
     
-    std::list<LazyConstant*> constants_;
-    std::list<LazyInput*> inputs_;        
+    std::set<LazyConstant*,PtrComparer> constants_;
+    std::set<LazyInput*,PtrComparer> inputs_;        
     
-    std::list<LazySinus*> sinus_;
-    std::list<LazyCosinus*> cosinus_;
+    std::set<LazySinus*,PtrComparer> sinus_;
+    std::set<LazyCosinus*,PtrComparer> cosinus_;
 
-    std::list<LazySoustraction*> soustractions_;
+    std::set<LazySoustraction*,PtrComparer> soustractions_;
     
-    std::list<LazyMultiplicationX*> multiplicationsX_;
-    std::list<LazyAdditionX*> additionsX_;
+    std::set<LazyMultiplicationX*,PtrComparer> multiplicationsX_;
+    std::set<LazyAdditionX*,PtrComparer> additionsX_;
 
     LazyStorage additions_;
     LazyStorage multiplications_;
@@ -138,7 +181,7 @@ private:
     
     bool is_additionX(LazyValue* in) const;    
     
-    bool is_constant( LazyValue* in) const;
+    
     
     bool is_cosinus( LazyValue* in) const;
     

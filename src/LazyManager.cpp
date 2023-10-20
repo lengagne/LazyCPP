@@ -103,7 +103,7 @@ LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
     for (auto& iter : additionsX_)
         if (*iter == *out)
             return iter;
-    additionsX_.push_back(out);
+    additionsX_.insert(out);
     return out;
 }
 
@@ -115,7 +115,7 @@ LazyValue* LazyManager::add_constant( double d)
             return iter;
         }
     LazyConstant * out = new LazyConstant(d);
-    constants_.push_back(out);
+    constants_.insert(out);
     return out;    
 }
 
@@ -126,7 +126,7 @@ LazyValue* LazyManager::add_cosinus( LazyValue* a)
     for (auto& iter : cosinus_)
         if (*iter == *out)
             return iter;
-    cosinus_.push_back(out);
+    cosinus_.insert(out);
     return out;
 }
 
@@ -140,7 +140,7 @@ LazyInput* LazyManager::add_input( const double &a, const std::string& name)
         }
         
     LazyInput* out = new LazyInput(a,name);
-    inputs_.push_back(out);
+    inputs_.insert(out);
     return out;
 }
 
@@ -189,12 +189,23 @@ LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
 LazyValue* LazyManager::add_sinus( LazyValue* a)
 {
     LazySinus* out = new LazySinus(a);
-    // check if does not already exist
-    for (auto& iter : sinus_)
-        if (*iter == *out)
-            return iter;
-    sinus_.push_back(out);
-    return out;
+//     // check if does not already exist
+//     for (auto& iter : sinus_)
+//         if (*iter == *out)
+//             return iter;
+//     sinus_.insert(out);
+//     return out;
+    
+    auto result = sinus_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }
 }
 
 
@@ -216,11 +227,22 @@ LazyValue* LazyManager::add_soustraction( LazyValue* a , LazyValue *b)
     }    
     
     LazySoustraction* out = new LazySoustraction(a,b);
-    for (auto& iter : soustractions_)
-        if (*iter == *out)
-            return iter;    
-    soustractions_.push_back(out);
-    return out;
+//     for (auto& iter : soustractions_)
+//         if (*iter == *out)
+//             return iter;    
+//     soustractions_.insert(out);
+//     return out;
+   
+    auto result = soustractions_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 uint LazyManager::affect()
@@ -545,12 +567,23 @@ LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
     // creation of the new object
     LazyAdditionX* out = new LazyAdditionX(v);
     
-    // check if does not already exist
-    for (auto& iter : additionsX_)
-        if (*iter == *out)
-            return iter;
-    additionsX_.push_back(out);
+//     // check if does not already exist
+//     for (auto& iter : additionsX_)
+//         if (*iter == *out)
+//             return iter;
+    additionsX_.insert(out);
     return out;    
+//     std::cout<<"additionsX_.size() = "<< additionsX_.size()<<std::endl;
+//     auto result = additionsX_.insert( out);
+//     if (result.second) 
+//     {
+//         // L'élément a été inséré, renvoie l'élément inséré
+//         return *result.first;
+//     } else {
+//         // L'élément existe déjà, renvoie l'élément existant
+//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         return *result.first;
+//     }    
 }
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
@@ -573,14 +606,28 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
 {
     // creation of the new object
     LazyMultiplicationX* out = new LazyMultiplicationX(v);
-    // check if does not already exist
-    for (auto& iter : multiplicationsX_)
-    {
-        if (*iter == *out)
-            return iter;
-    }
-    multiplicationsX_.push_back(out);
-    return out;    
+
+    
+//     // check if does not already exist
+//     for (auto& iter : multiplicationsX_)
+//     {
+//         if (*iter == *out)
+//             return iter;
+//     }
+    multiplicationsX_.insert(out);
+    return out;
+
+// //     std::cout<<"multiplicationsX_.size() = "<< multiplicationsX_.size()<<std::endl;
+//     auto result = multiplicationsX_.insert( out);
+//     if (result.second) 
+//     {
+//         // L'élément a été inséré, renvoie l'élément inséré
+//         return *result.first;
+//     } else {
+//         // L'élément existe déjà, renvoie l'élément existant
+//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         return *result.first;
+//     }    
 }
 
 void LazyManager::clean_files()
@@ -604,9 +651,9 @@ std::string LazyManager::get_unique_name()const
 
 void LazyManager::init_basic_constant()
 {             
-    constants_.push_back(zero_);
-    constants_.push_back(one_);
-    constants_.push_back(minus_one_);        
+    constants_.insert(zero_);
+    constants_.insert(one_);
+    constants_.insert(minus_one_);        
 }
 
 bool LazyManager::is_addition(LazyValue* in) const

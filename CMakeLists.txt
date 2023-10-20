@@ -1,6 +1,7 @@
-
 cmake_minimum_required( VERSION 2.8 )
 project (LazyCPP)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=c++0x -lstdc++ -msse2 -fPIC")
 
 ## TCMALLOC used to optimized memory allocation
 find_package(PkgConfig REQUIRED)

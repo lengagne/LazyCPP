@@ -33,6 +33,8 @@ public:
     friend std::ostream& operator<< (std::ostream& stream, const LazyVariable& v);
     
     bool operator != (const LazyVariable& b) const;
+    
+    friend bool operator==(const LazyVariable& a, double d);
   
     LazyVariable operator + (const LazyVariable& b) const;
     
@@ -89,5 +91,7 @@ inline LazyVariable operator / (const LazyVariable& a, double b)
 {
     return a*(1.0/b);
 }
+
+
 
 #endif // __LAZYVARIABLE_HPP__

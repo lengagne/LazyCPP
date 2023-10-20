@@ -128,6 +128,13 @@ LazyVariable sin (const LazyVariable& a)
     return out;
 }
 
+bool operator==(const LazyVariable& a, double d)
+{
+    if (LMANAGER.is_constant(a.ref_) && a.ref_->value_ ==d)
+        return true;
+    return false;
+}
+
 
 /////////////////////////////////////////////////////
 ////////////////////Private functions ///////////////
