@@ -63,24 +63,57 @@ void LazyAdditionX::compact()
 
 LazyValue* LazyAdditionX::explose()
 {
+//     if (!explosed_)
+//     {
+//         explosed_ = true;
+//         LazyValue* m;
+//         uint cpt=0;
+//         for (auto iter : p_)
+//         {
+//             if (cpt++ ==0)
+//             {
+//                 m = iter->explose();
+//             }else
+//             {
+//                 m = LMANAGER.add_addition(m,iter->explose());                
+// //                 m = new LazyAddition(m,iter->explose());
+//             }
+//         }        
+//         exploded_ptr_ = m;
+//     }
+    
     if (!explosed_)
     {
+        
         explosed_ = true;
-        LazyValue* m;
-        uint cpt=0;
-        for (auto iter : p_)
+        if (p_.size() == 2)
         {
-            if (cpt++ ==0)
+            LazyValue* m;
+            uint cpt=0;
+            for (auto iter : p_)
             {
-                m = iter->explose();
-            }else
+                if (cpt++ ==0)
+                {
+                    m = iter->explose();
+                }else
+                {
+                    m = LMANAGER.add_addition(m,iter->explose());                
+                }
+            }    
+            exploded_ptr_ = m;
+        }else
+        {
+        
+            std::list<LazyValue*> tmp;            
+            for (auto iter : p_)
             {
-                m = LMANAGER.add_addition(m,iter->explose());                
-//                 m = new LazyAddition(m,iter->explose());
-            }
-        }        
-        exploded_ptr_ = m;
-    }
+                LazyValue* m = iter->explose(); 
+                tmp.push_back(m);
+            }        
+            exploded_ptr_ = new LazyAdditionX(tmp);
+        }
+        
+    }    
     
     if (!exploded_ptr_)
     {
@@ -93,10 +126,10 @@ LazyValue* LazyAdditionX::explose()
 
 std::string LazyAdditionX::file_print( const std::string& varname)
 {
-    std::cerr<<"LazyAdditionX::file_print This should not happen"<<std::endl;
-    print_equation();std::cout<<std::endl;
+//     std::cerr<<"LazyAdditionX::file_print This should not happen"<<std::endl;
+/*    print_equation();std::cout<<std::endl;
     print();std::cout<<std::endl;
-    std::exit(12);    
+    std::exit(12);   */ 
     std::string cmd = varname+"["+ std::to_string(id_)+"] =";
     for (auto iter : p_)
         cmd += "+ " + iter->file_subname(varname) ;
@@ -126,7 +159,7 @@ void LazyAdditionX::print( const std::string& tab,uint index)
 void LazyAdditionX::print_equation()
 {
     uint cpt = 0;
-    std::cout<<"(";
+    std::cout<<"LazyAdditionX(";
     for (auto iter : p_)
     {
         if (cpt++)
@@ -136,3 +169,21 @@ void LazyAdditionX::print_equation()
     }
     std::cout<<")";
 }
+
+void LazyAdditionX::update_list(std::vector<LazyValue*>& vec, int current)
+{
+//     std::cerr<<"FILE : "<< __FILE__<<" line : "<< __LINE__<<std::endl;
+//     std::cerr<<"THIS FONCTION SHOULD NOT BE CALLED"<<std::endl;
+//     std::exit(1234);
+    
+    if (update_ < current)
+    {        
+        update_ = current;
+        for (auto iter : p_)
+        {
+            iter->update_list(vec,current);
+        }
+        vec.push_back(this);  
+    }
+    
+}   

@@ -21,6 +21,8 @@ public:
     
     virtual void print_equation();
     
+    virtual void update_list(std::vector<LazyValue*>& vec, int current);
+    
 private:
 
 };

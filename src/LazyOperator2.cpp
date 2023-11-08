@@ -24,17 +24,6 @@ LazyValue* LazyOperator2::explose()
 
 void LazyOperator2::update_list(std::vector<LazyValue*>& vec, int current)
 {
-//     if (update_ < current)
-//     {
-//         a_->update_list(vec,current);
-//         b_->update_list(vec,current);
-//         vec.push_back(this);            
-//     }
-//     update_ = current;
-//     std::cout<<"\t update_list of "<<std::endl;
-//     print_equation();
-//     std::cout<<"\nupdate_ = " << update_ <<std::endl;
-//     std::cout<<"current = " << current <<std::endl;
     if (update_ < current)
     {
 //         std::cout<<"update sons"<<std::endl;
@@ -42,14 +31,7 @@ void LazyOperator2::update_list(std::vector<LazyValue*>& vec, int current)
         b_->update_list(vec,current);
         vec.push_back(this);            
     }
-//     else
-//     {
-//         std::cout<<"Do not update sons"<<std::endl;
-//     }
     update_ = current;
-//     std::cout<<"\t end update_list of "<<std::endl;
-//     print_equation();        
-    
 }    
 
 

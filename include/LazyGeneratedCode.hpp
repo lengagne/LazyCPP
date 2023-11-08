@@ -26,11 +26,11 @@ public:
     
     void delete_files()
     {
-        std::string filename = class_name_ + ".cpp";  
-        std::string libname = "lib" + class_name_ + ".so";  
-        std::string cmd = "rm " + filename + " " + libname;
-        int dummy = system(cmd.c_str());
-        sleep(1);
+//         std::string filename = class_name_ + ".cpp";  
+//         std::string libname = "lib" + class_name_ + ".so";  
+//         std::string cmd = "rm " + filename + " " + libname;
+//         int dummy = system(cmd.c_str());
+//         sleep(1);
     }
     
     void set_class_name( std::string name)

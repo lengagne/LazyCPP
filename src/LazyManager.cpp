@@ -332,7 +332,7 @@ void LazyManager::prepare()
         iter.second.compute_dependances();
     }
     std::string class_name_ = get_unique_name();  
-    std::cout<<"class_name = "<< class_name_ <<std::endl;
+//     std::cout<<"class_name = "<< class_name_ <<std::endl;
     std::string filename = class_name_ + ".cpp";  
     std::ofstream f (filename );
     f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
@@ -349,15 +349,18 @@ void LazyManager::prepare()
         iter->id_ = LazyCounter++;
     }
     uint nb_in = LazyCounter;
+    
     // on numerote les variables intermédiaires.
     for (auto& iter : outputs_) // pour toutes les sorties
     {
+//         std::cout<<"Sortie numéro "<< iter.first <<std::endl;
         for ( auto& it2 : iter.second.dependances_) // pour toutes les sous sorties
         {
             for(auto & it3 : it2.second)    // pour toutes les dépendances
-            {
+            {                
                 if (it3->id_ == -1)
                 {
+//                     std::cout<<"it3 = "<< it3<<std::endl;
                     it3->id_ = LazyCounter++;
                 }
             }
@@ -387,18 +390,29 @@ void LazyManager::prepare()
         for ( auto& it2 : iter.second.dependances_)
         {
             f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
-            for(auto & it3 : it2.second)    if (it3->update_)
+//             std::cout<<"case("<<iter.first<<") switch("<<it2.first<<"):"<<std::endl;
+            for(auto & it3 : it2.second)  
             {
-                f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
-                it3->update_ = false;
+//                 std::cout<<"it3->update_ = "<< it3->update_ <<std::endl;
+                if (it3->update_)
+                {
+//                     std::cout<<"it3 = "; it3->print_equation();
+//                     std::cout<<std::endl;
+//                     std::cout<<"file_print : it3 : "<< it3->file_print("x")<<std::endl;                
+                    f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
+                    it3->update_ = false;
+                }
             }
 //             else
 //             {
 //                 f<< "\t\t\t\t\t//"<<   it3->file_print("x")  <<";\n";
 //                 it3->update_ = false;                
 //             }
-            
-            f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
+//             std::cout<<"ii = "<< iter.second.sub_outputs_[ it2.first]->id_ <<std::endl;     
+            if (iter.second.sub_outputs_[ it2.first]->id_ == -1)
+                f<<"\t\t\t\t\treturn 0.0;\n" <<std::endl;
+            else
+                f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
         }
         f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
         f<<"\t\t\t\tbreak;\n";          
@@ -421,10 +435,10 @@ void LazyManager::prepare()
     
     double tsart  = get_cpu_time();
     // Create the library
-    std::string command = "g++ -O3 -ggdb -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+    std::string command = "g++ -O2 -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
     int dummy = system ( command.c_str() );
     double compilation_time = get_cpu_time() - tsart;
-       
+    std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
     std::string lib = "./lib"+class_name_ +".so";
 
     unsigned int count = 0;
