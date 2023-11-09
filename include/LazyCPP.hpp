@@ -31,7 +31,11 @@ void LazyPrintAllOutputs();
 
 void LazyReset();
 
-double LazyUpdate(uint index, uint cpt);
+void LazyUpdateInput();
+
+void LazyUpdateInput(uint index, double value);
+
+double LazyUpdateOutput(uint index, uint cpt);
 
 // LazyValue* LazyAddMultiplication( LazyValue* a , LazyValue *b)
 

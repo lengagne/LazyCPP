@@ -43,7 +43,17 @@ void LazyReset()
     LMANAGER.reset();
 }
 
-double LazyUpdate(uint index, uint cpt)
+void LazyUpdateInput()
+{
+    LMANAGER.update_input();
+}
+
+void LazyUpdateInput(uint index, double value)
+{
+    LMANAGER.update_input(index,value);
+}
+
+double LazyUpdateOutput(uint index, uint cpt)
 {
     return LMANAGER.update(index,cpt);
 }

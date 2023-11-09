@@ -52,7 +52,8 @@ int main()
     X = x = -1.0;
     Y = y = 42.0;
 
-    LazyUpdate(0,0);
+    LazyUpdateInput();
+    LazyUpdateOutput(0,0);
 //     LazyUpdate(0,1);
     
 //     std::cout<<"X = "<< X <<std::endl;

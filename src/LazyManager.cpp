@@ -376,6 +376,10 @@ void LazyManager::prepare()
     }
     f<<"\t}\n\n";
     
+    f<<"\n\n\tvoid set_input(uint index, "<< RealName<<" value)\n\t{\n";
+            f<< "\t\tx[index] =  value;"<<std::endl;
+    f<<"\t}\n\n";    
+        
     f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
     
     for (auto& iter : outputs_)
@@ -435,7 +439,8 @@ void LazyManager::prepare()
     
     double tsart  = get_cpu_time();
     // Create the library
-    std::string command = "g++ -O2 -shared " + filename + std::string( COMPILE_FLAGS) + " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+    std::string command = "g++ -O2 -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+//     std::cout<<"Compilation command is : "<< command<<std::endl;
     int dummy = system ( command.c_str() );
     double compilation_time = get_cpu_time() - tsart;
     std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
@@ -546,13 +551,22 @@ void LazyManager::reset()
     outputs_.clear();
 }
 
-double LazyManager::update(uint index, uint cpt)
+void LazyManager::update_input()
 {
     std::vector<double> inputs(inputs_.size());
     for (auto & iter : inputs_)
         inputs[iter->id_] = iter->value_;
     
-    lazycode_->set_input(inputs);
+    lazycode_->set_input(inputs);    
+}
+
+void LazyManager::update_input(uint index, double value)
+{
+    lazycode_->set_input(index,value);    
+}
+
+double LazyManager::update(uint index, uint cpt) const
+{
     return lazycode_->function(index,cpt);
 }
 

@@ -132,7 +132,11 @@ public:
     
     void reset();
     
-    double update(uint index, uint cpt);
+    void update_input();
+    
+    void update_input(uint index, double value);
+    
+    double update(uint index, uint cpt) const;
         
 private:
 
