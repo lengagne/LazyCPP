@@ -18,9 +18,10 @@ void LazyCleanFiles()
     LMANAGER.clean_files();
 }
 
-void LazyPrepare()
+void LazyPrepare(const std::string& filename,
+                 bool reuse_if_exist)
 {
-    LMANAGER.prepare();
+    LMANAGER.prepare(filename, reuse_if_exist);
 }
 
 void LazyPrintAll()

@@ -325,21 +325,39 @@ bool LazyManager::is_zero(LazyValue * in) const
     return in == zero_;
 }
 
-void LazyManager::prepare()
+void LazyManager::prepare(  const std::string& name,
+                            bool reuse_if_exist)
 {
     for (auto& iter : outputs_)
     {
         iter.second.compute_dependances();
     }
-    std::string class_name_ = get_unique_name();  
+    std::string class_name_;
+    if (name == "")
+    {
+        class_name_ = get_unique_name();  
+    }else
+    {
+        class_name_ = "LazyCppGenerated_" + name;        
+        for (char& c : class_name_) {
+            if (c == '.') {
+                c = '_';
+            }
+        }
+                
+    }
 //     std::cout<<"class_name = "<< class_name_ <<std::endl;
     std::string filename = class_name_ + ".cpp";  
-    std::ofstream f (filename );
-    f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
-    f<<"class "<<class_name_<<": public LazyGeneratedCode\n{\npublic:\n";
-    f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
-    f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
-    f<<"\t // intermediate variables\n";
+    bool create = true;
+    if (reuse_if_exist)
+    {
+        std::ifstream file(filename);
+        if(file.good())
+        {
+            create = false;
+            std::cout<<"We do not need to recreate the file we use the existing one"<<std::endl;
+        }        
+    }
 
     uint LazyCounter = 0;
     
@@ -366,84 +384,97 @@ void LazyManager::prepare()
             }
         }
     }
-    f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
-    f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
     
-    f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
-    for (auto & iter : inputs_)
+    if (create)
     {
-              f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];"<<std::endl;
-    }
-    f<<"\t}\n\n";
-    
-    f<<"\n\n\tvoid set_input(uint index, "<< RealName<<" value)\n\t{\n";
-            f<< "\t\tx[index] =  value;"<<std::endl;
-    f<<"\t}\n\n";    
         
-    f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
-    
-    for (auto& iter : outputs_)
-    {
-        // on remet à zéro la mémoire des variables
-        for ( auto& it2 : iter.second.dependances_)
-            for(auto & it3 : it2.second)
-                it3->update_ = true;
-    
-        f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
-        f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
-        for ( auto& it2 : iter.second.dependances_)
-        {
-            f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
-//             std::cout<<"case("<<iter.first<<") switch("<<it2.first<<"):"<<std::endl;
-            for(auto & it3 : it2.second)  
-            {
-//                 std::cout<<"it3->update_ = "<< it3->update_ <<std::endl;
-                if (it3->update_)
-                {
-//                     std::cout<<"it3 = "; it3->print_equation();
-//                     std::cout<<std::endl;
-//                     std::cout<<"file_print : it3 : "<< it3->file_print("x")<<std::endl;                
-                    f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
-                    it3->update_ = false;
-                }
-            }
-//             else
-//             {
-//                 f<< "\t\t\t\t\t//"<<   it3->file_print("x")  <<";\n";
-//                 it3->update_ = false;                
-//             }
-//             std::cout<<"ii = "<< iter.second.sub_outputs_[ it2.first]->id_ <<std::endl;     
-            if (iter.second.sub_outputs_[ it2.first]->id_ == -1)
-                f<<"\t\t\t\t\treturn 0.0;\n" <<std::endl;
-            else
-                f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
-        }
-        f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
-        f<<"\t\t\t\tbreak;\n";          
-        
-    }    
-    f<<"\t\t\tdefault: return 0.;\n";
-    f<<"\n\t\t}\n\t}";
-    
-    f<<"\n\nvoid print_all()\n{\n";
-    f<<"\tfor (int i=0;i<"<< LazyCounter<<";i++)\n"; 
-    f<<"\t\tprintf(\"x[%d] = %f   \\n\",i,x[i]);\n"; 
-    f<<"}\n\n";
-    f<<"\n};\n\n";
-       
-    
-    f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
-    f<<"extern \"C\" void destroy(" + class_name_ +"* p)\n{\n\tdelete p;\n}\n\n";
+        std::ofstream f (filename );
+        f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
+        f<<"class "<<class_name_<<": public LazyGeneratedCode\n{\npublic:\n";
+        f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
+        f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
+        f<<"\t // intermediate variables\n";
 
-    f.close();   
+        f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
+        f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
+        
+        f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
+        for (auto & iter : inputs_)
+        {
+                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];"<<std::endl;
+        }
+        f<<"\t}\n\n";
+        
+        f<<"\n\n\tvoid set_input(uint index, "<< RealName<<" value)\n\t{\n";
+                f<< "\t\tx[index] =  value;"<<std::endl;
+        f<<"\t}\n\n";    
+            
+        f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
+        
+        for (auto& iter : outputs_)
+        {
+            // on remet à zéro la mémoire des variables
+            for ( auto& it2 : iter.second.dependances_)
+                for(auto & it3 : it2.second)
+                    it3->update_ = true;
+        
+            f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
+            f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
+            for ( auto& it2 : iter.second.dependances_)
+            {
+                f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
+    //             std::cout<<"case("<<iter.first<<") switch("<<it2.first<<"):"<<std::endl;
+                for(auto & it3 : it2.second)  
+                {
+    //                 std::cout<<"it3->update_ = "<< it3->update_ <<std::endl;
+                    if (it3->update_)
+                    {
+    //                     std::cout<<"it3 = "; it3->print_equation();
+    //                     std::cout<<std::endl;
+    //                     std::cout<<"file_print : it3 : "<< it3->file_print("x")<<std::endl;                
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
+                        it3->update_ = false;
+                    }
+                }
+    //             else
+    //             {
+    //                 f<< "\t\t\t\t\t//"<<   it3->file_print("x")  <<";\n";
+    //                 it3->update_ = false;                
+    //             }
+    //             std::cout<<"ii = "<< iter.second.sub_outputs_[ it2.first]->id_ <<std::endl;     
+                if (iter.second.sub_outputs_[ it2.first]->id_ == -1)
+                    f<<"\t\t\t\t\treturn 0.0;\n" <<std::endl;
+                else
+                    f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
+            }
+            f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
+            f<<"\t\t\t\tbreak;\n";          
+            
+        }    
+        f<<"\t\t\tdefault: return 0.;\n";
+        f<<"\n\t\t}\n\t}";
+        
+        f<<"\n\nvoid print_all()\n{\n";
+        f<<"\tfor (int i=0;i<"<< LazyCounter<<";i++)\n"; 
+        f<<"\t\tprintf(\"x[%d] = %f   \\n\",i,x[i]);\n"; 
+        f<<"}\n\n";
+        f<<"\n};\n\n";
+        
+        
+        f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
+        f<<"extern \"C\" void destroy(" + class_name_ +"* p)\n{\n\tdelete p;\n}\n\n";
+
+        f.close();   
+        
+        double tsart  = get_cpu_time();
+        // Create the library
+        std::string command = "g++ -O2 -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+        std::cout<<"Compilation command is : "<< command<<std::endl;
+        int dummy = system ( command.c_str() );
+        double compilation_time = get_cpu_time() - tsart;
+        std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
+    }
     
-    double tsart  = get_cpu_time();
-    // Create the library
-    std::string command = "g++ -O2 -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
-//     std::cout<<"Compilation command is : "<< command<<std::endl;
-    int dummy = system ( command.c_str() );
-    double compilation_time = get_cpu_time() - tsart;
-    std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
     std::string lib = "./lib"+class_name_ +".so";
 
     unsigned int count = 0;
@@ -562,6 +593,7 @@ void LazyManager::update_input()
 
 void LazyManager::update_input(uint index, double value)
 {
+//     std::cout<<"update_input("<<index<<") = "<< value <<std::endl;
     lazycode_->set_input(index,value);    
 }
 

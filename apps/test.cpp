@@ -41,7 +41,7 @@ int main()
     
     
     
-    LazyPrepare();
+    LazyPrepare("test");
     
 //     std::cout<<"X = "<< x <<std::endl;
 //     std::cout<<"Y = "<< y <<std::endl;

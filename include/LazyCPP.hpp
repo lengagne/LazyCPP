@@ -21,7 +21,8 @@ void LazyCleanFiles();
 
 uint LazyGetNbInputs();
 
-void LazyPrepare();
+void LazyPrepare(const std::string& filename="",
+                 bool reuse_if_exist = false);
 
 void LazyPrintAll();
 
@@ -37,7 +38,6 @@ void LazyUpdateInput(uint index, double value);
 
 double LazyUpdateOutput(uint index, uint cpt);
 
-// LazyValue* LazyAddMultiplication( LazyValue* a , LazyValue *b)
 
 
 #endif // __LAZYCPP_H__

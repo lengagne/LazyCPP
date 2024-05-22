@@ -122,7 +122,8 @@ public:
     
     bool is_zero(LazyValue * in) const;
 
-    void prepare();
+    void prepare(   const std::string& filename = "",
+                    bool reuse_if_exist = false);
     
     void print_all() const;
     
