@@ -332,7 +332,7 @@ void LazyManager::prepare(  const std::string& name,
     {
         iter.second.compute_dependances();
     }
-    std::string class_name_;
+    
     if (name == "")
     {
         class_name_ = get_unique_name();  
@@ -346,6 +346,8 @@ void LazyManager::prepare(  const std::string& name,
         }
                 
     }
+    
+//     class_name_ = get_unique_name();  
 //     std::cout<<"class_name = "<< class_name_ <<std::endl;
     std::string filename = class_name_ + ".cpp";  
     bool create = true;
@@ -478,11 +480,10 @@ void LazyManager::prepare(  const std::string& name,
     std::string lib = "./lib"+class_name_ +".so";
 
     unsigned int count = 0;
-    void* library;
     do{
         count++;
-        library =dlopen(lib.c_str(), RTLD_LAZY);
-        if (!library) {
+        handle_lib_ =dlopen(lib.c_str(), RTLD_LAZY);
+        if (!handle_lib_) {
             std::cerr <<"Error1 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load library ("<< lib <<"), with the error : " << dlerror() << '\n';
             if(count>10)
             {
@@ -492,13 +493,13 @@ void LazyManager::prepare(  const std::string& name,
             }
             sleep(1);
         }
-    }while(!library);
+    }while(!handle_lib_);
     // load the symbols
     count = 0;
     do{
         count++;
-        creator_ = (create_code*) dlsym(library, "create");
-        destructor_ = (destroy_code*) dlsym(library, "destroy");
+        creator_ = (create_code*) dlsym(handle_lib_, "create");
+        destructor_ = (destroy_code*) dlsym(handle_lib_, "destroy");
         if (!creator_ || !destructor_)
         {
             std::cerr <<"Error2 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load symbols of ("<< lib <<"), with the error : " << dlerror() << '\n';
@@ -574,8 +575,10 @@ void LazyManager::reset()
     
     if (lazycode_)  
     {
+        dlclose( handle_lib_);
         lazycode_->delete_files();
         destroy_code(lazycode_);
+        
     }
     lazycode_ = nullptr;
     

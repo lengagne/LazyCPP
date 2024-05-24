@@ -201,7 +201,10 @@ private:
     
     bool affect_ = true;
     uint counter_ = 0;
-       
+    
+    std::string class_name_;
+    void* handle_lib_;
+    
     create_code* creator_;
     destroy_code* destructor_;
     LazyGeneratedCode* lazycode_ = nullptr;
