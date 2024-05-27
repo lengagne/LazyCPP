@@ -1,10 +1,11 @@
 #include "LazyInput.hpp"
 
 
-LazyInput::LazyInput(double value, const std::string name):name_(name) 
+LazyInput::LazyInput(double value, const std::string name,int id):name_(name) 
 {            
     value_ = value;
     update_ = -1;
+    id_ = id;
 }
     
 
@@ -15,7 +16,7 @@ void LazyInput::print( const std::string& tab,uint index)
 
 std::string LazyInput::get_string( )
 {
-    return name_; 
+    return name_ + "["+ std::to_string(id_) +"]"; 
 }
 
 

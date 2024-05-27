@@ -16,7 +16,7 @@ inline void LazySoustraction::compute()
 
 std::string LazySoustraction::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "-" + b_->file_subname(varname);
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "-" + b_->file_subname(varname) + " /* " + get_string() + "*/";
 }
 
     

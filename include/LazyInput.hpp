@@ -6,7 +6,7 @@
 
 class LazyInput : public LazyValue {
 public:
-    LazyInput(double value, const std::string name="not_defined"); 
+    LazyInput(double value, const std::string name="not_defined", int id_=-1); 
         
     void compact()
     {

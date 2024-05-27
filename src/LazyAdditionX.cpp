@@ -81,7 +81,7 @@ LazyValue* LazyAdditionX::explose()
 //         }        
 //         exploded_ptr_ = m;
 //     }
-    
+    p_.sort();
     if (!explosed_)
     {
         
@@ -133,6 +133,7 @@ std::string LazyAdditionX::file_print( const std::string& varname)
     std::string cmd = varname+"["+ std::to_string(id_)+"] =";
     for (auto iter : p_)
         cmd += "+ " + iter->file_subname(varname) ;
+    cmd +=  " /* " + get_string() + "*/";
     return   cmd;
 }
 

@@ -35,6 +35,16 @@ public:
 
 
 struct PtrComparer {
+    
+//     bool operator()(const LazyValue* a, const LazyValue* b) const {    
+//         if (a->type_ == b->type_)
+//         {
+//             return a->id_ < b->id_; 
+//         }
+//         return  a->type_ <  b->type_;      
+//     }
+    
+    
     bool operator()(const LazyOperator1* a, const LazyOperator1* b) const {
         return a < b; 
     }
@@ -44,7 +54,15 @@ struct PtrComparer {
     }    
     
     bool operator()(const LazyInput* a, const LazyInput* b) const {
-        return a < b; 
+        if (a->id_ == b->id_)
+        {
+            if (a->name_ == b->name_)
+            {
+                return a < b; 
+            }
+            return  a->name_ <  b->name_;   
+        }
+        return  a->id_ <  b->id_;   
     }        
     
     
@@ -60,16 +78,6 @@ struct PtrComparer {
         if (a->p_.size() < b->p_.size())  return true;
         if (a->p_.size() > b->p_.size())  return false;
         return a->p_ < b->p_;
-/*         
-        if (a->p_.size() < b->p_.size())  return true;
-        if (a->p_.size() > b->p_.size())  return false;
-        
-        for (int i=0;i<a->p_.size();i++)
-        {
-            if (a->p_[i] < b->p_[i])  return true;
-            if (a->p_[i] > b->p_[i])  return false;            
-        }
-        return false;*/
     }   
     
 };

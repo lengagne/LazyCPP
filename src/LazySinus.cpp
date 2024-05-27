@@ -15,7 +15,7 @@ inline void LazySinus::compute()
 
 std::string LazySinus::file_print( const std::string& varname)
 {
-    return varname+"["+ std::to_string(id_)+"] = sin(" + a_->file_subname(varname) + ")";
+    return varname+"["+ std::to_string(id_)+"] = sin(" + a_->file_subname(varname) + ")" + " /* " + get_string() + "*/";
 }
 
 std::string LazySinus::get_string( )

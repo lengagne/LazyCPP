@@ -161,7 +161,7 @@ LazyInput* LazyManager::add_input( const double &a, const std::string& name)
             return iter;
         }
         
-    LazyInput* out = new LazyInput(a,name);
+    LazyInput* out = new LazyInput(a,name,inputs_.size());
     inputs_.insert( out);
     return out;
     
@@ -313,7 +313,7 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     {
         return add_constant( a->value_*b->value_);
     }    
-    return nullptr;
+    return 0;
 }
 
 uint LazyManager::get_nb_inputs() const
@@ -420,7 +420,7 @@ void LazyManager::prepare(  const std::string& name,
         f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
         for (auto & iter : inputs_)
         {
-                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];"<<std::endl;
+                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"]; //" << iter->get_string()<<std::endl;
         }
         f<<"\t}\n\n";
         
@@ -474,7 +474,7 @@ void LazyManager::prepare(  const std::string& name,
         
         double tsart  = get_cpu_time();
         // Create the library
-        std::string command = "g++ -O2 -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+        std::string command = "g++ -O3 -DNDEBUG -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
         std::cout<<"Compilation command is : "<< command<<std::endl;
         int dummy = system ( command.c_str() );
         double compilation_time = get_cpu_time() - tsart;
@@ -495,7 +495,8 @@ void LazyManager::prepare(  const std::string& name,
                 std::cerr<<"Sometimes the following line solve the issue : \n export LD_LIBRARY_PATH=."<<std::endl;
                 exit(0);
             }
-        }
+            sleep(1);
+        }        
     }while(!handle_lib_);
     // load the symbols
     count = 0;
@@ -508,6 +509,7 @@ void LazyManager::prepare(  const std::string& name,
             std::cerr <<"Error2 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load symbols of ("<< lib <<"), with the error : " << dlerror() << '\n';
             if(count>10)
                 exit(0);
+            sleep(1);
         }
     }while(!creator_ || ! destructor_);
 
@@ -599,16 +601,19 @@ LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
 {
     // creation of the new object
     LazyAdditionX* out = new LazyAdditionX(v);
-    auto result = additionsX_.insert( out);
-    if (result.second) 
-    {
-        // L'élément a été inséré, renvoie l'élément inséré
-        return *result.first;
-    } else {
-        // L'élément existe déjà, renvoie l'élément existant
-        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
-        return *result.first;
-    }    
+    additionsX_.insert(out);
+    return out;
+    
+//     auto result = additionsX_.insert( out);
+//     if (result.second) 
+//     {
+//         // L'élément a été inséré, renvoie l'élément inséré
+//         return *result.first;
+//     } else {
+//         // L'élément existe déjà, renvoie l'élément existant
+//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         return *result.first;
+//     }    
 }
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
@@ -631,16 +636,18 @@ LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
 {
     // creation of the new object
     LazyMultiplicationX* out = new LazyMultiplicationX(v);
-    auto result = multiplicationsX_.insert( out);
-    if (result.second) 
-    {
-        // L'élément a été inséré, renvoie l'élément inséré
-        return *result.first;
-    } else {
-        // L'élément existe déjà, renvoie l'élément existant
-        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
-        return *result.first;
-    }    
+    multiplicationsX_.insert(out);
+    return out;
+//     auto result = multiplicationsX_.insert( out);
+//     if (result.second) 
+//     {
+//         // L'élément a été inséré, renvoie l'élément inséré
+//         return *result.first;
+//     } else {
+//         // L'élément existe déjà, renvoie l'élément existant
+//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         return *result.first;
+//     }    
 }
 
 void LazyManager::clean_files()
