@@ -7,7 +7,7 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 {
     type_ = LAZYADDITIONX;
     p_ = a;
-    p_.sort();
+    p_.sort(compareLazyValue);
     compute();
 }
 
@@ -81,7 +81,7 @@ LazyValue* LazyAdditionX::explose()
 //         }        
 //         exploded_ptr_ = m;
 //     }
-    p_.sort();
+    p_.sort(compareLazyValue);
     if (!explosed_)
     {
         

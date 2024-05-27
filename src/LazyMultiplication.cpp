@@ -3,7 +3,8 @@
 LazyMultiplication::LazyMultiplication(LazyValue* a, LazyValue* b) 
 {
     type_ = LAZYMULTIPLICATION;
-    if (a<b)
+//     if (a<b)
+    if(compareLazyValue(a,b))
     {
         a_ = a;
         b_ = b; 
@@ -22,7 +23,7 @@ inline void LazyMultiplication::compute()
 
 std::string LazyMultiplication::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "*" + b_->file_subname(varname) + " /* " + get_string() + "*/";
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "*" + b_->file_subname(varname);
 }
 
 std::string LazyMultiplication::get_string( )

@@ -5,16 +5,14 @@
 #include <list>
 
 class LazyOperatorX : public LazyValue {
-public:
-    
+public:    
   
     virtual inline void compute() = 0;
     
     virtual void compact() = 0;
     
     virtual LazyValue* explose() = 0;
-    
-   
+       
     virtual void propag_update(int up =-1);
     
     virtual void update_list(std::vector<LazyValue*>& vec, int current);

@@ -86,4 +86,7 @@ public:
     LazyType type_ = LAZYUNDEFINED;
 };
 
+bool compareLazyValue(LazyValue* a, LazyValue* b);
+
+
 #endif // __LAZYVALUE_HPP__

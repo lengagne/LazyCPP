@@ -4,7 +4,9 @@
 LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
 {
     type_ = LAZYADDITION;
-    if (a<b)
+//     if (a<b)
+//     std::cout<<"LazyAddition"<<std::endl;
+    if(compareLazyValue(a,b))
     {
         a_ = a;
         b_ = b; 
@@ -25,7 +27,7 @@ inline void LazyAddition::compute()
 
 std::string LazyAddition::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "+" + b_->file_subname(varname) + " /* " + get_string() + "*/";
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "+" + b_->file_subname(varname);
 }
 
 std::string LazyAddition::get_string( )

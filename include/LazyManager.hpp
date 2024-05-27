@@ -36,13 +36,15 @@ public:
 
 struct PtrComparer {
     
-//     bool operator()(const LazyValue* a, const LazyValue* b) const {    
-//         if (a->type_ == b->type_)
-//         {
-//             return a->id_ < b->id_; 
-//         }
-//         return  a->type_ <  b->type_;      
-//     }
+    bool operator()(const LazyValue* a, const LazyValue* b) const {    
+        std::cout<<"PtrComparer LazyValue* a = "<< *a <<std::endl;
+        std::cout<<"PtrComparer LazyValue* b = "<< *b <<std::endl;
+        if (a->type_ == b->type_)
+        {
+            return a->id_ < b->id_; 
+        }
+        return  a->type_ <  b->type_;      
+    }
     
     
     bool operator()(const LazyOperator1* a, const LazyOperator1* b) const {

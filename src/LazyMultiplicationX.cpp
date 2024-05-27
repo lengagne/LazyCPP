@@ -7,8 +7,9 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyValue*>& a)
 {
     type_ = LAZYMULTIPLICATIONX;
     p_ = a;
-    p_.sort();
+    p_.sort(compareLazyValue);
     compute();
+    compact();
 }
 
 inline void LazyMultiplicationX::compute()
@@ -55,15 +56,13 @@ void LazyMultiplicationX::compact()
     if ( cst)
     {
         p_.push_back(LMANAGER.add_constant(cst));
-//     p_.push_back(new LazyConstant(cst));
     }   
+    p_.sort(compareLazyValue);
 }
-
-
 
 LazyValue* LazyMultiplicationX::explose()
 {
-    p_.sort();
+    p_.sort(compareLazyValue);
     if (!explosed_)
     {
         explosed_ = true;
@@ -77,7 +76,6 @@ LazyValue* LazyMultiplicationX::explose()
             }else
             {
                 m = LMANAGER.add_multiplication(m,iter->explose());
-//                 m = new LazyMultiplication(m,iter->explose());
             }
         }        
         exploded_ptr_ = m;
@@ -117,11 +115,9 @@ std::string LazyMultiplicationX::get_string( )
 
 void LazyMultiplicationX::print( const std::string& tab,uint index) 
 {
-    
     std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): MultiplicationX ("<<value_<<")"<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t",index);
-
 }   
     
 void LazyMultiplicationX::print_equation()

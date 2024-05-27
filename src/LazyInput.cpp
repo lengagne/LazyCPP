@@ -16,7 +16,7 @@ void LazyInput::print( const std::string& tab,uint index)
 
 std::string LazyInput::get_string( )
 {
-    return name_ + "["+ std::to_string(id_) +"]"; 
+    return name_ ; 
 }
 
 
