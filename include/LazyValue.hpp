@@ -3,8 +3,11 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 typedef enum LazyType{
+    LAZYUNDEFINED,
+    LAZYINPUT,
     LAZYADDITION,
     LAZYADDITIONX,
     LAZYCONSTANT,
@@ -12,8 +15,7 @@ typedef enum LazyType{
     LAZYMULTIPLICATION,
     LAZYMULTIPLICATIONX,
     LAZYSINUS,
-    LAZYSOUSTRACTION,
-    LAZYUNDEFINED    
+    LAZYSOUSTRACTION    
 } LazyType;
 
 
@@ -86,4 +88,7 @@ public:
     LazyType type_ = LAZYUNDEFINED;
 };
 
+bool compareLazyValue(const LazyValue* a, const LazyValue* b);
+
+bool operator<(const std::list<LazyValue*>& lhs, const std::list<LazyValue*>& rhs);
 #endif // __LAZYVALUE_HPP__

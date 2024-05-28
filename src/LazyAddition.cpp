@@ -4,7 +4,7 @@
 LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
 {
     type_ = LAZYADDITION;
-    if (a<b)
+    if (compareLazyValue(a,b))
     {
         a_ = a;
         b_ = b; 

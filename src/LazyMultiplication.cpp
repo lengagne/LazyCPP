@@ -3,7 +3,7 @@
 LazyMultiplication::LazyMultiplication(LazyValue* a, LazyValue* b) 
 {
     type_ = LAZYMULTIPLICATION;
-    if (a<b)
+    if (compareLazyValue(a,b))
     {
         a_ = a;
         b_ = b; 

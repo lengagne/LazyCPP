@@ -161,7 +161,7 @@ LazyInput* LazyManager::add_input( const double &a, const std::string& name)
 //             return iter;
 //         }
 //         
-    LazyInput* out = new LazyInput(a,name);
+    LazyInput* out = new LazyInput(a,name,inputs_.size());
 //     inputs_.insert( out);
 //     return out;
     
@@ -349,7 +349,7 @@ bool LazyManager::is_zero(LazyValue * in) const
     return in == zero_;
 }
 
-git stvoid LazyManager::prepare(  const std::string& name,
+void LazyManager::prepare(  const std::string& name,
                             bool reuse_if_exist)
 {
     for (auto& iter : outputs_)

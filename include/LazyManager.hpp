@@ -35,31 +35,55 @@ public:
 
 
 struct PtrComparer {
-    bool operator()(const LazyOperator1* a, const LazyOperator1* b) const {
-        return a < b; 
+    
+    bool operator()(const LazyValue* a, const LazyValue* b) const {    
+        return compareLazyValue(a,b);
     }
     
-    bool operator()(const LazyConstant* a, const LazyConstant* b) const {
-        return a < b; 
-    }    
+//     bool operator()(const LazyValue* a, const LazyValue* b) const {    
+//         std::cout<<"PtrComparer LazyValue* a = "<< *a <<std::endl;
+//         std::cout<<"PtrComparer LazyValue* b = "<< *b <<std::endl;
+//         if (a->type_ == b->type_)
+//         {
+//             return a->id_ < b->id_; 
+//         }
+//         return  a->type_ <  b->type_;      
+//     }    
+//     
+//     bool operator()(const LazyOperator1* a, const LazyOperator1* b) const {
+//         return a < b; 
+//     }
     
-    bool operator()(const LazyInput* a, const LazyInput* b) const {
-        return a < b; 
-    }        
+//     bool operator()(const LazyConstant* a, const LazyConstant* b) const {
+//         return a < b; 
+//     }    
+    
+/*    bool operator()(const LazyInput* a, const LazyInput* b) const {
+//         return a < b; 
+        if (a->id_ == b->id_)
+        {
+            if (a->name_ == b->name_)
+            {
+                return a < b; 
+            }
+            return  a->name_ <  b->name_;   
+        }
+        return  a <  b;          
+    }   */     
     
     
-    bool operator()(const LazyOperator2* a, const LazyOperator2* b) const {
-        if (a->a_ < b->a_)  return true;
-        if (a->a_ > b->a_)  return false;
-        
-        if (a->b_ < b->b_)  return true;
-        return false;
-    }
+//     bool operator()(const LazyOperator2* a, const LazyOperator2* b) const {
+//         if (a->a_ < b->a_)  return true;
+//         if (a->a_ > b->a_)  return false;
+//         
+//         if (a->b_ < b->b_)  return true;
+//         return false;
+//     }
     
-     bool operator()(const LazyOperatorX* a, const LazyOperatorX* b) const {
-        if (a->p_.size() < b->p_.size())  return true;
-        if (a->p_.size() > b->p_.size())  return false;
-        return a->p_ < b->p_;
+//      bool operator()(const LazyOperatorX* a, const LazyOperatorX* b) const {
+//         if (a->p_.size() < b->p_.size())  return true;
+//         if (a->p_.size() > b->p_.size())  return false;
+//         return a->p_ < b->p_;
 /*         
         if (a->p_.size() < b->p_.size())  return true;
         if (a->p_.size() > b->p_.size())  return false;
@@ -70,7 +94,7 @@ struct PtrComparer {
             if (a->p_[i] > b->p_[i])  return false;            
         }
         return false;*/
-    }   
+//     }   
     
 };
 
@@ -201,6 +225,9 @@ private:
     
     bool affect_ = true;
     uint counter_ = 0;
+
+    std::string class_name_;
+    void* handle_lib_;
        
     create_code* creator_;
     destroy_code* destructor_;

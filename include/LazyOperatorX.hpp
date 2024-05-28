@@ -18,7 +18,6 @@ public:
     
     virtual LazyValue* explose() = 0;
     
-   
     virtual void propag_update(int up =-1);
     
     virtual void update_list(std::vector<LazyValue*>& vec, int current);
@@ -29,5 +28,6 @@ public:
     
     LazyValue* exploded_ptr_ = nullptr;
 };
+
 
 #endif //  __LAZYADDITION_HPP__

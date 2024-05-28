@@ -1,10 +1,14 @@
 #include "LazyInput.hpp"
 
 
-LazyInput::LazyInput(double value, const std::string name):name_(name) 
-{            
+LazyInput::LazyInput(double value, 
+                     const std::string name,
+                     int id):name_(name)
+{          
+    type_ = LAZYINPUT;
     value_ = value;
     update_ = -1;
+    id_ = id;
 }
     
 
