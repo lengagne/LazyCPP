@@ -100,11 +100,17 @@ LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
     LazyAdditionX* out = new LazyAdditionX(vec);
     
     // check if does not already exist
-    for (auto& iter : additionsX_)
-        if (*iter == *out)
-            return iter;
-    additionsX_.insert(out);
-    return out;
+    auto result = additionsX_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
+//     return out;
 }
 
 LazyValue* LazyManager::add_constant( double d)
@@ -114,34 +120,61 @@ LazyValue* LazyManager::add_constant( double d)
         {
             return iter;
         }
+
     LazyConstant * out = new LazyConstant(d);
-    constants_.insert(out);
-    return out;    
+//     constants_.insert( out);
+//     return out;
+    auto result = constants_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 LazyValue* LazyManager::add_cosinus( LazyValue* a)
 {
     LazyCosinus* out = new LazyCosinus(a);
     // check if does not already exist
-    for (auto& iter : cosinus_)
-        if (*iter == *out)
-            return iter;
-    cosinus_.insert(out);
-    return out;
+    auto result = cosinus_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 LazyInput* LazyManager::add_input( const double &a, const std::string& name)
 {
-    for (auto& iter : inputs_)
-        if(iter->name_ == name)
-        {
-            iter->value_ = a;
-            return iter;
-        }
-        
+//     for (auto& iter : inputs_)
+//         if(iter->name_ == name)
+//         {
+//             iter->value_ = a;
+//             return iter;
+//         }
+//         
     LazyInput* out = new LazyInput(a,name);
-    inputs_.insert(out);
-    return out;
+//     inputs_.insert( out);
+//     return out;
+    
+    auto result = inputs_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
@@ -189,13 +222,6 @@ LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
 LazyValue* LazyManager::add_sinus( LazyValue* a)
 {
     LazySinus* out = new LazySinus(a);
-//     // check if does not already exist
-//     for (auto& iter : sinus_)
-//         if (*iter == *out)
-//             return iter;
-//     sinus_.insert(out);
-//     return out;
-    
     auto result = sinus_.insert( out);
     if (result.second) 
     {
@@ -267,8 +293,7 @@ LazyValue* LazyManager::check_addition( LazyValue*a , LazyValue*b)
     if (is_minus_one(b))
     {
         return add_soustraction(a,b);
-    }  
-    
+    }      
     return 0;
 }
 
@@ -287,8 +312,7 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     if (is_constant(a) && is_constant(b))
     {
         return add_constant( a->value_*b->value_);
-    }
-    
+    }    
     return 0;
 }
 
@@ -325,24 +349,40 @@ bool LazyManager::is_zero(LazyValue * in) const
     return in == zero_;
 }
 
-void LazyManager::prepare()
+void LazyManager::prepare(  const std::string& name,
+                            bool reuse_if_exist)
 {
     for (auto& iter : outputs_)
     {
         iter.second.compute_dependances();
     }
-    std::string class_name_ = get_unique_name();  
-//     std::cout<<"class_name = "<< class_name_ <<std::endl;
+    
+    if (name == "")
+    {
+        class_name_ = get_unique_name();  
+    }else
+    {
+        class_name_ = "LazyCppGenerated_" + name;        
+        for (char& c : class_name_) {
+            if (c == '.') {
+                c = '_';
+            }
+        }                
+    }
+    
     std::string filename = class_name_ + ".cpp";  
-    std::ofstream f (filename );
-    f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
-    f<<"class "<<class_name_<<": public LazyGeneratedCode\n{\npublic:\n";
-    f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
-    f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
-    f<<"\t // intermediate variables\n";
+    bool create = true;
+    if (reuse_if_exist)
+    {
+        std::ifstream file(filename);
+        if(file.good())
+        {
+            create = false;
+            std::cout<<"We do not need to recreate the file we use the existing one"<<std::endl;
+        }        
+    }
 
     uint LazyCounter = 0;
-    
     // on numerote les entrées 
     for (auto & iter : inputs_)
     {
@@ -353,105 +393,101 @@ void LazyManager::prepare()
     // on numerote les variables intermédiaires.
     for (auto& iter : outputs_) // pour toutes les sorties
     {
-//         std::cout<<"Sortie numéro "<< iter.first <<std::endl;
         for ( auto& it2 : iter.second.dependances_) // pour toutes les sous sorties
         {
             for(auto & it3 : it2.second)    // pour toutes les dépendances
             {                
                 if (it3->id_ == -1)
                 {
-//                     std::cout<<"it3 = "<< it3<<std::endl;
                     it3->id_ = LazyCounter++;
                 }
             }
         }
     }
-    f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
-    f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
     
-    f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
-    for (auto & iter : inputs_)
+    if (create)
     {
-              f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];"<<std::endl;
-    }
-    f<<"\t}\n\n";
-    
-    f<<"\n\n\tvoid set_input(uint index, "<< RealName<<" value)\n\t{\n";
-            f<< "\t\tx[index] =  value;"<<std::endl;
-    f<<"\t}\n\n";    
-        
-    f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
-    
-    for (auto& iter : outputs_)
-    {
-        // on remet à zéro la mémoire des variables
-        for ( auto& it2 : iter.second.dependances_)
-            for(auto & it3 : it2.second)
-                it3->update_ = true;
-    
-        f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
-        f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
-        for ( auto& it2 : iter.second.dependances_)
-        {
-            f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
-//             std::cout<<"case("<<iter.first<<") switch("<<it2.first<<"):"<<std::endl;
-            for(auto & it3 : it2.second)  
-            {
-//                 std::cout<<"it3->update_ = "<< it3->update_ <<std::endl;
-                if (it3->update_)
-                {
-//                     std::cout<<"it3 = "; it3->print_equation();
-//                     std::cout<<std::endl;
-//                     std::cout<<"file_print : it3 : "<< it3->file_print("x")<<std::endl;                
-                    f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
-                    it3->update_ = false;
-                }
-            }
-//             else
-//             {
-//                 f<< "\t\t\t\t\t//"<<   it3->file_print("x")  <<";\n";
-//                 it3->update_ = false;                
-//             }
-//             std::cout<<"ii = "<< iter.second.sub_outputs_[ it2.first]->id_ <<std::endl;     
-            if (iter.second.sub_outputs_[ it2.first]->id_ == -1)
-                f<<"\t\t\t\t\treturn 0.0;\n" <<std::endl;
-            else
-                f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
-        }
-        f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
-        f<<"\t\t\t\tbreak;\n";          
-        
-    }    
-    f<<"\t\t\tdefault: return 0.;\n";
-    f<<"\n\t\t}\n\t}";
-    
-    f<<"\n\nvoid print_all()\n{\n";
-    f<<"\tfor (int i=0;i<"<< LazyCounter<<";i++)\n"; 
-    f<<"\t\tprintf(\"x[%d] = %f   \\n\",i,x[i]);\n"; 
-    f<<"}\n\n";
-    f<<"\n};\n\n";
-       
-    
-    f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
-    f<<"extern \"C\" void destroy(" + class_name_ +"* p)\n{\n\tdelete p;\n}\n\n";
+        std::ofstream f (filename );
+        f<<"#include <vector>\n#include <math.h>\n#include <iostream>\n#include \"LazyGeneratedCode.hpp\" \n\n\n";
+        f<<"class "<<class_name_<<": public LazyGeneratedCode\n{\npublic:\n";
+        f<<"\t void print_time()\n\t{ \n \t\t std::cout<<\" time of compilation : "<< time(0)<<" \"<<std::endl;\n\t}\n\n";
+        f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
+        f<<"\t // intermediate variables\n";
 
-    f.close();   
+        f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
+        f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
+        
+        f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
+        for (auto & iter : inputs_)
+        {
+                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"]; //" << iter->get_string()<<std::endl;
+        }
+        f<<"\t}\n\n";
+        
+        f<<"\n\n\tvoid set_input(uint index, "<< RealName<<" value)\n\t{\n";
+                f<< "\t\tx[index] =  value;"<<std::endl;
+        f<<"\t}\n\n";    
+            
+        f<<"\t"<< RealName<<" function(unsigned int out, unsigned int index=0)\n\t{\n\t\tswitch(out)\n\t\t{\n";
+        
+        for (auto& iter : outputs_)
+        {
+            // on remet à zéro la mémoire des variables
+            for ( auto& it2 : iter.second.dependances_)
+                for(auto & it3 : it2.second)
+                    it3->update_ = true;
+        
+            f<<"\t\t\tcase("<<iter.first <<"): // out number "<< iter.first <<" \n";
+            f<<"\t\t\t\tswitch(index)\n\t\t\t\t{\n";
+            for ( auto& it2 : iter.second.dependances_)
+            {
+                f<<"\t\t\t\t\t case("<< it2.first<<"): " <<std::endl;
+                for(auto & it3 : it2.second)  
+                {
+                    if (it3->update_)
+                    {
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
+                        it3->update_ = false;
+                    }
+                }
+                if (iter.second.sub_outputs_[ it2.first]->id_ == -1)
+                    f<<"\t\t\t\t\treturn 0.0;\n" <<std::endl;
+                else
+                    f<<"\t\t\t\t\treturn x["+ std::to_string(iter.second.sub_outputs_[ it2.first]->id_) +"];\n" <<std::endl;
+            }
+            f<<"\t\t\t\t\tdefault: return 0.;\n\t\t\t\t};\n";
+            f<<"\t\t\t\tbreak;\n";                      
+        }    
+        f<<"\t\t\tdefault: return 0.;\n";
+        f<<"\n\t\t}\n\t}";        
+        f<<"\n\nvoid print_all()\n{\n";
+        f<<"\tfor (int i=0;i<"<< LazyCounter<<";i++)\n"; 
+        f<<"\t\tprintf(\"x[%d] = %f   \\n\",i,x[i]);\n"; 
+        f<<"}\n\n";
+        f<<"\n};\n\n";
+        
+        
+        f<<"extern \"C\" " + class_name_ +"* create()\n{\n\treturn new " + class_name_ + "();\n}\n\n";
+        f<<"extern \"C\" void destroy(" + class_name_ +"* p)\n{\n\tdelete p;\n}\n\n";
+
+        f.close();   
+        
+        double tsart  = get_cpu_time();
+        // Create the library
+        std::string command = "g++ -O3 -DNDEBUG -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+        std::cout<<"Compilation command is : "<< command<<std::endl;
+        int dummy = system ( command.c_str() );
+        double compilation_time = get_cpu_time() - tsart;
+        std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
+    }
     
-    double tsart  = get_cpu_time();
-    // Create the library
-    std::string command = "g++ -O2 -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
-//     std::cout<<"Compilation command is : "<< command<<std::endl;
-    int dummy = system ( command.c_str() );
-    double compilation_time = get_cpu_time() - tsart;
-    std::cout<<"LazyCPP compilation time = "<< compilation_time  <<std::endl;
     std::string lib = "./lib"+class_name_ +".so";
 
     unsigned int count = 0;
-    void* library;
     do{
         count++;
-        library =dlopen(lib.c_str(), RTLD_LAZY);
-        if (!library) {
+        handle_lib_ =dlopen(lib.c_str(), RTLD_LAZY);
+        if (!handle_lib_) {
             std::cerr <<"Error1 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load library ("<< lib <<"), with the error : " << dlerror() << '\n';
             if(count>10)
             {
@@ -460,14 +496,14 @@ void LazyManager::prepare()
                 exit(0);
             }
             sleep(1);
-        }
-    }while(!library);
+        }        
+    }while(!handle_lib_);
     // load the symbols
     count = 0;
     do{
         count++;
-        creator_ = (create_code*) dlsym(library, "create");
-        destructor_ = (destroy_code*) dlsym(library, "destroy");
+        creator_ = (create_code*) dlsym(handle_lib_, "create");
+        destructor_ = (destroy_code*) dlsym(handle_lib_, "destroy");
         if (!creator_ || !destructor_)
         {
             std::cerr <<"Error2 in "<<__FILE__<<" at line "<<__LINE__<< " : Cannot load symbols of ("<< lib <<"), with the error : " << dlerror() << '\n';
@@ -504,51 +540,22 @@ void LazyManager::print_all_output_equations()
 
 void LazyManager::reset()
 {
-//     for ( auto & v : inputs_)
-//         delete v;
     inputs_.clear();
-
-//     for ( auto & v : additionsX_)
-//         delete v;    
     additionsX_.clear();
-        
-//     for ( auto & v : cosinus_)
-//         delete v;    
     cosinus_.clear();
-    
-//     for ( auto & v : multiplicationsX_)
-//         delete v;
     multiplicationsX_.clear();
-    
-//     for ( auto & v : sinus_)
-//         delete v;
     sinus_.clear();
-    
-//     for ( auto & v : soustractions_)
-//         delete v;
     soustractions_.clear();
-    
-//     for ( auto & v : constants_)
-//         delete v;
-    constants_.clear();
-    
+    constants_.clear();    
     additions_.clear();    
     multiplications_.clear();
-    
-    
+        
     init_basic_constant();
     
     counter_ = 0;
     affect_ = true;
-    
-    if (lazycode_)  
-    {
-        lazycode_->delete_files();
-        destroy_code(lazycode_);
-    }
-    lazycode_ = nullptr;
-    
     outputs_.clear();
+    clean_files();
 }
 
 void LazyManager::update_input()
@@ -592,26 +599,21 @@ LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 
 LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
 {
-    // creation of the new object
+//     // creation of the new object
     LazyAdditionX* out = new LazyAdditionX(v);
+//     additionsX_.insert(out);
+//     return out;
     
-//     // check if does not already exist
-//     for (auto& iter : additionsX_)
-//         if (*iter == *out)
-//             return iter;
-    additionsX_.insert(out);
-    return out;    
-//     std::cout<<"additionsX_.size() = "<< additionsX_.size()<<std::endl;
-//     auto result = additionsX_.insert( out);
-//     if (result.second) 
-//     {
-//         // L'élément a été inséré, renvoie l'élément inséré
-//         return *result.first;
-//     } else {
-//         // L'élément existe déjà, renvoie l'élément existant
-//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
-//         return *result.first;
-//     }    
+    auto result = additionsX_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
@@ -632,36 +634,32 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
 
 LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
 {
-    // creation of the new object
+//     // creation of the new object
     LazyMultiplicationX* out = new LazyMultiplicationX(v);
-
-    
-//     // check if does not already exist
-//     for (auto& iter : multiplicationsX_)
-//     {
-//         if (*iter == *out)
-//             return iter;
-//     }
-    multiplicationsX_.insert(out);
-    return out;
-
-// //     std::cout<<"multiplicationsX_.size() = "<< multiplicationsX_.size()<<std::endl;
-//     auto result = multiplicationsX_.insert( out);
-//     if (result.second) 
-//     {
-//         // L'élément a été inséré, renvoie l'élément inséré
-//         return *result.first;
-//     } else {
-//         // L'élément existe déjà, renvoie l'élément existant
-//         delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
-//         return *result.first;
-//     }    
+//     multiplicationsX_.insert(out);
+//     return out;
+    auto result = multiplicationsX_.insert( out);
+    if (result.second) 
+    {
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
 }
 
 void LazyManager::clean_files()
 {
-    if (lazycode_)
+    if (lazycode_)  
+    {
+        dlclose( handle_lib_);
         lazycode_->delete_files();
+        destroy_code(lazycode_);        
+    }
+    lazycode_ = nullptr;
+    
 }
 
 std::string LazyManager::get_unique_name()const
