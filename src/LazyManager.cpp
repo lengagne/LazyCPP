@@ -349,7 +349,7 @@ bool LazyManager::is_zero(LazyValue * in) const
     return in == zero_;
 }
 
-void LazyManager::prepare(  const std::string& name,
+git stvoid LazyManager::prepare(  const std::string& name,
                             bool reuse_if_exist)
 {
     for (auto& iter : outputs_)
