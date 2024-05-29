@@ -61,6 +61,35 @@ LazyCreator* LazyMultiplicationX::explose()
     return explosed_;    
 }
 
+double LazyMultiplicationX::get_constant() const
+{
+    double out = 1.0;
+    for (auto& iter : p_)
+    {
+        if (iter->typep_ == LAZYP_ADDITIONX)
+        {
+            LazyAdditionX* Ax = (LazyAdditionX*)iter;
+            if (Ax->is_double())
+                out *= Ax->get_double();
+        }
+    }
+    return out;
+}
+
+LazyMultiplicationX* LazyMultiplicationX::get_without_constant() const
+{
+    std::list<LazyParser*> vec;
+    for (auto& iter : p_)
+    {
+        if (iter->typep_ != LAZYP_ADDITIONX || ! ((LazyAdditionX*)iter)->is_double())
+        {
+            vec.push_back(iter);
+        }
+    }
+    return new LazyMultiplicationX(vec);
+}
+
+
 bool LazyMultiplicationX::is_zero() const
 {
     return (p_.size() ==0);

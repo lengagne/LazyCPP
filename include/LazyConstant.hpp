@@ -18,7 +18,12 @@ public:
     LazyConstant(double value);
     
     ~ LazyConstant();
-//        
+    
+    void compute();
+    
+    virtual std::string file_print( const std::string& varname="x");
+    
+    void update_list(std::vector<LazyCreator*>& vec, int current);      
 //     void compact()
 //     {
 //         

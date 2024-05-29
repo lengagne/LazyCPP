@@ -7,6 +7,10 @@ class LazySinus : public LazyParserCreator {
 public:
     LazySinus(LazyParser* a);
     
+    ~LazySinus()
+    {
+    }
+    
     void compute();
     
     void set_creator_input( LazyCreator* in);

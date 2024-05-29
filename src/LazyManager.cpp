@@ -81,6 +81,11 @@ LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
     return add_parser(new LazyAdditionX(vec));
 }
 
+LazyCreator* LazyManager::add_constant( double a)
+{
+    return add_creator(new LazyConstant(a));
+}
+
 LazyParser* LazyManager::add_constant_parser( double a)
 {
     return add_parser(new LazyAdditionX(a));
@@ -142,25 +147,24 @@ LazyParser* LazyManager::add_parser( LazyParser* in)
     }        
 }
 
-// LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
-// {
-// //     std::cout<<"deb add_output : "<< index <<" / "<< rank<<std::endl;
-//     if (outputs_.find(index) == outputs_.end())
-//     { // there is no such element, we create it
-//         outputs_[index] = Dependance(index);    
-//     }   
-// //     std::cout<<"in = "<<*in <<std::endl;
-// //     std::cout<<"compact" <<std::endl;
-//     in->compact();
-// //     std::cout<<"explose" <<std::endl;
-//     LazyValue *output = in->explose();
-// //     std::cout<<"add sub" <<std::endl;
-//     outputs_[index].add_suboutput(output,rank);
-// //     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
-// //     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
-// //     std::cout<<"outputs_.size() "<< outputs_.size() <<std::endl;
-//     return output;
-// }
+LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
+{
+//     std::cout<<"deb add_output : "<< index <<" / "<< rank<<std::endl;
+    if (outputs_.find(index) == outputs_.end())
+    { // there is no such element, we create it
+        outputs_[index] = Dependance(index);    
+    }   
+//     std::cout<<"in = "<<*in <<std::endl;
+//     std::cout<<"compact" <<std::endl;
+//     std::cout<<"explose" <<std::endl;
+    LazyCreator *create = in->explose();
+//     std::cout<<"add sub" <<std::endl;
+    outputs_[index].add_suboutput(create,rank);
+//     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
+//     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
+//     std::cout<<"outputs_.size() "<< outputs_.size() <<std::endl;
+    return create;
+}
 
 LazyParser* LazyManager::add_sinus( LazyParser* a)
 {

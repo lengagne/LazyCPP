@@ -66,7 +66,7 @@ int main()
 //     std::cout<<"z = "<< test_function<double>(x,y) <<std::endl<<std::endl;
 //     std::cout<<"z1 = "<< test_function<double>(x,y)*test_function<double>(x,y) <<std::endl<<std::endl;
 
-    LazyPrintAllInputs();
+//     LazyPrintAllInputs();
     
     
     return 0;

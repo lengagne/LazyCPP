@@ -6,7 +6,6 @@ LazySinus::LazySinus(LazyParser* a)
     typec_ = LAZYC_SINUS;
     typep_ = LAZYP_SINUS;
     pa_ = a;
-    compute();
 }
     
 void LazySinus::compute()

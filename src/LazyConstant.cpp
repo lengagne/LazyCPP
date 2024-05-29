@@ -10,7 +10,21 @@ LazyConstant::LazyConstant(double value)
 LazyConstant::~LazyConstant()
 {
 }    
+
+void LazyConstant::compute()
+{
     
+}
+    
+std::string LazyConstant::file_print( const std::string& varname)
+{
+    return std::to_string(value_);
+}
+
+void LazyConstant::update_list(std::vector<LazyCreator*>& vec, int current)
+{
+    
+}
 /*
 
 std::string LazyConstant::file_subname( const std::string& varname)

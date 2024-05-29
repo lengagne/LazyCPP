@@ -9,6 +9,11 @@ class LazyCosinus : public LazyParserCreator {
 public:
     LazyCosinus(LazyParser* a);
     
+    ~LazyCosinus()
+    {
+        
+    }
+    
     void compute();
     
     void set_creator_input( LazyCreator* in);

@@ -6,7 +6,6 @@ LazyCosinus::LazyCosinus(LazyParser* a)
     typec_ = LAZYC_COSINUS;
     typep_ = LAZYP_COSINUS;
     pa_ = a;
-    compute();
 }
     
 void LazyCosinus::compute()

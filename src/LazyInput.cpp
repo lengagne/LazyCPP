@@ -9,9 +9,15 @@ LazyInput::LazyInput(double value,
     value_ = value;
 }
     
-void compute()
+void LazyInput::compute()
 {
     
+}
+
+
+std::string LazyInput::file_print( const std::string& varname)
+{
+    return name_;
 }
 
 void LazyInput::print( const std::string& tab) const

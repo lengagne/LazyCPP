@@ -25,7 +25,7 @@ public:
 
     virtual std::string file_print( const std::string& varname="x")=0;
     
-    double get_value()const
+    virtual double get_value()const
     {
         return value_;
     }
