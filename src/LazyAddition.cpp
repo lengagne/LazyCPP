@@ -3,7 +3,7 @@
 
 LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
 {
-    std::cout<<"LazyAddition a,b"<<std::endl;
+    //std::cout<<"LazyAddition a,b"<<std::endl;
     type_ = LAZYADDITION;
     if (compareLazyValue(a,b))
     {
@@ -15,7 +15,7 @@ LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
         a_ = b;
     }
     value_ = a->value_+b->value_;        
-    std::cout<<"Done LazyAddition a,b"<<std::endl;
+    //std::cout<<"Done LazyAddition a,b"<<std::endl;
 }
     
 inline void LazyAddition::compute()

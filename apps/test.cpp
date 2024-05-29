@@ -14,8 +14,10 @@ T test_function( T& x, T& y)
     T c = 3; //*(x+y+2);
     T d = c+c+c;
     
-    return a; //+(2*x)+(2*x)+a+a+a;
+//     return a; //+(2*x)+(2*x)+a+a+a;
 //     return a * b *c *d;
+    
+    return cos(x) - x;
 }
 
 int main()
@@ -32,17 +34,15 @@ int main()
     LazyVariable lz = test_function<LazyVariable>(X,Y);
     lz.print_detail();    
     
-    LazyVariable lz1 = lz+lz;
+//     LazyVariable lz1 = lz+lz;
     
     std::cout<<"lz = "<< lz<<std::endl;
-    std::cout<<"lz1 = "<< lz1<<std::endl;
+//     std::cout<<"lz1 = "<< lz1<<std::endl;
     LazyAddOutput(lz,0,0);
-    LazyAddOutput(lz1,1,0);
+//     LazyAddOutput(lz1,1,0);
     
     lz.print_equation();
     std::cout<<std::endl;
-    
-    
     
     LazyPrepare("test");
     

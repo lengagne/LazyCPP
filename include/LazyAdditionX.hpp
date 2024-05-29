@@ -8,6 +8,8 @@ class LazyAdditionX : public LazyOperatorX {
 public:
     LazyAdditionX(std::list<LazyValue*>& a);
     
+    LazyAdditionX(double coeff, LazyValue* in);
+    
     inline void compute();
     
     virtual void compact();

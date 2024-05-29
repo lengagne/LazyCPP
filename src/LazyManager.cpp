@@ -75,9 +75,15 @@ LazyManager::LazyManager()
 
 LazyValue* LazyManager::add_additionX( LazyValue* a , LazyValue *b)
 {
-    LazyValue* check = check_addition(a,b);
-    if (check)
-        return check;    
+//     LazyValue* check = check_addition(a,b);
+//     if (check)
+//         return check;    
+   
+    if ( is_zero(a))
+        return b;
+    
+    if ( is_zero(b))
+        return a;    
     
     std::list<LazyValue*> vec;
     vec.push_back(a);
@@ -208,19 +214,19 @@ LazyValue* LazyManager::add_multiplicationX( LazyValue* a , LazyValue *b)
 
 LazyValue* LazyManager::add_output( LazyValue* in, uint index, uint rank )
 {
-    std::cout<<"deb add_output : "<< index <<" / "<< rank<<std::endl;
+//     std::cout<<"deb add_output : "<< index <<" / "<< rank<<std::endl;
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
 //     std::cout<<"in = "<<*in <<std::endl;
-    std::cout<<"compact" <<std::endl;
+//     std::cout<<"compact" <<std::endl;
     in->compact();
-    std::cout<<"explose" <<std::endl;
+//     std::cout<<"explose" <<std::endl;
     LazyValue *output = in->explose();
-    std::cout<<"add sub" <<std::endl;
+//     std::cout<<"add sub" <<std::endl;
     outputs_[index].add_suboutput(output,rank);
-    std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
+//     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
 //     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
 //     std::cout<<"outputs_.size() "<< outputs_.size() <<std::endl;
     return output;
@@ -284,25 +290,25 @@ uint LazyManager::affect()
     return counter_;
 }
 
-LazyValue* LazyManager::check_addition( LazyValue*a , LazyValue*b)
-{            
-    if ( is_zero(a))
-        return b;
-    
-    if ( is_zero(b))
-        return a;
-
-    if (is_minus_one(a))
-    {
-        return add_soustraction(b,a);
-    }
-
-    if (is_minus_one(b))
-    {
-        return add_soustraction(a,b);
-    }      
-    return 0;
-}
+// LazyValue* LazyManager::check_addition( LazyValue*a , LazyValue*b)
+// {            
+//     if ( is_zero(a))
+//         return b;
+//     
+//     if ( is_zero(b))
+//         return a;
+// 
+// //     if (is_minus_one(a))
+// //     {
+// //         return add_soustraction(b,a);
+// //     }
+// // 
+// //     if (is_minus_one(b))
+// //     {
+// //         return add_soustraction(a,b);
+// //     }      
+//     return 0;
+// }
 
 
 LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
@@ -320,6 +326,38 @@ LazyValue* LazyManager::check_multiplication( LazyValue*a , LazyValue*b)
     {
         return add_constant( a->value_*b->value_);
     }    
+    
+    if (is_constant(a) || is_constant(b))
+    {
+//         LazyAdditionX* out;
+//         if (is_constant(a))
+//         {
+//             out = new LazyAdditionX(a->value_,b);
+//         }
+//         
+//         if (is_constant(b))
+//         {
+//             out = new LazyAdditionX(b->value_,a);
+//         }
+//     
+//         if (out->p_.size() == 0.0)
+//         {
+//             delete out;
+//             return zero_;
+//         }
+// 
+//         auto result = additionsX_.insert( out);
+//         if (result.second) 
+//         {
+//             // L'élément a été inséré, renvoie l'élément inséré
+//             return *result.first;
+//         } else {
+//             // L'élément existe déjà, renvoie l'élément existant
+//             delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//             return *result.first;
+//         }    
+    }
+    
     return 0;
 }
 
@@ -557,7 +595,7 @@ void LazyManager::reset()
     cosinus_.clear();
     multiplicationsX_.clear();
     sinus_.clear();
-    soustractions_.clear();
+//     soustractions_.clear();
     constants_.clear();    
     additions_.clear();    
     multiplications_.clear();
@@ -595,26 +633,49 @@ double LazyManager::update(uint index, uint cpt) const
 
 LazyValue* LazyManager::add_addition( LazyValue* a , LazyValue *b)
 {
-    std::cout<<"deb add_addition"<<std::endl;
-    LazyValue* check = check_addition(a,b);
-    if (check)
-    {
-        std::cout<<"fin1 add_addition"<<std::endl;
-        return check;
-    }
-    std::cout<<"check add_addition"<<std::endl;
+//     std::cout<<"deb add_addition"<<std::endl;
+//     LazyValue* check = check_addition(a,b);
+//     std::cout<<"check = "<< check<<std::endl;
+//     if (check)
+//     {
+//         std::cout<<"fin1 add_addition"<<std::endl;
+//         return check;
+//     }    
+    if ( is_zero(a))
+        return b;
+    
+    if ( is_zero(b))
+        return a;
+    
+//     std::cout<<"check add_addition"<<std::endl;
+//     std::cout<<"step1 add_addition"<<std::endl;
     LazyAddition* out = new LazyAddition(a,b);
-    std::cout<<"create add_addition"<<std::endl;
-    LazyOperator2* tmp = (LazyOperator2*) out;
-//     std::cout<<"toto"<<std::endl;
-    if ( additions_.look_for (&tmp) )
+//     std::cout<<"step2 add_addition"<<std::endl;
+    auto result = additions_.insert( out);
+//     std::cout<<"step3 add_addition"<<std::endl;
+    if (result.second) 
     {
-        std::cout<<"fin2 add_addition"<<std::endl;
-        return tmp;
-    }
-    additions_.store(tmp);
-    std::cout<<"fin3 add_addition"<<std::endl;
-    return tmp;
+        // L'élément a été inséré, renvoie l'élément inséré
+//         std::cout<<"add_addition insert"<<std::endl;
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         std::cout<<"add_addition retrun previous"<<std::endl;
+        return *result.first;
+    }    
+    
+//     std::cout<<"create add_addition"<<std::endl;
+//     LazyOperator2* tmp = (LazyOperator2*) out;
+// //     std::cout<<"toto"<<std::endl;
+//     if ( additions_.look_for (&tmp) )
+//     {
+//         std::cout<<"fin2 add_addition"<<std::endl;
+//         return tmp;
+//     }
+//     additions_.store(tmp);
+//     std::cout<<"fin3 add_addition"<<std::endl;
+//     return tmp;
 }
 
 LazyValue* LazyManager::add_additionX( std::list<LazyValue*> v)
@@ -649,14 +710,27 @@ LazyValue* LazyManager::add_multiplication( LazyValue* a , LazyValue *b)
     if (check)
         return check;
     
+    
+    
     LazyMultiplication* out = new LazyMultiplication(a,b);
-    LazyOperator2* tmp = (LazyOperator2*) out;
-    if ( multiplications_.look_for (&tmp) )
+    auto result = multiplications_.insert( out);
+    if (result.second) 
     {
-        return tmp;
-    }
-    multiplications_.store(tmp);    
-    return tmp;
+        // L'élément a été inséré, renvoie l'élément inséré
+        return *result.first;
+    } else {
+        // L'élément existe déjà, renvoie l'élément existant
+        delete out; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        return *result.first;
+    }    
+    
+//     LazyOperator2* tmp = (LazyOperator2*) out;
+//     if ( multiplications_.look_for (&tmp) )
+//     {
+//         return tmp;
+//     }
+//     multiplications_.store(tmp);    
+//     return tmp;
 }
 
 LazyValue* LazyManager::add_multiplicationX( std::list<LazyValue*> v)
@@ -685,7 +759,7 @@ void LazyManager::clean_files()
     if (lazycode_)  
     {
         dlclose( handle_lib_);
-        lazycode_->delete_files();
+//         lazycode_->delete_files();
         destroy_code(lazycode_);        
     }
     lazycode_ = nullptr;
@@ -747,7 +821,7 @@ bool LazyManager::is_sinus( LazyValue* in) const
     return (in->type_ == LAZYSINUS);
 }
 
-bool LazyManager::is_soustraction( LazyValue* in) const
-{
-    return (in->type_ == LAZYSOUSTRACTION);
-}
+// bool LazyManager::is_soustraction( LazyValue* in) const
+// {
+//     return (in->type_ == LAZYSOUSTRACTION);
+// }

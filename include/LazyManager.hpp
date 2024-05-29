@@ -126,7 +126,7 @@ public:
 
     LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
 
-    LazyValue* check_addition( LazyValue*a , LazyValue*b);
+//     LazyValue* check_addition( LazyValue*a , LazyValue*b);
 
     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
 
@@ -182,8 +182,10 @@ private:
     std::set<LazyMultiplicationX*,PtrComparer> multiplicationsX_;
     std::set<LazyAdditionX*,PtrComparer> additionsX_;
 
-    LazyStorage additions_;
-    LazyStorage multiplications_;
+    std::set<LazyAddition*,PtrComparer> additions_;
+    std::set<LazyMultiplication*,PtrComparer> multiplications_;
+//     LazyStorage additions_;
+//     LazyStorage multiplications_;
     
     std::map<uint,Dependance> outputs_;    
 
@@ -224,7 +226,7 @@ private:
       
     bool is_sinus( LazyValue* in) const;
     
-    bool is_soustraction( LazyValue* in) const;
+//     bool is_soustraction( LazyValue* in) const;
     
     
     bool affect_ = true;

@@ -77,8 +77,10 @@ LazyVariable LazyVariable::operator + (const LazyVariable& b) const
 
 LazyVariable LazyVariable::operator - (const LazyVariable& b) const
 {
-    LazyVariable out( LMANAGER.add_soustraction(ref_, b.ref_));
-    return out;    
+//     LazyVariable out( LMANAGER.add_soustraction(ref_, b.ref_));
+//     return out;    
+    
+    return *this + (-1*b);
 }
 
 LazyVariable LazyVariable::operator * (const LazyVariable& b) const
@@ -94,7 +96,8 @@ void LazyVariable::operator += (const LazyVariable& b)
 
 void LazyVariable::operator -= (const LazyVariable& b)
 {
-    ref_ = LMANAGER.add_soustraction(ref_,b.ref_);
+//     ref_ = LMANAGER.add_soustraction(ref_,b.ref_);
+    *this += (-1*b);
 }
 
 void LazyVariable::operator *= (const LazyVariable& b)

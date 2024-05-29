@@ -10,6 +10,7 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 //         std::cout<<"LazyAdditionX : "<< *i <<std::endl;
     
     type_ = LAZYADDITIONX;
+    explosed_ = false;
     
     for ( auto& i : a)
     {
@@ -17,8 +18,9 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
         double coeff;
         LazyMultiplication* I;
         LazyMultiplicationX* XI;
+        LazyAdditionX* AI;
         LazyValue*Xout;
-        std::list<LazyValue*> a;
+        std::list<LazyValue*> lista;
         bool test;
         switch(i->type_)
         {
@@ -47,7 +49,7 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
                 XI = (LazyMultiplicationX*) i;
 //                 std::cout<<"ajout de LAZYMULTIPLICATIONX : "<<*i<<std::endl;
                 test = false;
-                a.clear();
+                lista.clear();
 //                 for (auto& iter : XI->p_)
                 for (auto it = XI->p_.begin(); it != XI->p_.end(); ) 
                 {
@@ -59,24 +61,33 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
 //                         it = XI->p_.erase(it);
                     }else
                     {
-//                         std::cout<<"on garde "<< *(*it) <<std::endl;
-                        a.push_back(*it);
+//                         std::cout<<"on considere dans la liste "<< *(*it) <<std::endl;
+                        lista.push_back(*it);
                     }
                     ++it;
                 }
                 
 //                 if (test)
 //                 {                    
-                    Xout = LMANAGER.add_multiplicationX(a);
-                    p_[Xout] += coeff;
-//                     std::cout<<"on ajoute "<< coeff<< " *"<< *Xout <<std::endl;
-//                     std::cout<<"on obtient : "<< p_[Xout]<<std::endl;
-//                 }else
-//                 {                    
-//                     p_[i] += 1.0;
-// //                     std::cout<<"pas de Lazyconstant : "<<i<<std::endl;
-//                 }
+//                     std::cout<<"lista.size() = "<< lista.size()<<std::endl;
+                    if (lista.size() == 1)
+                    {
+                        p_[lista.front()] += coeff;
+                    }else
+                    {
+                        Xout = LMANAGER.add_multiplicationX(lista);
+                        p_[Xout] += coeff;
+                    }
+                    
                 break;              
+            
+            case(LAZYADDITIONX): 
+                AI = (LazyAdditionX*) i;
+                for (auto& it : AI->p_)
+                {
+                    p_[it.first] += it.second;
+                }   
+                break;
                 
             case(LAZYCONSTANT):
 //                 std::cout<<"on ajoute une constante : "<< i->value_ <<std::endl;
@@ -84,17 +95,34 @@ LazyAdditionX::LazyAdditionX(std::list<LazyValue*>& a)
                 break;
             default:
                 p_[i] += 1.0;
+//                 std::cout<<"on ajoute "<< 1.0<< " *"<< *i <<std::endl;
 //                 std::cout<<"Must plan this case "<<std::endl;
                 break;
         }
     }
 //     p_ = a;
-
+    compact();
     remove_zeros();
     
 //     p_.sort(compareLazyValue);
     compute();
-//     std::cout<<"LazyAdditionX = "<< *this <<std::endl<<std::endl;
+
+//     for (auto& i : p_)
+//     {
+//         std::cout<<"Result LazyAdditionX @ "<< i.second <<std::endl;    
+//         i.first->print();
+//     }
+//         
+//     std::cout<<"Result LazyAdditionX = "<< *this <<std::endl<<std::endl;
+}
+
+LazyAdditionX::LazyAdditionX(double coeff, LazyValue* in)
+{
+    type_ = LAZYADDITIONX;
+    explosed_ = false;
+    p_[in] = coeff;
+    remove_zeros();
+    compute();
 }
 
 inline void LazyAdditionX::compute()
@@ -154,94 +182,59 @@ void LazyAdditionX::compact()
 
 LazyValue* LazyAdditionX::explose()
 {
-//     std::cout<<"deb : LazyAdditionX::explose()"<<std::endl;
-//     if (!explosed_)
-//     {
-//         explosed_ = true;
-//         LazyValue* m;
-//         uint cpt=0;
-//         for (auto iter : p_)
-//         {
-//             if (cpt++ ==0)
-//             {
-//                 m = iter->explose();
-//             }else
-//             {
-//                 m = LMANAGER.add_addition(m,iter->explose());                
-// //                 m = new LazyAddition(m,iter->explose());
-//             }
-//         }        
-//         exploded_ptr_ = m;
-//     }
+    return this;
+    
     if (!explosed_)
-    {        
+    {
         explosed_ = true;
         LazyValue* m = LMANAGER.get_zero();
         for (auto& iter : p_)
         {
-            if (iter.second !=1.0)
+            if (iter.second ==1.0)
+            {
+                m = LMANAGER.add_addition(m,iter.first->explose());
+//                 m = LMANAGER.add_addition(m,iter.first);
+            }else if (iter.second ==-1.0)
+            {
+                m = LMANAGER.add_soustraction(m,iter.first->explose());
+//                 m = LMANAGER.add_soustraction(m,iter.first);
+            }else
             {
                 LazyValue* tmp = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first);                
                 m = LMANAGER.add_addition(m,tmp->explose());
 //                 m = LMANAGER.add_addition(m,tmp);
-            }else
-            {
-                m = LMANAGER.add_addition(m,iter.first->explose());
-//                 m = LMANAGER.add_addition(m,iter.first);
             }
+            
         }
         exploded_ptr_ = m;
-//         std::cout<<"after explose : "<< *m <<std::endl;
-/*        if (p_.size() == 2)
-        {
-            LazyValue* m;
-            uint cpt=0;
-            for (auto& iter : p_)
-            {
-                if (cpt++ ==0)
-                {
-                    m = iter.first->explose();
-                }else
-                {
-                    m = LMANAGER.add_addition(m,iter.first->explose());                
-                }
-            }    
-            exploded_ptr_ = m;
-        }else
-        {
-        
-            std::list<LazyValue*> tmp;            
-            for (auto& iter : p_)
-            {
-                LazyValue* m = iter.first->explose(); 
-                tmp.push_back(m);
-            }        
-            exploded_ptr_ = new LazyAdditionX(tmp);
-        }    */    
-    }    
+    }
+    
     if (!exploded_ptr_)
     {
         std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" SHOULD NOT HAPPEN"<<std::endl;
         exit(123);
     }
-//     std::cout<<"fin : LazyAdditionX::explose()"<<std::endl;
+    
     return exploded_ptr_;
 }
 
 
 std::string LazyAdditionX::file_print( const std::string& varname)
 {
-    std::cerr<<"LazyAdditionX::file_print This should not happen"<<std::endl;
-   print_equation();std::cout<<std::endl;
-    print();std::cout<<std::endl;
-    std::exit(12);    
+//     std::cerr<<"LazyAdditionX::file_print This should not happen"<<std::endl;
+//    print_equation();std::cout<<std::endl;
+//     print();std::cout<<std::endl;
+//     std::exit(12);    
     std::string cmd = varname+"["+ std::to_string(id_)+"] =";
+    int cpt=0;
     for (auto& iter : p_)
     {
+        if (cpt++)
+            cmd += "+ ";
         if (iter.second == 1.0)
-            cmd += "+ " + iter.first->file_subname(varname) ;
+            cmd += iter.first->file_subname(varname) ;
         else
-            cmd += "+ " +std::to_string(iter.second) + "*" + iter.first->file_subname(varname) ;
+            cmd += std::to_string(iter.second) + "*" + iter.first->file_subname(varname) ;
     }
     return   cmd;
 }
@@ -252,10 +245,12 @@ std::string LazyAdditionX::get_string( )const
     uint cpt = 0;
     for (auto& iter : p_)
     {
+        if(cpt++)
+            cmd += "+ ";
         if (iter.second == 1.0)
-            cmd += "+ " + iter.first->get_string();
+            cmd += iter.first->get_string();
         else
-            cmd = cmd+"+"+ std::to_string(iter.second)+ "*" + iter.first->get_string();
+            cmd += std::to_string(iter.second)+ "*" + iter.first->get_string();
     }
     cmd = cmd +")";
     return cmd;
