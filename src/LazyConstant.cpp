@@ -31,7 +31,7 @@ void LazyConstant::print( const std::string& tab ,uint index)
     std::cout<<tab<<"LazyConstant:("<<this<<") Constante : "<< value_<<std::endl;
 }    
 
-std::string LazyConstant::get_string( )
+std::string LazyConstant::get_string( )const 
 {
     return std::to_string(value_); 
 }

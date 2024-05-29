@@ -18,7 +18,7 @@ std::string LazyCosinus::file_print( const std::string& varname)
     return varname+"["+ std::to_string(id_)+"] = cos(" + a_->file_subname(varname) + ")";
 }
 
-std::string LazyCosinus::get_string( )
+std::string LazyCosinus::get_string( )const 
 {
     return "cos(" + a_->get_string() + ")";
 }

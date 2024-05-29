@@ -29,7 +29,7 @@ public:
         return this;
     }
     
-    virtual std::string get_string( );
+    virtual std::string get_string( )const ;
     
     virtual std::string file_print( const std::string& varname="x");
     

@@ -27,7 +27,7 @@ void LazySoustraction::print( const std::string& tab ,uint index)
     b_->print(tab+"\t",index);
 }
     
-std::string LazySoustraction::get_string( )
+std::string LazySoustraction::get_string( )const 
 {
     return "(" + a_->get_string() + "-" + b_->get_string() + ")";
 }    

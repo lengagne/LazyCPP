@@ -25,7 +25,7 @@ std::string LazyMultiplication::file_print( const std::string& varname)
     return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "*" + b_->file_subname(varname);
 }
 
-std::string LazyMultiplication::get_string( )
+std::string LazyMultiplication::get_string( )const 
 {
     return "(" + a_->get_string() + "*" + b_->get_string() + ")";
 }

@@ -25,7 +25,7 @@ public:
         
     }
     
-    virtual std::string get_string( );
+    virtual std::string get_string( )const ;
 
     virtual void print( const std::string& tab ="",uint index=0) ;
     

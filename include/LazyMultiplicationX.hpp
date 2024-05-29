@@ -15,11 +15,19 @@ public:
     
     virtual std::string file_print( const std::string& varname="x");
     
-    virtual std::string get_string( );
+    virtual std::string get_string( )const ;
     
     virtual void print( const std::string& tab ="",uint index=0);
     
     virtual void print_equation();
+    
+    virtual void propag_update(int up =-1);
+    
+    virtual void update_list(std::vector<LazyValue*>& vec, int current);
+    
+    virtual bool operator == (const LazyMultiplicationX& A) const;
+    
+    std::list<LazyValue*> p_;
     
 private:
 

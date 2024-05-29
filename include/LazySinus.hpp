@@ -11,7 +11,7 @@ public:
        
     virtual std::string file_print( const std::string& varname="x");
     
-    virtual std::string get_string( );
+    virtual std::string get_string( )const ;
     
     virtual void print( const std::string& tab ="",uint index=0);
     

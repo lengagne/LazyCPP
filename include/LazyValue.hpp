@@ -7,10 +7,10 @@
 
 typedef enum LazyType{
     LAZYUNDEFINED,
+    LAZYCONSTANT,
     LAZYINPUT,
     LAZYADDITION,
     LAZYADDITIONX,
-    LAZYCONSTANT,
     LAZYCOSINUS,
     LAZYMULTIPLICATION,
     LAZYMULTIPLICATIONX,
@@ -51,7 +51,7 @@ public:
         return varname + "[" + std::to_string(id_)+"]";
     }
     
-    virtual std::string get_string( ) = 0;
+    virtual std::string get_string( ) const = 0;      // FIXME : toutes ces fonctions devraient être const
     
     virtual void print( const std::string& tab ="", uint index=0) = 0;
     
@@ -70,7 +70,7 @@ public:
     
     friend std::ostream& operator<< (std::ostream& stream, const LazyValue& v)
     {
-        stream<<v.value_;
+        stream<<v.get_string() /*<<"--("<<v.value_<<")"*/;
         return stream;
     }
     

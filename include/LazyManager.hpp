@@ -134,6 +134,8 @@ public:
     
     uint get_nb_inputs() const;
 
+    LazyValue* get_one() const;
+    
     LazyValue* get_zero() const;
     
     bool is_constant( LazyValue* in) const;
@@ -187,12 +189,14 @@ private:
 
 //     LazyValue* add_addition( LazyValue* a , LazyValue *b);
     
+public:
     LazyValue* add_additionX( std::list<LazyValue*> v);
     
 //     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
     
     LazyValue* add_multiplicationX( std::list<LazyValue*> v);
     
+private:
 //     // simplify the equation
 //     LazyValue* compact( LazyValue* a);
 //     

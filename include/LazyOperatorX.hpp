@@ -18,13 +18,13 @@ public:
     
     virtual LazyValue* explose() = 0;
     
-    virtual void propag_update(int up =-1);
+    virtual void propag_update(int up =-1)=0;
     
-    virtual void update_list(std::vector<LazyValue*>& vec, int current);
+    virtual void update_list(std::vector<LazyValue*>& vec, int current)=0;
        
-    virtual bool operator == (const LazyOperatorX& A) const;
+//     virtual bool operator == (const LazyOperatorX& A) const =0;
 
-    std::list<LazyValue*> p_;
+    
     
     LazyValue* exploded_ptr_ = nullptr;
 };

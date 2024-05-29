@@ -18,7 +18,7 @@ std::string LazySinus::file_print( const std::string& varname)
     return varname+"["+ std::to_string(id_)+"] = sin(" + a_->file_subname(varname) + ")";
 }
 
-std::string LazySinus::get_string( )
+std::string LazySinus::get_string( )const 
 {
     return "sin(" + a_->get_string() + ")";
 }

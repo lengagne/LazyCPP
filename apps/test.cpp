@@ -33,6 +33,9 @@ int main()
     lz.print_detail();    
     
     LazyVariable lz1 = lz+lz;
+    
+    std::cout<<"lz = "<< lz<<std::endl;
+    std::cout<<"lz1 = "<< lz1<<std::endl;
     LazyAddOutput(lz,0,0);
     LazyAddOutput(lz1,1,0);
     
@@ -41,7 +44,7 @@ int main()
     
     
     
-    LazyPrepare();
+    LazyPrepare("test");
     
 //     std::cout<<"X = "<< x <<std::endl;
 //     std::cout<<"Y = "<< y <<std::endl;
