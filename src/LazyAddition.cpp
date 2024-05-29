@@ -1,6 +1,42 @@
-
 #include "LazyAddition.hpp"
 
+LazyAddition::LazyAddition(LazyCreator* a, LazyCreator* b)
+{
+    typec_ = LAZYC_ADDITION;
+    if (compareLazyCreator(a,b))
+    {
+        a_ = a;
+        b_ = b; 
+    }else
+    {
+        b_ = a;
+        a_ = b;
+    }
+    compute();
+}
+
+void LazyAddition::compute()
+{
+    value_ = a_->value_ + b_->value_;
+}
+
+std::string LazyAddition::file_print( const std::string& varname)
+{
+    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] + " + varname+"["+ std::to_string(b_->id_)+"];";
+}
+
+void LazyAddition::update_list(std::vector<LazyCreator*>& vec, int current)
+{
+    if (update_ < current)
+    {
+        a_->update_list(vec,current);
+        b_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+    update_ = current;    
+}
+
+/*
 LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
 {
     //std::cout<<"LazyAddition a,b"<<std::endl;
@@ -18,18 +54,10 @@ LazyAddition::LazyAddition(LazyValue* a, LazyValue* b)
     //std::cout<<"Done LazyAddition a,b"<<std::endl;
 }
     
-inline void LazyAddition::compute()
-{
-    value_ = a_->value_ + b_->value_;
-}
 
 
-
-std::string LazyAddition::file_print( const std::string& varname)
-{
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "+" + b_->file_subname(varname);
-}
-
+*/
+/*
 std::string LazyAddition::get_string( ) const 
 {
     return "(" + a_->get_string() + "+" + b_->get_string() + ")";
@@ -50,4 +78,4 @@ void LazyAddition::print_equation()
     b_->print_equation();
     std::cout<<")" ;
 }
-
+*/

@@ -1,23 +1,29 @@
 #ifndef __LAZYADDITION_HPP__
 #define __LAZYADDITION_HPP__
 
-#include "LazyOperator2.hpp"
+#include "LazyCreator.hpp"
 
-class LazyAddition : public LazyOperator2 {
+class LazyAddition : public LazyCreator 
+{
 public:
-    LazyAddition(LazyValue* a, LazyValue* b);
+    LazyAddition(LazyCreator* a, LazyCreator* b);
     
-    inline void compute();
+    void compute();
     
     virtual std::string file_print( const std::string& varname="x");
     
-    virtual std::string get_string( )const ;
+    void update_list(std::vector<LazyCreator*>& vec, int current);
+//     
+//     virtual std::string get_string( )const ;
+//     
+//     virtual void print( const std::string& tab ="",uint index=0);
+//     
+//     virtual void print_equation();
     
-    virtual void print( const std::string& tab ="",uint index=0);
+// private:
     
-    virtual void print_equation();
-    
-private:
+    LazyCreator* a_;
+    LazyCreator* b_;
 
 };
 

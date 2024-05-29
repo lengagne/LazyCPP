@@ -1,14 +1,15 @@
 #ifndef __LAZYMANAGER_HPP__
 #define __LAZYMANAGER_HPP__
+#include <iostream>
+#include <map>
+#include <set>
+#include <vector>
 
 
 #include "LazyCPP.hpp"
-#include "LazyStorage.hpp"
 
 #include "LazyGeneratedCode.hpp"
-#include <vector>
-#include <map>
-#include <set>
+
 
 class Dependance
 {
@@ -17,11 +18,11 @@ public:
 
     Dependance(uint index);
     
-    void add_suboutput( LazyValue * in, uint nb);
+    void add_suboutput( LazyCreator* in, uint nb);
     
     void compute_dependances();
     
-    void print();
+//     void print();
     
 //     void re_init_known();    
     
@@ -29,17 +30,24 @@ public:
     
     uint index_output_ = 0;
     uint nb_sub_output_ = 0;    
-    std::map< uint, LazyValue* > sub_outputs_;
-    std::map< uint, std::vector< LazyValue* > > dependances_; // in case we have the value changes    
+    std::map< uint, LazyCreator* > sub_outputs_;
+    std::map< uint, std::vector< LazyCreator* > > dependances_; // in case we have the value changes    
 };
 
 
 struct PtrComparer {
     
-    bool operator()(const LazyValue* a, const LazyValue* b) const {    
-        return compareLazyValue(a,b);
+    bool operator()(const LazyCreator* a, const LazyCreator* b) const {    
+        return compareLazyCreator(a,b);
     }
-    
+
+    bool operator()(const LazyParser* a, const LazyParser* b) const {    
+        return compareLazyParser(a,b);
+    }
+
+    bool operator()(const LazyInput* a, const LazyInput* b) const {    
+        return a->name_ < b->name_;
+    }    
 //     bool operator()(const LazyValue* a, const LazyValue* b) const {    
 //         std::cout<<"PtrComparer LazyValue* a = "<< *a <<std::endl;
 //         std::cout<<"PtrComparer LazyValue* b = "<< *b <<std::endl;
@@ -104,58 +112,54 @@ public:
     LazyManager();
     
     // add an instance as output
-    LazyValue* add_output( LazyValue* in, uint index, uint rank );
+    LazyCreator* add_output( LazyParser* in, uint index, uint rank );
     
-    uint affect();
+//     uint affect();
     
-    LazyValue* add_addition( LazyValue* a , LazyValue *b);
+    // the function for the creators
+    LazyCreator* add_addition( LazyCreator* a , LazyCreator *b);
     
-    LazyValue* add_additionX( LazyValue* a , LazyValue *b);
-
-    LazyValue* add_constant(double d);
+    LazyCreator* add_constant(double cst);
     
-    LazyInput* add_input( const double &a, const std::string& name);
-
-    LazyValue* add_cosinus( LazyValue* a);
+    LazyCreator* add_cosinus( LazyCreator* a);
     
-    LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
-
-    LazyValue* add_multiplicationX( LazyValue* a , LazyValue *b);
-
-    LazyValue* add_sinus( LazyValue* a);
-
-    LazyValue* add_soustraction( LazyValue* a , LazyValue *b);
+    LazyCreator* add_multiplication( LazyCreator* a , LazyCreator *b);
+    
+    LazyCreator* add_sinus( LazyCreator* a);
+    
+    LazyCreator* add_soustraction( LazyCreator* a , LazyCreator *b);    
+    
 
 //     LazyValue* check_addition( LazyValue*a , LazyValue*b);
 
-    LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
+//     LazyValue* check_multiplication( LazyValue*a , LazyValue*b);
 
     void clean_files();
     
     uint get_nb_inputs() const;
 
-    LazyValue* get_one() const;
+//     LazyValue* get_one() const;
     
-    LazyValue* get_zero() const;
+//     LazyValue* get_zero() const;
     
-    bool is_constant( LazyValue* in) const;
+//     bool is_constant( LazyValue* in) const;
 
-    bool is_input( LazyValue* in) const;
+//     bool is_input( LazyValue* in) const;
     
-    bool is_minus_one(LazyValue * in) const;
+//     bool is_minus_one(LazyValue * in) const;
     
-    bool is_one(LazyValue * in) const;
+//     bool is_one(LazyValue * in) const;
     
-    bool is_zero(LazyValue * in) const;
+//     bool is_zero(LazyValue * in) const;
 
     void prepare( const std::string& filename = "",
                     bool reuse_if_exist = false);
     
-    void print_all() const;
+//     void print_all() const;
     
-    void print_all_inputs() const;
+//     void print_all_inputs() const;
 
-    void print_all_output_equations();
+//     void print_all_output_equations();
     
     void reset();
     
@@ -165,72 +169,94 @@ public:
     
     double update(uint index, uint cpt) const;
         
+
+    // the function for the parsers
+    LazyParser* add_additionX( LazyParser* a , LazyParser *b);
+
+    LazyParser* add_constant_parser( double val);
+    
+    LazyParser* add_cosinus( LazyParser* a);
+    
+    LazyParser* add_input( const double &a, const std::string& name);
+
+    LazyParser* add_multiplicationX( LazyParser* a , LazyParser *b);
+
+    LazyParser* add_sinus( LazyParser* a);
+    
 private:
-
-    LazyConstant* zero_ = nullptr;
-    LazyConstant*one_ = nullptr;
-    LazyConstant*minus_one_ = nullptr;
     
-    std::set<LazyConstant*,PtrComparer> constants_;
+//     LazyConstant* zero_ = nullptr;
+//     LazyConstant*one_ = nullptr;
+//     LazyConstant*minus_one_ = nullptr;
+//     
+//     std::set<LazyConstant*,PtrComparer> constants_;
     std::set<LazyInput*,PtrComparer> inputs_;        
-    
-    std::set<LazySinus*,PtrComparer> sinus_;
-    std::set<LazyCosinus*,PtrComparer> cosinus_;
-
-    std::set<LazySoustraction*,PtrComparer> soustractions_;
-    
-    std::set<LazyMultiplicationX*,PtrComparer> multiplicationsX_;
-    std::set<LazyAdditionX*,PtrComparer> additionsX_;
-
-    std::set<LazyAddition*,PtrComparer> additions_;
-    std::set<LazyMultiplication*,PtrComparer> multiplications_;
-//     LazyStorage additions_;
-//     LazyStorage multiplications_;
-    
+//     
+//     std::set<LazySinus*,PtrComparer> sinus_;
+//     std::set<LazyCosinus*,PtrComparer> cosinus_;
+// 
+//     std::set<LazySoustraction*,PtrComparer> soustractions_;
+//     
+//     std::set<LazyMultiplicationX*,PtrComparer> multiplicationsX_;
+//     std::set<LazyAdditionX*,PtrComparer> additionsX_;
+// 
+//     std::set<LazyAddition*,PtrComparer> additions_;
+//     std::set<LazyMultiplication*,PtrComparer> multiplications_;
+// //     LazyStorage additions_;
+// //     LazyStorage multiplications_;
+//     
     std::map<uint,Dependance> outputs_;    
+// 
+// // //     LazyValue* add_addition( LazyValue* a , LazyValue *b);
 
-//     LazyValue* add_addition( LazyValue* a , LazyValue *b);
+    LazyCreator* add_creator( LazyCreator* in);
+    
+    LazyParser* add_parser( LazyParser* in);
+    
+    std::set<LazyCreator*,PtrComparer> creators_;
+    
+    std::set<LazyParser*,PtrComparer> parsers_;
     
 public:
-    LazyValue* add_additionX( std::list<LazyValue*> v);
-    
-//     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
-    
-    LazyValue* add_multiplicationX( std::list<LazyValue*> v);
-    
-private:
-//     // simplify the equation
-//     LazyValue* compact( LazyValue* a);
+//     LazyValue* add_additionX( std::list<LazyValue*> v);
 //     
-//     LazyValue * compact_additionX (LazyAdditionX *a );
+// //     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);
+    
+//     LazyValue* add_multiplicationX( std::list<LazyValue*> v);
 //     
-//     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
-    
-//     LazyValue * explose( LazyValue * in);
-    
+// private:
+// //     // simplify the equation
+// //     LazyValue* compact( LazyValue* a);
+// //     
+// //     LazyValue * compact_additionX (LazyAdditionX *a );
+// //     
+// //     LazyValue * compact_multiplicationX (LazyMultiplicationX *a );
+//     
+// //     LazyValue * explose( LazyValue * in);
+//     
     std::string get_unique_name() const;
-    
-    void init_basic_constant();    
-    
-    bool is_addition(LazyValue* in) const;    
-    
-    bool is_additionX(LazyValue* in) const;    
-    
-    
-    
-    bool is_cosinus( LazyValue* in) const;
-    
-    bool is_multiplication(LazyValue* in) const;    
-    
-    bool is_multiplicationX(LazyValue* in) const;    
-      
-    bool is_sinus( LazyValue* in) const;
-    
-//     bool is_soustraction( LazyValue* in) const;
-    
-    
-    bool affect_ = true;
-    uint counter_ = 0;
+//     
+//     void init_basic_constant();    
+//     
+//     bool is_addition(LazyValue* in) const;    
+//     
+//     bool is_additionX(LazyValue* in) const;    
+//     
+//     
+//     
+//     bool is_cosinus( LazyValue* in) const;
+//     
+//     bool is_multiplication(LazyValue* in) const;    
+//     
+//     bool is_multiplicationX(LazyValue* in) const;    
+//       
+//     bool is_sinus( LazyValue* in) const;
+//     
+// //     bool is_soustraction( LazyValue* in) const;
+//     
+//     
+//     bool affect_ = true;
+//     uint counter_ = 0;
 
     std::string class_name_;
     void* handle_lib_;
@@ -238,6 +264,8 @@ private:
     create_code* creator_;
     destroy_code* destructor_;
     LazyGeneratedCode* lazycode_ = nullptr;
+    
+    friend class LazyVariable;
        
 };
 

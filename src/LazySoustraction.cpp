@@ -1,48 +1,58 @@
 
 #include "LazySoustraction.hpp"
 
-LazySoustraction::LazySoustraction(LazyValue* a, LazyValue* b) 
+LazySoustraction::LazySoustraction(LazyCreator* a, LazyCreator* b) 
 {
-    type_ = LAZYSOUSTRACTION;
+    typec_ = LAZYC_SOUSTRACTION;
     a_ =a;
     b_ = b;
-    value_ = a->value_-b->value_;        
+    compute();
 }
     
-inline void LazySoustraction::compute()
+void LazySoustraction::compute()
 {
     value_ = a_->value_ - b_->value_;
 }    
 
-std::string LazySoustraction::file_print( const std::string& varname)
+void LazySoustraction::update_list(std::vector<LazyCreator*>& vec, int current)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "-" + b_->file_subname(varname);
+    if (update_ < current)
+    {
+        a_->update_list(vec,current);
+        b_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+    update_ = current;    
 }
 
-    
-void LazySoustraction::print( const std::string& tab ,uint index) 
+std::string LazySoustraction::file_print( const std::string& varname)
 {
-    std::cout<<tab<<"LazySoustraction:("<<this<<") Soustraction ("<<value_<<")"<<std::endl;
-    a_->print(tab+"\t",index);
-    b_->print(tab+"\t",index);
+    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] - " + varname+"["+ std::to_string(b_->id_)+"];";
 }
-    
-std::string LazySoustraction::get_string( )const 
-{
-    return "(" + a_->get_string() + "-" + b_->get_string() + ")";
-}    
-    
-void LazySoustraction::print_equation()
-{
-    std::cout<<"(";
-    a_->print_equation();
-    std::cout<<" - ";
-    b_->print_equation();
-    std::cout<<")";
-}
-    
-bool LazySoustraction::operator == (const LazyOperator2& A) const
-{
-    return (a_ == A.a_ && b_ == A.b_);
-}    
-    
+//     
+// void LazySoustraction::print( const std::string& tab ,uint index) 
+// {
+//     std::cout<<tab<<"LazySoustraction:("<<this<<") Soustraction ("<<value_<<")"<<std::endl;
+//     a_->print(tab+"\t",index);
+//     b_->print(tab+"\t",index);
+// }
+//     
+// std::string LazySoustraction::get_string( )const 
+// {
+//     return "(" + a_->get_string() + "-" + b_->get_string() + ")";
+// }    
+//     
+// void LazySoustraction::print_equation()
+// {
+//     std::cout<<"(";
+//     a_->print_equation();
+//     std::cout<<" - ";
+//     b_->print_equation();
+//     std::cout<<")";
+// }
+//     
+// bool LazySoustraction::operator == (const LazyOperator2& A) const
+// {
+//     return (a_ == A.a_ && b_ == A.b_);
+// }    
+//     

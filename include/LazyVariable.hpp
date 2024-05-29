@@ -9,6 +9,8 @@ class LazyVariable
 public:
     LazyVariable();
     
+    LazyVariable(LazyParser* in);
+    
     LazyVariable(const LazyVariable& a);
     
     LazyVariable(const uint & a);
@@ -20,7 +22,7 @@ public:
     LazyVariable(const double &a, const std::string& name);
     
     LazyVariable(const std::string& name);
-    
+   
     // modif value
     void operator = (double d);
            
@@ -48,30 +50,31 @@ public:
     
     void operator *= (const LazyVariable& b);
 
-    std::string get_string()
-    {
-        return ref_->get_string();
-    }   
-    
-    std::string file_print( const std::string& varname="x")
-    {
-        return ref_->file_print(varname);
-    }
-    
-    void print_detail()
-    {
-        ref_->print();
-    }
-    
+//     std::string get_string()
+//     {
+//         return ref_->get_string();
+//     }   
+//     
+//     std::string file_print( const std::string& varname="x")
+//     {
+//         return ref_->file_print(varname);
+//     }
+//     
+//     void print_detail()
+//     {
+//         ref_->print();
+//     }
+//     
     void print_equation()
     {
-        ref_->print_equation();
+        parser_->print();
     }
     
 // private:
-    LazyValue* ref_;
+    LazyParser* parser_;
+    LazyCreator* creator_;
     
-    friend class LazyManager;
+//     friend class LazyManager;
     
     friend LazyVariable cos (const LazyVariable& a);
 
@@ -79,7 +82,7 @@ public:
     
     friend void LazyAddOutput(LazyVariable& in,uint index,uint rank);
         
-    LazyVariable(LazyValue* in);
+//     LazyVariable(LazyValue* in);
 };
 
 inline LazyVariable operator * (double a, const LazyVariable& b)

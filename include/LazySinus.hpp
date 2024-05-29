@@ -1,23 +1,29 @@
 #ifndef __LAZYSINUS_HPP__
 #define __LAZYSINUS_HPP__
 #include <math.h>
-#include "LazyOperator1.hpp"
+#include "LazyParserCreator.hpp"
 
-class LazySinus : public LazyOperator1 {
+class LazySinus : public LazyParserCreator {
 public:
-    LazySinus(LazyValue* a);
+    LazySinus(LazyParser* a);
     
-    inline void compute();
+    void compute();
+    
+    void set_creator_input( LazyCreator* in);
+    
+    void update_list(std::vector<LazyCreator*>& vec, int current);
        
     virtual std::string file_print( const std::string& varname="x");
-    
-    virtual std::string get_string( )const ;
-    
-    virtual void print( const std::string& tab ="",uint index=0);
-    
-    virtual void print_equation();    
+//     
+//     virtual std::string get_string( )const ;
+//     
+    virtual void print( const std::string& tab="") const; 
+//     
+//     virtual void print_equation();    
     
 private:
+    LazyParser* pa_;
+    LazyCreator* ca_;    
 
 };
 

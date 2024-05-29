@@ -3,16 +3,15 @@
 
 LazyConstant::LazyConstant(double value)
 {
-    type_ = LAZYCONSTANT;
+    typec_ = LAZYC_CONSTANT;
     value_ = value;
-    update_ = -1;
 }    
 
 LazyConstant::~LazyConstant()
 {
 }    
     
-
+/*
 
 std::string LazyConstant::file_subname( const std::string& varname)
 {
@@ -55,4 +54,4 @@ void LazyConstant::operator = (const double & d)
 {
     value_ = d;
 }
-        
+        */

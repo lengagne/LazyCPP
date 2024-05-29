@@ -32,7 +32,7 @@ int main()
     LazyVariable X(x,"X"), Y(y,"Y");
     
     LazyVariable lz = test_function<LazyVariable>(X,Y);
-    lz.print_detail();    
+//     lz.print_detail();    
     
 //     LazyVariable lz1 = lz+lz;
     

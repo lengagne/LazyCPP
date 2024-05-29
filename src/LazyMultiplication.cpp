@@ -1,9 +1,9 @@
 #include "LazyMultiplication.hpp"
 
-LazyMultiplication::LazyMultiplication(LazyValue* a, LazyValue* b) 
+LazyMultiplication::LazyMultiplication(LazyCreator* a, LazyCreator* b) 
 {
-    type_ = LAZYMULTIPLICATION;
-    if (compareLazyValue(a,b))
+    typec_ = LAZYC_MULTIPLICATION;
+    if (compareLazyCreator(a,b))
     {
         a_ = a;
         b_ = b; 
@@ -22,27 +22,38 @@ inline void LazyMultiplication::compute()
 
 std::string LazyMultiplication::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "*" + b_->file_subname(varname);
+    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] * " + varname+"["+ std::to_string(b_->id_)+"];";
 }
 
-std::string LazyMultiplication::get_string( )const 
+void LazyMultiplication::update_list(std::vector<LazyCreator*>& vec, int current)
 {
-    return "(" + a_->get_string() + "*" + b_->get_string() + ")";
+    if (update_ < current)
+    {
+        a_->update_list(vec,current);
+        b_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+    update_ = current;    
 }
-    
-void LazyMultiplication::print( const std::string& tab,uint index) 
-{
-    std::cout<<tab<<"LazyMultiplication:("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
-    a_->print(tab+"\t",index);
-    b_->print(tab+"\t",index);
-}   
-    
-void LazyMultiplication::print_equation()
-{
-    std::cout<<"(";
-    a_->print_equation();
-    std::cout<<"*";
-    b_->print_equation();
-    std::cout<<")";
-}
+
+// std::string LazyMultiplication::get_string( )const 
+// {
+//     return "(" + a_->get_string() + "*" + b_->get_string() + ")";
+// }
+//     
+// void LazyMultiplication::print( const std::string& tab,uint index) 
+// {
+//     std::cout<<tab<<"LazyMultiplication:("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
+//     a_->print(tab+"\t",index);
+//     b_->print(tab+"\t",index);
+// }   
+//     
+// void LazyMultiplication::print_equation()
+// {
+//     std::cout<<"(";
+//     a_->print_equation();
+//     std::cout<<"*";
+//     b_->print_equation();
+//     std::cout<<")";
+// }
     

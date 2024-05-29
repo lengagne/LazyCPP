@@ -1,33 +1,40 @@
 #ifndef __LAZYMULTIPLICATIONX_HPP__
 #define __LAZYMULTIPLICATIONX_HPP__
 
-#include "LazyOperatorX.hpp"
+#include <list>
+#include "LazyParser.hpp"
 
-class LazyMultiplicationX : public LazyOperatorX {
+class LazyMultiplicationX : public LazyParser {
 public:
-    LazyMultiplicationX(std::list<LazyValue*>& a);
+    LazyMultiplicationX(std::list<LazyParser*>& a);
     
-    inline void compute();
+    double get_constant() const;
     
-    virtual void compact();
+    LazyMultiplicationX* get_without_constant() const;
     
-    virtual LazyValue* explose();
+//     inline void compute();
+//     
+//     virtual void compact();
+//     
+    virtual LazyCreator* explose();
     
-    virtual std::string file_print( const std::string& varname="x");
+    virtual bool is_zero() const;
+//     
+//     virtual std::string file_print( const std::string& varname="x");
+//     
+//     virtual std::string get_string( )const ;
+//     
+    virtual void print( const std::string& tab ="") const;
+//     
+//     virtual void print_equation();
+//     
+//     virtual void propag_update(int up =-1);
+//     
+//     virtual void update_list(std::vector<LazyValue*>& vec, int current);
+//     
+//     virtual bool operator == (const LazyMultiplicationX& A) const;
     
-    virtual std::string get_string( )const ;
-    
-    virtual void print( const std::string& tab ="",uint index=0);
-    
-    virtual void print_equation();
-    
-    virtual void propag_update(int up =-1);
-    
-    virtual void update_list(std::vector<LazyValue*>& vec, int current);
-    
-    virtual bool operator == (const LazyMultiplicationX& A) const;
-    
-    std::list<LazyValue*> p_;
+    std::list<LazyParser*> p_;
     
 private:
 
