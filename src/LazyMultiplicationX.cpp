@@ -112,7 +112,6 @@ LazyCreator* LazyMultiplicationX::explose()
             }
         }
     }      
-    std::cout<<"LazyMultiplicationX explosed("<<this<<") "<<std::endl;    
     return explosed_;    
 }
 

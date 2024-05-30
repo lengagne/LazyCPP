@@ -112,20 +112,13 @@ LazyParser* LazyManager::add_cosinus( LazyParser* a)
 
 LazyCreator* LazyManager::add_creator( LazyCreator* in)
 {
-//     std::cout<<"Trying to add creator "<< in <<" type:"<< in->typec_<<" : "<< *in <<std::endl;
     auto result = creators_.insert(in);
     if (result.second) 
     {
         // L'élément a été inséré, renvoie l'élément inséré
-//         std::cout<<" added "<< in<<std::endl;
-//         if (dummy_debug++ == 1)
-//             exit(122);
         return *result.first;
     } else {
         // L'élément existe déjà, renvoie l'élément existant
-//         std::cout<<" returned previous not "<< in<<std::endl;
-//         if (dummy_debug++ == 1)
-//             exit(122);
 //         
         // FIXME on ne peut pas supprimer car cela supprime aussi le LazyParser en cas de LazyParserCreator
             switch (in->typec_)
@@ -186,15 +179,12 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
-//     std::cout<<"Parser adding : ("<< in<<") : "<< *in <<std::endl;
     auto result = parsers_.insert(in);
     if (result.second) 
     {
-//         std::cout<<"added"<<std::endl;
         // L'élément a été inséré, renvoie l'élément inséré
         return *result.first;
     } else {
-//         std::cout<<"returned"<<std::endl;
         // L'élément existe déjà, renvoie l'élément existant
         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
         return *result.first;
@@ -203,23 +193,12 @@ LazyParser* LazyManager::add_parser( LazyParser* in)
 
 LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 {
-//     std::cout<<"deb add_output : "<< index <<" / "<< rank<<std::endl;
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
-    
-    std::cout<<"addoutput : "<< index<<" - "<<rank<<std::endl;
-    std::cout<<"in = "<<*in <<std::endl;
-//     std::cout<<"compact" <<std::endl;
-//     std::cout<<"explose" <<std::endl;
     LazyCreator *create = in->explose();
-    
-    create->print_tree();
     outputs_[index].add_suboutput(create,rank);
-//     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
-//     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
-//     std::cout<<"outputs_.size() "<< outputs_.size() <<std::endl;
     return create;
 }
 

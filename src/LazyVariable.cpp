@@ -51,30 +51,28 @@ LazyVariable::LazyVariable(const double & a)
     creator_ = nullptr;
 }
     
+// create an input
 LazyVariable::LazyVariable(const double &a, const std::string& name)
 {
     parser_ = LMANAGER.add_input(a,name);
-    creator_ = nullptr;
+    creator_ = parser_->explose();
 }
-    
+
+// create an input
 LazyVariable::LazyVariable(const std::string& name) 
 {
     parser_ = LMANAGER.add_input(0,name);
-    creator_ = nullptr;
+    creator_ = parser_->explose();
 }
 
 void LazyVariable::operator = (double d)
 {
-    std::cout<<"Affectation operator = "<<d<<" de : "<<*this <<std::endl;
-    
     if (parser_ == nullptr || LMANAGER.is_zero(parser_))
     {
-        std::cout<<"on crée une constante" <<std::endl;
         parser_ = LMANAGER.add_constant_parser(d);
     }else
     if (parser_->typep_ == LAZYP_INPUT)
     {
-        std::cout<<"on met à jour input = "<< d <<std::endl;
         ((LazyInput*) parser_)->value_ = d;
     }else
     {
@@ -164,7 +162,7 @@ void LazyVariable::operator *= (const LazyVariable& b)
 
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-    stream << "@"<< v.parser_<<"@ "<<" TYPE : "<< v.parser_->typep_<<" eq : "<< v.parser_->get_name();
+    stream << "@"<< v.parser_<<"@"<< v.creator_<<"@  TYPE : "<< v.parser_->typep_<<" eq : "<< v.parser_->get_name();
     return stream;
 }
    
@@ -188,9 +186,6 @@ LazyVariable sin (const LazyVariable& a)
 bool operator==(const LazyVariable& a, double d)
 {
     return ! (a != LazyVariable(d));
-//     if (LMANAGER.is_constant(a.ref_) && a.ref_->value_ ==d)
-//         return true;
-//     return false;
 }
 
 

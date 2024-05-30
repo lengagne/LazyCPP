@@ -7,13 +7,11 @@ LazyInput::LazyInput(double value,
     typec_ = LAZYC_INPUT;
     typep_ = LAZYP_INPUT;
     value_ = value;
-    
-    std::cout<<"Create_input of "<< name_<<std::endl;
 }
     
 LazyInput::~LazyInput()
 {
-    std::cout<<"Delete input  of "<< name_<<std::endl;
+    
 }    
     
 void LazyInput::compute()

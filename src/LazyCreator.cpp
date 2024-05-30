@@ -27,7 +27,7 @@ bool compareLazyCreator(LazyCreator* a,
                 return  (*((LazyMultiplication*) a) < *((LazyMultiplication*) b));
                 
             default:
-                std::cout<<"compareLazyCreator type :" << a->typec_ <<"=="<< b->typec_<<" return by default "<<(a<b)<<std::endl;
+//                 std::cout<<"compareLazyCreator type :" << a->typec_ <<"=="<< b->typec_<<" return by default "<<(a<b)<<std::endl;
                 return (a < b);
         }
     }
