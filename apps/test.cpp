@@ -16,16 +16,7 @@ T test_function( T& x, T& y)
     
 //     return a; //+(2*x)+(2*x)+a+a+a;
 //     return a * b *c *d;
-    
-//     return sin(3.5*x) - cos(2*x*x + 2);
-//     return cos(2.0+2*x);
-//     return sin(2.0+2*x+5*3); // + 
-//     return sin(1*y-x+3*x+4*y+2.0);
-    
-    a+= 2.0-x;
-    a+= 2.0-x;
-    return a;
-//     return cos(x+y) * sin (x+y) + x+y;
+    return cos(x+y) * sin (x+y) + x+y;
 }
 
 int main()
@@ -58,9 +49,9 @@ int main()
     
     X = x = -1.0;
     Y = y = 42.0;
-    LazyUpdateInput();
-//     LazyUpdateInput(0,x);
-//     LazyUpdateInput(1,y);
+//     LazyUpdateInput();
+    LazyUpdateInput(0,x);
+    LazyUpdateInput(1,y);
     std::cout<<"AfterUpdate = "<< LazyUpdateOutput(0,0)<<std::endl;
     std::cout<<"Should be = "<< test_function<double>(x,y)<<std::endl;
     

@@ -100,8 +100,9 @@ LazyCreator* LazyMultiplicationX::explose()
 {
     if (explosed_ == nullptr)
     {       
+        
         int cpt = 0;
-        for (auto& iter : p_)
+        for (auto& iter : p_)   if ( !LMANAGER.is_one(iter))
         {
             if (cpt++ == 0)
             {
@@ -111,6 +112,13 @@ LazyCreator* LazyMultiplicationX::explose()
                 explosed_ = LMANAGER.add_multiplication(explosed_,iter->explose());
             }
         }
+        
+        if (explosed_ == nullptr)
+        {
+            explosed_ = LMANAGER.get_zero()->explose();
+            return explosed_;
+        }
+        
     }      
     return explosed_;    
 }

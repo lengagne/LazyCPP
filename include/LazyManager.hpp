@@ -140,7 +140,7 @@ public:
 
     LazyParser* get_one() const;
     
-//     LazyValue* get_zero() const;
+    LazyParser* get_zero() const;
     
 //     bool is_constant( LazyValue* in) const;
 
@@ -187,8 +187,11 @@ public:
     
 private:
     
-    LazyConstant* zero_ = nullptr;
-    LazyConstant*one_ = nullptr;
+    LazyParser* zero_ = nullptr;
+    LazyParser* one_ = nullptr;
+    
+    LazyCreator* czero_ = nullptr;
+    LazyCreator* cone_ = nullptr;
 //     LazyConstant*minus_one_ = nullptr;
 //     
 //     std::set<LazyConstant*,PtrComparer> constants_;

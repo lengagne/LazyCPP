@@ -65,24 +65,25 @@ inline double Dependance::update( uint cpt )
 
 LazyManager::LazyManager()
 {
-    zero_ = new LazyConstant(0.0);   
-    one_ = new LazyConstant(1.0);
-    add_parser(zero_);
-    add_parser(one_);
+    one_ = add_parser(new LazyConstant(1.0));
+    zero_ = add_parser(new LazyConstant(0));
+    
+    cone_ = add_creator(one_->explose());
+    czero_ = add_creator(zero_->explose());
 //     minus_one_ = new LazyConstant(-1.0);
 //     init_basic_constant();
 }
 
 LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
 {
-    if(is_zero(a))
-    {
-        return add_parser(b);
-    }
-    if(is_zero(b))
-    {
-        return add_parser(a);
-    }
+//     if(a->is_zero())
+//     {
+//         return add_parser(b);
+//     }
+//     if(b->is_zero())
+//     {
+//         return add_parser(a);
+//     }
     
     std::list<LazyParser*> vec;
     vec.push_back(a);
@@ -162,15 +163,14 @@ LazyParser* LazyManager::add_input( const double &a, const std::string& name)
 
 LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 {
-    if(is_zero(a) || is_zero(b))
-        return zero_;
-    
-    if(is_one(a))
-        return add_parser(b);
-    if(is_one(b))
-        return add_parser(a);        
-    
-    
+//     if(is_zero(a) || is_zero(b))
+//         return zero_;
+//     
+//     if(is_one(a))
+//         return add_parser(b);
+//     if(is_one(b))
+//         return add_parser(a);        
+        
     std::list<LazyParser*> vec;
     vec.push_back(a);
     vec.push_back(b);
@@ -179,6 +179,8 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
+//     if (in->is_zero())  return zero_;
+    
     auto result = parsers_.insert(in);
     if (result.second) 
     {
@@ -193,11 +195,21 @@ LazyParser* LazyManager::add_parser( LazyParser* in)
 
 LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 {
+    if (index == 0 && rank == 0)   
+    {
+        std::cout<<"add output : "<< *in <<std::endl;
+        in->print();
+    }
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
     LazyCreator *create = in->explose();
+    if (index == 0 && rank == 0)
+    {
+        std::cout<<"add output : "<< *create <<std::endl;
+        create->print_tree();
+    }
     outputs_[index].add_suboutput(create,rank);
     return create;
 }
@@ -299,11 +311,11 @@ LazyParser* LazyManager::get_one() const
 {
     return one_;
 }
-/*
-LazyValue* LazyManager::get_zero() const
+
+LazyParser* LazyManager::get_zero() const
 {
     return zero_;
-}*/
+}
 /*
 bool LazyManager::is_input( LazyValue* in) const
 {
@@ -425,7 +437,7 @@ void LazyManager::prepare(  const std::string& name,
                 {
                     if (it3->update_)
                     {
-                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// " << it3->get_equation() <<"\n";
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// TYPE"<< it3->typec_<<" eq:"<< it3->get_equation() <<"\n";
                         it3->update_ = false;
                     }
                 }
@@ -551,11 +563,16 @@ double LazyManager::update(uint index, uint cpt) const
 
 LazyCreator* LazyManager::add_addition( LazyCreator* a , LazyCreator *b)
 {   
+//     if (a == czero_) return b;
+//     if (b == czero_) return a;
     return add_creator( new LazyAddition(a,b));
 }
 
 LazyCreator* LazyManager::add_multiplication( LazyCreator* a , LazyCreator *b)
 {   
+//     if (a == czero_ || b == czero_) return czero_;
+//     if (a == cone_) return b;
+//     if (b == cone_) return a;
     return add_creator( new LazyMultiplication(a,b));
 }
 

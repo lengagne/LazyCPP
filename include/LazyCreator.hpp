@@ -9,7 +9,7 @@ typedef enum LazyCreatorType{
     LAZYC_INPUT,        //1
     LAZYC_ADDITION,     //2
     LAZYC_SOUSTRACTION, //3
-    LAZYC_MULTIPLICATION,   //4
+    LAZYC_MULTIPLICATION,//4
     LAZYC_COSINUS,      //5
     LAZYC_SINUS,        //6
     

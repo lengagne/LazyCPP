@@ -5,6 +5,9 @@
 
 LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
 {
+    std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
+    for (auto& i : a)
+        std::cout<<"\t Ajout de(@"<<i<<") : "<< *i <<std::endl;    
     typep_ = LAZYP_ADDITIONX;    
     for ( auto& i : a)
     {
@@ -26,6 +29,11 @@ LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
         }
     }
     remove_zeros();
+    std::cout<<"LazyAdditionX result = "<<*this <<std::endl;
+    print();
+    std::cout<<"TREE"<<std::endl;
+    explose()->print_tree();
+    std::cout<<"*******************"<<std::endl<<std::endl;
 }
 
 LazyAdditionX::LazyAdditionX(double value)
@@ -61,6 +69,12 @@ LazyCreator* LazyAdditionX::explose()
 {
     if (explosed_ == nullptr)
     {
+        if (p_.size() == 0)
+        {
+            explosed_ = LMANAGER.get_zero()->explose();
+            return explosed_;
+        }
+        
         int cpt =0;
         for (auto& iter : p_)
         {
@@ -101,13 +115,17 @@ double LazyAdditionX::get_double()
 
 std::string LazyAdditionX::get_name() const
 {
+    if (is_zero())
+        return "ZERO";
+    
     std::string cmd;
     int cpt = 0;
     for (auto&i : p_)
     {
         if (cpt++)  cmd +="+";
-        cmd += std::to_string(i.second);
-        if (i.first != LMANAGER.get_one())   cmd +=  "*" + i.first->get_name() ;
+        if (i.second != 1.0) cmd += std::to_string(i.second) + "*";
+//         if (i.first != LMANAGER.get_one()) 
+            cmd +=  i.first->get_name() ;
     }
     return cmd;
 }
@@ -142,7 +160,7 @@ void LazyAdditionX::print( const std::string& tab) const
     for (auto& iter : p_)
     {
         if (cpt ++)std::cout<<"+";
-        std::cout<<iter.second<<"*";
+        if (iter.second != 1.0) std::cout<<iter.second<<"*";
         iter.first->print(tab+"\t");
     }
 }   
