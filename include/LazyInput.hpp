@@ -8,11 +8,8 @@ public:
     LazyInput(double value, 
               const std::string name="not_defined"); 
         
-    ~LazyInput()
-    {
-        
-    }
-
+    ~LazyInput();
+    
     virtual void compute();
     
     virtual LazyCreator* explose();

@@ -10,7 +10,7 @@ LazyConstant::LazyConstant(double value)
 
 LazyConstant::~LazyConstant()
 {
-    std::cout<<"LazyConstant::~LazyConstant()"<<std::endl;
+    
 }    
 
 void LazyConstant::compute()

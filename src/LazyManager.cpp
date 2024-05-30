@@ -39,10 +39,6 @@ void Dependance::compute_dependances()
     for (auto out : sub_outputs_)
     {
         out.second->update_list(vec,index_output_);   
-        std::cout<<"dependances_.size() = "<< dependances_.size()<<std::endl;
-        std::cout<<"vec.size() = "<< vec.size()<<std::endl;
-        std::cout<<"cpt  = "<< cpt <<std::endl;
-        std::cout<<"index_output_  = "<< index_output_ <<std::endl;
         dependances_[cpt++] = vec;
         counter += vec.size();
     }
@@ -71,6 +67,8 @@ LazyManager::LazyManager()
 {
     zero_ = new LazyConstant(0.0);   
     one_ = new LazyConstant(1.0);
+    add_parser(zero_);
+    add_parser(one_);
 //     minus_one_ = new LazyConstant(-1.0);
 //     init_basic_constant();
 }
@@ -78,9 +76,13 @@ LazyManager::LazyManager()
 LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
 {
     if(is_zero(a))
+    {
         return add_parser(b);
+    }
     if(is_zero(b))
+    {
         return add_parser(a);
+    }
     
     std::list<LazyParser*> vec;
     vec.push_back(a);
@@ -110,7 +112,7 @@ LazyParser* LazyManager::add_cosinus( LazyParser* a)
 
 LazyCreator* LazyManager::add_creator( LazyCreator* in)
 {
-    std::cout<<"Trying to add creator "<< in <<" type:"<< in->typec_<<" : "<< *in <<std::endl;
+//     std::cout<<"Trying to add creator "<< in <<" type:"<< in->typec_<<" : "<< *in <<std::endl;
     auto result = creators_.insert(in);
     if (result.second) 
     {
@@ -128,7 +130,6 @@ LazyCreator* LazyManager::add_creator( LazyCreator* in)
         // FIXME on ne peut pas supprimer car cela supprime aussi le LazyParser en cas de LazyParserCreator
             switch (in->typec_)
             {
-            
                 case(LAZYC_ADDITION):
                 case(LAZYC_SOUSTRACTION):
                 case(LAZYC_MULTIPLICATION):
@@ -152,7 +153,16 @@ LazyParser* LazyManager::add_input( const double &a, const std::string& name)
         return *result.first;
     } else {
         // L'élément existe déjà, renvoie l'élément existant
-        delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+            switch (in->typec_)
+            {
+                case(LAZYP_ADDITIONX):
+                case(LAZYP_MULTIPLICATIONX):
+                    delete in;
+                default:
+                    break;
+            }
+
+//         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
         return *result.first;
     }      
 }
@@ -176,7 +186,6 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
-    if (in->is_zero())  return zero_;
 //     std::cout<<"Parser adding : ("<< in<<") : "<< *in <<std::endl;
     auto result = parsers_.insert(in);
     if (result.second) 
@@ -199,11 +208,13 @@ LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
-//     std::cout<<"in = "<<*in <<std::endl;
+    
+    std::cout<<"addoutput : "<< index<<" - "<<rank<<std::endl;
+    std::cout<<"in = "<<*in <<std::endl;
 //     std::cout<<"compact" <<std::endl;
 //     std::cout<<"explose" <<std::endl;
     LazyCreator *create = in->explose();
-    std::cout<<"create = "<< *create <<std::endl; 
+    
     create->print_tree();
     outputs_[index].add_suboutput(create,rank);
 //     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;

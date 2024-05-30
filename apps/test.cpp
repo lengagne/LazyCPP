@@ -9,7 +9,7 @@ T test_function( T& x, T& y)
 //      return (x+y)*(x*2)*(x+y+y+sin(y)+sin(y)+cos(x))-(x+y)*(x-y) *(y-(y*3)*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
 //     return ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(((x*2)*(y*3)*cos(x))));
     
-//     T a = 2*x;
+    T a = 2*x-4;
 //     T b = 2*y;
 //     T c = 3; //*(x+y+2);
 //     T d = c+c+c;
@@ -20,8 +20,11 @@ T test_function( T& x, T& y)
 //     return sin(3.5*x) - cos(2*x*x + 2);
 //     return cos(2.0+2*x);
 //     return sin(2.0+2*x+5*3); // + 
-    return sin(1*y-x+3*x+4*y+2.0);
+//     return sin(1*y-x+3*x+4*y+2.0);
     
+    a+= 2.0-x;
+    a+= 2.0-x;
+    return a;
 //     return cos(x+y) * sin (x+y) + x+y;
 }
 
@@ -50,12 +53,17 @@ int main()
 //     std::cout<<std::endl;
     
     
-    std::cout<<"Know LazyPrepare"<<std::endl;
+    std::cout<<"Now LazyPrepare"<<std::endl;
     LazyPrepare("test");
     
-//     X = x = -1.0;
-//     Y = y = 42.0;
-//     LazyUpdateInput();
-//     LazyUpdateOutput(0,0);
+    X = x = -1.0;
+    Y = y = 42.0;
+    LazyUpdateInput();
+//     LazyUpdateInput(0,x);
+//     LazyUpdateInput(1,y);
+    std::cout<<"AfterUpdate = "<< LazyUpdateOutput(0,0)<<std::endl;
+    std::cout<<"Should be = "<< test_function<double>(x,y)<<std::endl;
+    
+    
     return 0;
 }

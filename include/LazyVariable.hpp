@@ -94,6 +94,12 @@ inline LazyVariable operator + (double a, const LazyVariable& b)
     return b+a;
 }
 
+inline LazyVariable operator - (double a, const LazyVariable& b)
+{
+    return ((LazyVariable) a)-b;
+}
+
+
 inline LazyVariable operator * (double a, const LazyVariable& b)
 {
     return b*a;

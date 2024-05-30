@@ -23,7 +23,6 @@ void LazyAddition::compute()
 
 std::string LazyAddition::file_print( const std::string& varname)
 {
-    std::cout<<"LazyAddition::file_print : " <<std::endl;
     return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) +" + "+ b_->file_subname(varname) +";";
 }
 
@@ -45,7 +44,6 @@ void LazyAddition::update_list(std::vector<LazyCreator*>& vec, int current)
     {
         a_->update_list(vec,current);
         b_->update_list(vec,current);
-        std::cout<<"On ajoute LazyAddition"<<std::endl;
         vec.push_back(this);            
     }
     update_ = current;    

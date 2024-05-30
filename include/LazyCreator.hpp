@@ -5,14 +5,13 @@
 #include <vector>
 
 typedef enum LazyCreatorType{
-    LAZYC_UNDEFINED,    //0
-    LAZYC_CONSTANT,     //1
-    LAZYC_INPUT,        //2
-    LAZYC_ADDITION,     //3
-    LAZYC_SOUSTRACTION, //4
-    LAZYC_MULTIPLICATION,   //5
-    LAZYC_COSINUS,      //6
-    LAZYC_SINUS,        //7
+    LAZYC_CONSTANT,     //0
+    LAZYC_INPUT,        //1
+    LAZYC_ADDITION,     //2
+    LAZYC_SOUSTRACTION, //3
+    LAZYC_MULTIPLICATION,   //4
+    LAZYC_COSINUS,      //5
+    LAZYC_SINUS,        //6
     
 } LazyCreatorType;
 
@@ -45,7 +44,7 @@ public:
     
 //     std::string name_;
     double value_;
-    LazyCreatorType typec_ = LAZYC_UNDEFINED;
+    LazyCreatorType typec_ = LAZYC_CONSTANT;
     int id_ = -1;
     int update_ = -1;
     

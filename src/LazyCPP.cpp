@@ -5,6 +5,7 @@ LazyManager LMANAGER;
 
 void LazyAddOutput(LazyVariable& in,uint index,uint rank)
 {
+    std::cout<<"LazyAddOutput in = "<< in <<std::endl;
     in.creator_ = LMANAGER.add_output(in.parser_, index,rank);
 }
 

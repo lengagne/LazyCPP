@@ -65,33 +65,38 @@ LazyVariable::LazyVariable(const std::string& name)
 
 void LazyVariable::operator = (double d)
 {
+    std::cout<<"Affectation operator = "<<d<<" de : "<<*this <<std::endl;
+    
     if (parser_ == nullptr || LMANAGER.is_zero(parser_))
     {
+        std::cout<<"on crée une constante" <<std::endl;
         parser_ = LMANAGER.add_constant_parser(d);
     }else
     if (parser_->typep_ == LAZYP_INPUT)
     {
+        std::cout<<"on met à jour input = "<< d <<std::endl;
         ((LazyInput*) parser_)->value_ = d;
     }else
     {
-        if (parser_->typep_ == LAZYP_ADDITIONX)
-        {
-            LazyAdditionX* ax = (LazyAdditionX*) parser_;
-            if ( ! ax->is_double())
-            {
-                std::cerr<<"Error in "<< __FILE__<<" at line "<<__LINE__<<std::endl;
-                std::cerr<<"You cannot impose value"<<std::endl;
-                exit(45);                
-            }else
-            {
-                ax->p_[nullptr] = d;
-            }
-        }else
-        {
-            std::cerr<<"Error in "<< __FILE__<<" at line "<<__LINE__<<std::endl;
-            std::cerr<<"You cannot impose value"<<std::endl;
-            exit(45);
-        }
+        parser_ = LMANAGER.add_constant_parser(d);
+//         if (parser_->typep_ == LAZYP_ADDITIONX)
+//         {
+//             LazyAdditionX* ax = (LazyAdditionX*) parser_;
+//             if ( ! ax->is_double())
+//             {
+//                 std::cerr<<"Error in "<< __FILE__<<" at line "<<__LINE__<<std::endl;
+//                 std::cerr<<"You cannot impose value"<<std::endl;
+//                 exit(45);                
+//             }else
+//             {
+//                 ax->p_[LMANAGER.get_one()] = d;
+//             }
+//         }else
+//         {
+//             std::cerr<<"Error in "<< __FILE__<<" at line "<<__LINE__<<std::endl;
+//             std::cerr<<"You cannot impose value"<<std::endl;
+//             exit(45);
+//         }
     }
 }
         
@@ -107,6 +112,7 @@ double LazyVariable::get_value() const
     
 bool LazyVariable::is_null() const
 {
+    if (! parser_)  return true;
     return parser_->is_zero();
 }
 
@@ -139,7 +145,11 @@ LazyVariable LazyVariable::operator * (double b) const
 
 void LazyVariable::operator += (const LazyVariable& b)
 {
+//     std::cout<<"Operator+= avant this: "<< *this <<std::endl;
+//     std::cout<<"Operator+= avant b: "<< b <<std::endl;
     parser_ = LMANAGER.add_additionX(parser_,b.parser_);
+//     *this = *this + b;
+//     std::cout<<"Operator+= après : "<< *this <<std::endl<<std::endl;
 }
 
 void LazyVariable::operator -= (const LazyVariable& b)
@@ -154,11 +164,10 @@ void LazyVariable::operator *= (const LazyVariable& b)
 
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-    stream <<  v.parser_->get_name();
+    stream << "@"<< v.parser_<<"@ "<<" TYPE : "<< v.parser_->typep_<<" eq : "<< v.parser_->get_name();
     return stream;
 }
    
-    
 bool LazyVariable::operator != (const LazyVariable& b) const
 {
     return ( parser_ != b.parser_ || creator_ != b.creator_);

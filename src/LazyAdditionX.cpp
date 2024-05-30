@@ -5,9 +5,9 @@
 
 LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
 {
-//     std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
-//     for (auto& i : a)
-//         std::cout<<"\ta = (@"<<i<<") : "<< *i <<std::endl;
+    std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
+    for (auto& i : a)
+        std::cout<<"\ta = (@"<<i<<") : "<< *i <<std::endl;
     
     typep_ = LAZYP_ADDITIONX;    
     for ( auto& i : a)
@@ -170,11 +170,6 @@ LazyCreator* LazyAdditionX::explose()
 //     std::cout<<"LazyAdditionX explosed("<<this<<") = "<< *explosed_<<std::endl;            
         }
     }    
-//     std::cout<<"LazyAdditionX explosed("<<this<<") = "<< *explosed_<<std::endl;
-//     std::cout<<"End of explose()"<<std::endl;
-    std::cout<<"equation : "<< explosed_->get_equation()<<std::endl;
-    explosed_->print_tree();
-    std::cout<<std::endl<<std::endl;
     return explosed_;
 }
 

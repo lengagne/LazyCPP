@@ -61,7 +61,6 @@ void LazySinus::update_list(std::vector<LazyCreator*>& vec, int current)
     if (update_ < current)
     {
         ca_->update_list(vec,current);
-        std::cout<<"On ajoute LazySinus"<<std::endl;
         vec.push_back(this);            
     }
     update_ = current;    

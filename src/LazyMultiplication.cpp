@@ -41,7 +41,6 @@ void LazyMultiplication::update_list(std::vector<LazyCreator*>& vec, int current
 {
     if (update_ < current)
     {
-        std::cout<<"On ajoute LazyMulitplication"<<std::endl;
         a_->update_list(vec,current);
         b_->update_list(vec,current);
         vec.push_back(this);            
