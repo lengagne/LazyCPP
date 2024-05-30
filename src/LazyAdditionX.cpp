@@ -259,7 +259,7 @@ bool LazyAdditionX::is_zero() const
 
 void LazyAdditionX::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazyAdditionX:("<<this<<"): AdditionX "<<std::endl;
+    std::cout<<tab<<"LazyAdditionX:("<<this<<"): "<<std::endl;
     int cpt = 0;
     for (auto& iter : p_)
     {
