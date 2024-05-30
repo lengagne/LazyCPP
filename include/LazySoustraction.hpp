@@ -10,9 +10,11 @@ public:
    
     void compute();
     
-    void update_list(std::vector<LazyCreator*>& vec, int current);
-    
     virtual std::string file_print( const std::string& varname="x");
+    
+    virtual std::string get_equation( );
+        
+    void update_list(std::vector<LazyCreator*>& vec, int current);
 //     
 //     virtual std::string get_string( )const ;
 //     

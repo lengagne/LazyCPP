@@ -5,142 +5,66 @@
 
 LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
 {
-//     std::cout<<"\n\nLazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
+//     std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
 //     for (auto& i : a)
-//         std::cout<<"LazyAdditionX : "<< *i <<std::endl;
+//         std::cout<<"\ta = (@"<<i<<") : "<< *i <<std::endl;
     
-    typep_ = LAZYP_ADDITIONX;
-    
+    typep_ = LAZYP_ADDITIONX;    
     for ( auto& i : a)
     {
         switch(i->typep_)
         {
             case(LAZYP_ADDITIONX):
                 for (auto& it : ((LazyAdditionX*)i)->p_)
+                {
+//                     std::cout<<"LAZYP_ADDITIONX : "<< it.first << "!"<< it.second<<std::endl;
                     p_[it.first] += it.second;
+                }
                 break;
                 
             case(LAZYP_MULTIPLICATIONX):
+//                 std::cout<<"LAZYP_MULTIPLICATIONX"<<std::endl;
                 // extract the constant part
-                p_[((LazyMultiplicationX*)i)->get_without_constant()] = ((LazyMultiplicationX*)i)->get_constant();
+                p_[LMANAGER.add_parser(((LazyMultiplicationX*)i)->get_without_constant())] = ((LazyMultiplicationX*)i)->get_constant();
                 break;
             default:
+//                 std::cout<<"default"<<std::endl;
                 p_[i] += 1.0;
                 
         }
-        
-        
-        
-/*        
-        // extract constant from variable
-        double coeff;
-        LazyMultiplication* I;
-        LazyMultiplicationX* XI;
-        LazyAdditionX* AI;
-        LazyValue*Xout;
-        std::list<LazyValue*> lista;
-        bool test;
-        switch(i->type_)
-        {
-            case(LAZYMULTIPLICATION): 
-                I = (LazyMultiplication*) i;
-                if (I->a_->type_ == LAZYCONSTANT && I->b_->type_ != LAZYCONSTANT)
-                {
-//                     std::cout<<"CASE 1"<<std::endl;
-                    p_[I->b_] += I->a_->value_;
-                }else if (I->b_->type_ == LAZYCONSTANT && I->a_->type_ != LAZYCONSTANT)
-                {
-//                     std::cout<<"CASE 2"<<std::endl;
-                    p_[I->a_] += I->b_->value_;
-                }else if (I->a_->type_ != LAZYCONSTANT && I->b_->type_ != LAZYCONSTANT)
-                {
-//                     std::cout<<"CASE 3"<<std::endl;
-                    p_[i] += 1.0;
-                }else
-                {
-                    std::cout<<"This case must not happen"<<std::endl;
-                }
-                break;
-                
-           case(LAZYMULTIPLICATIONX): 
-                coeff = 1.0;
-                XI = (LazyMultiplicationX*) i;
-//                 std::cout<<"ajout de LAZYMULTIPLICATIONX : "<<*i<<std::endl;
-                test = false;
-                lista.clear();
-//                 for (auto& iter : XI->p_)
-                for (auto it = XI->p_.begin(); it != XI->p_.end(); ) 
-                {
-                    if((*it)->type_ == LAZYCONSTANT)
-                    {
-                        test = true;
-                        coeff *= (*it)->value_;
-//                         std::cout<<"mutliplication par "<< (*it)->value_ <<std::endl;
-//                         it = XI->p_.erase(it);
-                    }else
-                    {
-//                         std::cout<<"on considere dans la liste "<< *(*it) <<std::endl;
-                        lista.push_back(*it);
-                    }
-                    ++it;
-                }
-                
-//                 if (test)
-//                 {                    
-//                     std::cout<<"lista.size() = "<< lista.size()<<std::endl;
-                    if (lista.size() == 1)
-                    {
-                        p_[lista.front()] += coeff;
-                    }else
-                    {
-                        Xout = LMANAGER.add_multiplicationX(lista);
-                        p_[Xout] += coeff;
-                    }
-                    
-                break;              
-            
-            case(LAZYADDITIONX): 
-                AI = (LazyAdditionX*) i;
-                for (auto& it : AI->p_)
-                {
-                    p_[it.first] += it.second;
-                }   
-                break;
-                
-            case(LAZYCONSTANT):
-//                 std::cout<<"on ajoute une constante : "<< i->value_ <<std::endl;
-                p_[ LMANAGER.get_one()] += i->value_;
-                break;
-            default:
-                p_[i] += 1.0;
-//                 std::cout<<"on ajoute "<< 1.0<< " *"<< *i <<std::endl;
-//                 std::cout<<"Must plan this case "<<std::endl;
-                break;
-        }*/
     }
-// //     p_ = a;
-//     compact();
     remove_zeros();
-//     
-// //     p_.sort(compareLazyValue);
-//     compute();
-// 
-// //     for (auto& i : p_)
-// //     {
-// //         std::cout<<"Result LazyAdditionX @ "<< i.second <<std::endl;    
-// //         i.first->print();
-// //     }
-// //         
-// //     std::cout<<"Result LazyAdditionX = "<< *this <<std::endl<<std::endl;
+//     std::cout<<"Result LazyAdditionX (@"<<this<<") = "<< *this <<std::endl<<std::endl;
 }
 
 LazyAdditionX::LazyAdditionX(double value)
 {
     typep_ = LAZYP_ADDITIONX;
-    p_[nullptr] = value;
+    if (value)
+        p_[ LMANAGER.get_one()] = value;
 }
 
+LazyAdditionX::LazyAdditionX(double coeff, LazyParser* in)
+{
+    typep_ = LAZYP_ADDITIONX;
+    switch( in->typep_)
+    {
+        case(LAZYP_ADDITIONX):
+            p_ = ((LazyAdditionX*)in)->p_;
+            for(auto& i:p_)
+                i.second *= coeff;
+            break;
+//         case(LAZYP_MULTIPLICATIONX):
+//             std::cout<<"LAZYP_MULTIPLICATIONX"<<std::endl;
+//             std::cout<<" vec = "<< *LMANAGER.add_parser(((LazyMultiplicationX*)in)->get_without_constant())<<std::endl;
+//             std::cout<<" val = "<< ((LazyMultiplicationX*)in)->get_constant() <<std::endl;
+//             p_[LMANAGER.add_parser(((LazyMultiplicationX*)in)->get_without_constant())] = ((LazyMultiplicationX*)in)->get_constant()*coeff;
+//             break;
 
+        default:
+            p_[ in] = coeff;
+    }
+}
 // LazyAdditionX::LazyAdditionX(double coeff, LazyValue* in)
 // {
 //     type_ = LAZYADDITIONX;
@@ -207,33 +131,45 @@ LazyAdditionX::LazyAdditionX(double value)
 
 LazyCreator* LazyAdditionX::explose()
 {
+//     std::cout<<"We explose LazyAdditionX("<<this<<") "<< * this <<std::endl;
+    print();
     if (explosed_ == nullptr)
     {
         int cpt =0;
         for (auto& iter : p_)
         {
-            if (cpt == 0)
+//             std::cout<<"We explose LazyAdditionX : "<< *(iter.first)<<"  @" <<iter.second <<std::endl;
+            if (cpt++ == 0)
             {
-                explosed_ = iter.first->explose();
+//                 std::cout<<"\tWe explose LazyAdditionX case 0"<<std::endl;
+                explosed_ = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
+                
+//                 iter.first->explose();                
             }else
             {
                 if (iter.second ==1.0)
                 {
+//                     std::cout<<"We explose LazyAdditionX case 1"<<std::endl;
                     explosed_ = LMANAGER.add_addition(explosed_,iter.first->explose());
     //                 m = LMANAGER.add_addition(m,iter.first);
                 }else if (iter.second ==-1.0)
                 {
+//                     std::cout<<"We explose LazyAdditionX case 2"<<std::endl;
                     explosed_ = LMANAGER.add_soustraction(explosed_,iter.first->explose());
     //                 m = LMANAGER.add_soustraction(m,iter.first);
                 }else
                 {
+//                     std::cout<<"We explose LazyAdditionX case 3"<<std::endl;
                     LazyCreator* tmp = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
                     explosed_ = LMANAGER.add_addition(explosed_,tmp);
     //                 m = LMANAGER.add_addition(m,tmp);
                 }
             }
+            
         }
     }    
+//     std::cout<<"LazyAdditionX explosed("<<this<<") = "<< *explosed_<<std::endl;
+//     std::cout<<"End of explose()"<<std::endl;
     return explosed_;
 }
 
@@ -244,12 +180,38 @@ double LazyAdditionX::get_double()
         std::cerr<<"ERROR in "<<__FILE__<<" at line "<< __LINE__<<std::endl;
         exit(44);
     }
-    return p_[nullptr];
+    return p_[LMANAGER.get_one()];
 }
+
+std::string LazyAdditionX::get_name() const
+{
+    std::string cmd;
+    int cpt = 0;
+    for (auto&i : p_)
+    {
+        if (cpt++)  cmd +="+";
+        cmd += std::to_string(i.second);
+        if (i.first != LMANAGER.get_one())   cmd +=  "*" + i.first->get_name() ;
+    }
+    return cmd;
+}
+
 
 bool LazyAdditionX::is_double() const
 {
-    return(p_.size() == 1 &&   p_.find(nullptr) == p_.end());
+    if (p_.size() != 1){
+        return false;
+    }
+    
+    std::map<LazyParser*, double>::const_iterator it = p_.begin();    
+    if (it->first == LMANAGER.get_one())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool LazyAdditionX::is_zero() const
@@ -298,8 +260,10 @@ bool LazyAdditionX::is_zero() const
 void LazyAdditionX::print( const std::string& tab) const
 {
     std::cout<<tab<<"LazyAdditionX:("<<this<<"): AdditionX "<<std::endl;
+    int cpt = 0;
     for (auto& iter : p_)
     {
+        if (cpt ++)std::cout<<"+";
         std::cout<<iter.second<<"*";
         iter.first->print(tab+"\t");
     }
@@ -335,7 +299,8 @@ void LazyAdditionX::remove_zeros()
     // erase the zero values
     for (auto it = p_.begin(); it != p_.end(); ) 
     {
-        if (it->second == 0.0) {
+        if (it->second == 0.0 || LMANAGER.is_zero( it->first))
+        {
             it = p_.erase(it);
         } else {
             ++it;

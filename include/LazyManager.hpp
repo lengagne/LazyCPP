@@ -22,7 +22,7 @@ public:
     
     void compute_dependances();
     
-//     void print();
+    void print();
     
 //     void re_init_known();    
     
@@ -138,7 +138,7 @@ public:
     
     uint get_nb_inputs() const;
 
-//     LazyValue* get_one() const;
+    LazyParser* get_one() const;
     
 //     LazyValue* get_zero() const;
     
@@ -150,16 +150,16 @@ public:
     
 //     bool is_one(LazyValue * in) const;
     
-//     bool is_zero(LazyValue * in) const;
+    bool is_zero(LazyParser * in) const;
 
     void prepare( const std::string& filename = "",
                     bool reuse_if_exist = false);
     
-//     void print_all() const;
+    void print_all() const;
     
-//     void print_all_inputs() const;
+    void print_all_inputs() const;
 
-//     void print_all_output_equations();
+    void print_all_output_equations();
     
     void reset();
     
@@ -172,6 +172,8 @@ public:
 
     // the function for the parsers
     LazyParser* add_additionX( LazyParser* a , LazyParser *b);
+    
+    LazyParser* add_additionX( LazyParser* a , double value);
 
     LazyParser* add_constant_parser( double val);
     
@@ -185,8 +187,8 @@ public:
     
 private:
     
-//     LazyConstant* zero_ = nullptr;
-//     LazyConstant*one_ = nullptr;
+    LazyConstant* zero_ = nullptr;
+    LazyConstant*one_ = nullptr;
 //     LazyConstant*minus_one_ = nullptr;
 //     
 //     std::set<LazyConstant*,PtrComparer> constants_;
@@ -211,13 +213,12 @@ private:
 
     LazyCreator* add_creator( LazyCreator* in);
     
-    LazyParser* add_parser( LazyParser* in);
-    
     std::set<LazyCreator*,PtrComparer> creators_;
     
     std::set<LazyParser*,PtrComparer> parsers_;
     
 public:
+    LazyParser* add_parser( LazyParser* in);
 //     LazyValue* add_additionX( std::list<LazyValue*> v);
 //     
 // //     LazyValue* add_multiplication( LazyValue* a , LazyValue *b);

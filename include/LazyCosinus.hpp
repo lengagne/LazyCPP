@@ -18,7 +18,7 @@ public:
     
     void set_creator_input( LazyCreator* in);
     
-    
+    virtual std::string get_name() const;
    
 //     virtual 
     

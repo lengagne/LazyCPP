@@ -9,15 +9,15 @@ T test_function( T& x, T& y)
 //      return (x+y)*(x*2)*(x+y+y+sin(y)+sin(y)+cos(x))-(x+y)*(x-y) *(y-(y*3)*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
 //     return ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(((x*2)*(y*3)*cos(x))));
     
-    T a = 2*x;
-    T b = 2*y;
-    T c = 3; //*(x+y+2);
-    T d = c+c+c;
+//     T a = 2*x;
+//     T b = 2*y;
+//     T c = 3; //*(x+y+2);
+//     T d = c+c+c;
     
 //     return a; //+(2*x)+(2*x)+a+a+a;
 //     return a * b *c *d;
     
-    return cos(x) - x;
+    return 3.5*x -2*x*x;
 }
 
 int main()
@@ -41,8 +41,8 @@ int main()
     LazyAddOutput(lz,0,0);
 //     LazyAddOutput(lz1,1,0);
     
-    lz.print_equation();
-    std::cout<<std::endl;
+//     lz.print_equation();
+//     std::cout<<std::endl;
     
     LazyPrepare("test");
     

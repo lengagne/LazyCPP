@@ -24,20 +24,20 @@ void LazyPrepare(const std::string& filename,
     LMANAGER.prepare(filename, reuse_if_exist);
 }
 
-// void LazyPrintAll()
-// {
-//     LMANAGER.print_all();
-// }
-// 
-// void LazyPrintAllInputs()
-// {
-//     LMANAGER.print_all_inputs();
-// }
-// 
-// void LazyPrintAllOutputs()
-// {
-//     LMANAGER.print_all_output_equations();
-// }
+void LazyPrintAll()
+{
+    LMANAGER.print_all();
+}
+
+void LazyPrintAllInputs()
+{
+    LMANAGER.print_all_inputs();
+}
+
+void LazyPrintAllOutputs()
+{
+    LMANAGER.print_all_output_equations();
+}
 
 void LazyReset()
 {

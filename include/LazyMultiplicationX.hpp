@@ -10,13 +10,15 @@ public:
     
     double get_constant() const;
     
-    LazyMultiplicationX* get_without_constant() const;
+    LazyParser* get_without_constant() const;
     
 //     inline void compute();
 //     
-//     virtual void compact();
+    virtual double compact(std::list<LazyParser*> in);
 //     
     virtual LazyCreator* explose();
+    
+    virtual std::string get_name() const;
     
     virtual bool is_zero() const;
 //     

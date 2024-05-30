@@ -1,7 +1,7 @@
 #ifndef __LAZYCONSTANT_HPP__
 #define __LAZYCONSTANT_HPP__
 
-#include "LazyCreator.hpp"
+#include "LazyParserCreator.hpp"
 // #include <sstream>
 // 
 // template <typename T>
@@ -13,7 +13,7 @@
 //     return std::move(out).str();
 // }
 // 
-class LazyConstant : public LazyCreator {
+class LazyConstant : public LazyParserCreator {
 public:
     LazyConstant(double value);
     
@@ -21,9 +21,20 @@ public:
     
     void compute();
     
+    virtual std::string file_subname( const std::string& varname="x")
+    {
+        return std::to_string( value_);
+    }
+    
     virtual std::string file_print( const std::string& varname="x");
     
+    virtual std::string get_name() const;
+    
+    virtual void print( const std::string& tab="") const; 
+    
     void update_list(std::vector<LazyCreator*>& vec, int current);      
+    
+    bool operator < ( const LazyConstant& in) const;
 //     void compact()
 //     {
 //         

@@ -14,6 +14,10 @@ void LazyInput::compute()
     
 }
 
+std::string LazyInput::get_name() const
+{
+    return name_;
+}
 
 std::string LazyInput::file_print( const std::string& varname)
 {

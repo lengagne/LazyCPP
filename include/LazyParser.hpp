@@ -4,12 +4,13 @@
 #include "LazyCreator.hpp"
 
 typedef enum LazyParserType{
-    LAZYP_UNDEFINED,
-    LAZYP_INPUT,
-    LAZYP_ADDITIONX,
-    LAZYP_MULTIPLICATIONX,
-    LAZYP_COSINUS,    
-    LAZYP_SINUS,
+    LAZYP_UNDEFINED,        //0
+    LAZYP_CONSTANT,         //1
+    LAZYP_INPUT,            //2
+    LAZYP_ADDITIONX,        //3
+    LAZYP_MULTIPLICATIONX,  //4
+    LAZYP_COSINUS,          //5
+    LAZYP_SINUS,            //6
 } LazyParserType;
 
 
@@ -21,12 +22,16 @@ public:
 
     virtual LazyCreator* explose() = 0;
     
+    virtual std::string get_name() const = 0;
+    
     virtual bool is_zero() const =0;
     
     virtual void print( const std::string& tab="") const = 0; 
 
     LazyParserType typep_ = LAZYP_UNDEFINED;
 
+    friend std::ostream& operator<< (std::ostream& stream, const LazyParser& v);
+    
 protected:
     
     LazyCreator* explosed_ = nullptr;

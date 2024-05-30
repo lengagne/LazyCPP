@@ -18,6 +18,8 @@ public:
     
     double get_double();
     
+    virtual std::string get_name() const;
+    
     bool is_double() const;
     
     virtual bool is_zero() const;

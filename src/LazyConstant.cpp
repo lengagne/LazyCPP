@@ -4,6 +4,7 @@
 LazyConstant::LazyConstant(double value)
 {
     typec_ = LAZYC_CONSTANT;
+    typep_ = LAZYP_CONSTANT;
     value_ = value;
 }    
 
@@ -21,9 +22,23 @@ std::string LazyConstant::file_print( const std::string& varname)
     return std::to_string(value_);
 }
 
+std::string LazyConstant::get_name() const
+{
+    return std::to_string(value_);
+}
+
+void LazyConstant::print( const std::string& tab) const
+{
+    std::cout<<tab<<"LazyConstant:("<<this<<"): "<< value_<<std::endl;    
+}
 void LazyConstant::update_list(std::vector<LazyCreator*>& vec, int current)
 {
     
+}
+
+bool LazyConstant::operator < ( const LazyConstant& in) const
+{
+    return value_ < in.value_;
 }
 /*
 

@@ -3,20 +3,34 @@
 
 LazyVariable::LazyVariable()
 {
-    parser_ = nullptr;
+    parser_ = LMANAGER.add_constant_parser(0.0);
     creator_ = nullptr;
 }
 
 LazyVariable::LazyVariable(LazyParser* in)
 {
+//     std::cout<<" constructor"<<std::endl;
     parser_ = in ;
     creator_ = nullptr;
+//     std::cout<<"\t constructor @("<<parser_<<") this "<< *(parser_)<<std::endl;
 }
 
 LazyVariable::LazyVariable(const LazyVariable& a)
 {
+//     std::cout<<"copy constructor"<<std::endl;
     parser_ = a.parser_;
     creator_ = a.creator_;
+//     std::cout<<"\t copy constructor a    "<< *(a.parser_)<<std::endl;
+//     std::cout<<"\t copy constructor this "<< *(parser_)<<std::endl;
+}
+
+void LazyVariable::operator = (const LazyVariable& a)
+{
+//     std::cout<<"copy operator ="<<std::endl;
+    parser_ = a.parser_;
+    creator_ = a.creator_;
+//     std::cout<<"\t copy operator = a    "<< *(a.parser_)<<std::endl;
+//     std::cout<<"\t copy operator = this "<< *(parser_)<<std::endl;    
 }
     
 LazyVariable::LazyVariable(const uint & a)
@@ -51,6 +65,10 @@ LazyVariable::LazyVariable(const std::string& name)
 
 void LazyVariable::operator = (double d)
 {
+    if (parser_ == nullptr || LMANAGER.is_zero(parser_))
+    {
+        parser_ = LMANAGER.add_constant_parser(d);
+    }else
     if (parser_->typep_ == LAZYP_INPUT)
     {
         ((LazyInput*) parser_)->value_ = d;
@@ -81,8 +99,7 @@ LazyVariable::~LazyVariable()
 {
     
 }
-    
-    
+        
 double LazyVariable::get_value() const
 {
     return creator_->get_value();
@@ -105,16 +122,19 @@ LazyVariable LazyVariable::operator + (const LazyVariable& b) const
 
 LazyVariable LazyVariable::operator - (const LazyVariable& b) const
 {
-//     LazyVariable out( LMANAGER.add_soustraction(ref_, b.ref_));
-//     return out;    
-    
-    return *this + (-1*b);
+    return (*this + (b* -1));
 }
 
 LazyVariable LazyVariable::operator * (const LazyVariable& b) const
 {
     LazyVariable out( LMANAGER.add_multiplicationX(parser_,b.parser_));
     return out;    
+}
+
+LazyVariable LazyVariable::operator * (double b) const
+{
+    LazyVariable out( LMANAGER.add_additionX(parser_,b));
+    return out;
 }
 
 void LazyVariable::operator += (const LazyVariable& b)
@@ -124,8 +144,7 @@ void LazyVariable::operator += (const LazyVariable& b)
 
 void LazyVariable::operator -= (const LazyVariable& b)
 {
-//     parser_ = LMANAGER.add_soustraction(parser_,b.parser_);
-    *this += (-1*b);
+    *this += (b*-1);
 }
 
 void LazyVariable::operator *= (const LazyVariable& b)
@@ -135,18 +154,15 @@ void LazyVariable::operator *= (const LazyVariable& b)
 
 std::ostream& operator<< (std::ostream& stream, const LazyVariable& v)
 {
-//     v.ref_->print_equation();
-//     stream << v.ref_->value_;
-//     stream <<  v.parser_->get_string();
-    stream<<"Not coded yet ";
+    stream <<  v.parser_->get_name();
     return stream;
 }
    
     
-// bool LazyVariable::operator != (const LazyVariable& b) const
-// {
-//     return ref_ != b.ref_;
-// }
+bool LazyVariable::operator != (const LazyVariable& b) const
+{
+    return ( parser_ != b.parser_ || creator_ != b.creator_);
+}
 
 LazyVariable cos (const LazyVariable& a)
 {
@@ -160,12 +176,13 @@ LazyVariable sin (const LazyVariable& a)
     return out;
 }
 
-// bool operator==(const LazyVariable& a, double d)
-// {
+bool operator==(const LazyVariable& a, double d)
+{
+    return ! (a != LazyVariable(d));
 //     if (LMANAGER.is_constant(a.ref_) && a.ref_->value_ ==d)
 //         return true;
 //     return false;
-// }
+}
 
 
 

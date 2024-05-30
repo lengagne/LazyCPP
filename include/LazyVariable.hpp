@@ -25,6 +25,8 @@ public:
    
     // modif value
     void operator = (double d);
+    
+    void operator = (const LazyVariable& a);
            
     ~LazyVariable();
     
@@ -43,6 +45,8 @@ public:
     LazyVariable operator - (const LazyVariable& b) const;
     
     LazyVariable operator * (const LazyVariable& b) const;
+    
+    LazyVariable operator * (double b) const;
     
     void operator += (const LazyVariable& b);
     

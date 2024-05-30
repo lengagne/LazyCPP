@@ -14,6 +14,12 @@ public:
         return this;
     }
     
+    virtual std::string get_equation( )
+    {
+        return get_name();
+    }
+    
+    
     virtual bool is_zero() const
     {
         return false;

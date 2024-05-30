@@ -27,8 +27,15 @@ void LazySoustraction::update_list(std::vector<LazyCreator*>& vec, int current)
 
 std::string LazySoustraction::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] - " + varname+"["+ std::to_string(b_->id_)+"];";
+//     return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] - " + varname+"["+ std::to_string(b_->id_)+"];";
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) +" - "+ b_->file_subname(varname) +";";
 }
+
+std::string LazySoustraction::get_equation( )
+{
+    return a_->get_equation() + "-" + b_->get_equation();
+}
+
 //     
 // void LazySoustraction::print( const std::string& tab ,uint index) 
 // {

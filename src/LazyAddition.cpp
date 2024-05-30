@@ -2,6 +2,7 @@
 
 LazyAddition::LazyAddition(LazyCreator* a, LazyCreator* b)
 {
+//     std::cout<<"LazyAddition::LazyAddition"<<std::endl;
     typec_ = LAZYC_ADDITION;
     if (compareLazyCreator(a,b))
     {
@@ -22,7 +23,13 @@ void LazyAddition::compute()
 
 std::string LazyAddition::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] + " + varname+"["+ std::to_string(b_->id_)+"];";
+    std::cout<<"LazyAddition::file_print : " <<std::endl;
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) +" + "+ b_->file_subname(varname) +";";
+}
+
+std::string LazyAddition::get_equation( )
+{
+    return a_->get_equation() + "+" + b_->get_equation();
 }
 
 void LazyAddition::update_list(std::vector<LazyCreator*>& vec, int current)

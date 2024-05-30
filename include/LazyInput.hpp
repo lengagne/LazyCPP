@@ -15,6 +15,8 @@ public:
 
     virtual void compute();
     
+    virtual std::string get_name() const;
+    
     virtual std::string file_print( const std::string& varname="x");
 
     virtual void print( const std::string& tab="") const; 

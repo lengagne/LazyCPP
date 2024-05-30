@@ -44,15 +44,13 @@ void Dependance::compute_dependances()
     }
 }
 
-// void Dependance::print()
-// {
-//     for (auto idep : sub_outputs_)
-//     {
-//         std::cout<<"output : ";
-//         idep.second->print();
-//         std::cout<<"\n";
-//     }        
-// }
+void Dependance::print()
+{
+    for (auto idep : sub_outputs_)
+    {
+        std::cout<<"output : "<< idep.second->get_equation()<<std::endl;
+    }        
+}
 
 inline double Dependance::update( uint cpt )
 {        
@@ -67,8 +65,8 @@ inline double Dependance::update( uint cpt )
 
 LazyManager::LazyManager()
 {
-//     zero_ = new LazyConstant(0.0);   
-//     one_ = new LazyConstant(1.0);
+    zero_ = new LazyConstant(0.0);   
+    one_ = new LazyConstant(1.0);
 //     minus_one_ = new LazyConstant(-1.0);
 //     init_basic_constant();
 }
@@ -79,6 +77,11 @@ LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
     vec.push_back(a);
     vec.push_back(b);
     return add_parser(new LazyAdditionX(vec));
+}
+
+LazyParser* LazyManager::add_additionX( LazyParser* a , double value)
+{
+    return add_parser(new LazyAdditionX(value,a));    
 }
 
 LazyCreator* LazyManager::add_constant( double a)
@@ -98,13 +101,16 @@ LazyParser* LazyManager::add_cosinus( LazyParser* a)
 
 LazyCreator* LazyManager::add_creator( LazyCreator* in)
 {
+//     std::cout<<"Trying to add creator "<< in->typec_<<" : "<< *in <<std::endl;
     auto result = creators_.insert(in);
     if (result.second) 
     {
         // L'élément a été inséré, renvoie l'élément inséré
+//         std::cout<<" added "<<std::endl;
         return *result.first;
     } else {
         // L'élément existe déjà, renvoie l'élément existant
+//         std::cout<<" returned "<<std::endl;
         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
         return *result.first;
     }        
@@ -135,12 +141,16 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
+    if (in->is_zero())  return zero_;
+//     std::cout<<"Parser adding : ("<< in<<") : "<< *in <<std::endl;
     auto result = parsers_.insert(in);
     if (result.second) 
     {
+//         std::cout<<"added"<<std::endl;
         // L'élément a été inséré, renvoie l'élément inséré
         return *result.first;
     } else {
+//         std::cout<<"returned"<<std::endl;
         // L'élément existe déjà, renvoie l'élément existant
         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
         return *result.first;
@@ -158,7 +168,7 @@ LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 //     std::cout<<"compact" <<std::endl;
 //     std::cout<<"explose" <<std::endl;
     LazyCreator *create = in->explose();
-//     std::cout<<"add sub" <<std::endl;
+    std::cout<<"create = "<< *create <<std::endl; 
     outputs_[index].add_suboutput(create,rank);
 //     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
 //     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
@@ -258,12 +268,12 @@ uint LazyManager::get_nb_inputs() const
 {
     return inputs_.size();
 }
-/*
-LazyValue* LazyManager::get_one() const
+
+LazyParser* LazyManager::get_one() const
 {
     return one_;
 }
-
+/*
 LazyValue* LazyManager::get_zero() const
 {
     return zero_;
@@ -286,11 +296,11 @@ bool LazyManager::is_one(LazyValue * in) const
 {
     return in == one_;
 }
-
-bool LazyManager::is_zero(LazyValue * in) const
+*/
+bool LazyManager::is_zero(LazyParser* in) const
 {
     return in == zero_;
-}*/
+}
 
 void LazyManager::prepare(  const std::string& name,
                             bool reuse_if_exist)
@@ -363,7 +373,7 @@ void LazyManager::prepare(  const std::string& name,
         f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
         for (auto & iter : inputs_)
         {
-                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"]; ";
+                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];\n";
         }
         f<<"\t}\n\n";
         
@@ -389,7 +399,7 @@ void LazyManager::prepare(  const std::string& name,
                 {
                     if (it3->update_)
                     {
-                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<";\n";
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// " << it3->get_equation() <<"\n";
                         it3->update_ = false;
                     }
                 }
@@ -460,26 +470,26 @@ void LazyManager::prepare(  const std::string& name,
     lazycode_->set_class_name(class_name_);
 }
 
-// void LazyManager::print_all() const
-// {
-//     lazycode_->print_all();
-// }
-// 
-// void LazyManager::print_all_inputs() const
-// {
-//     for (auto& iter : inputs_)
-//     {
-//         std::cout<<" input : "<< iter->name_<<" : "<< iter->value_<<std::endl;
-//     }
-// }
-// 
-// void LazyManager::print_all_output_equations()
-// {
-//     for (auto& iter : outputs_)
-//     {
-//         iter.second.print();
-//     }
-// }
+void LazyManager::print_all() const
+{
+    lazycode_->print_all();
+}
+
+void LazyManager::print_all_inputs() const
+{
+    for (auto& iter : inputs_)
+    {
+        std::cout<<" input : "<< iter->name_<<" : "<< iter->value_<<std::endl;
+    }
+}
+
+void LazyManager::print_all_output_equations()
+{
+    for (auto& iter : outputs_)
+    {
+        iter.second.print();
+    }
+}
 
 void LazyManager::reset()
 {

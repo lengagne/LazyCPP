@@ -13,6 +13,8 @@ public:
     
     void compute();
     
+    virtual std::string get_name() const;
+    
     void set_creator_input( LazyCreator* in);
     
     void update_list(std::vector<LazyCreator*>& vec, int current);

@@ -22,7 +22,12 @@ inline void LazyMultiplication::compute()
 
 std::string LazyMultiplication::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + varname+"["+ std::to_string(a_->id_)+ "] * " + varname+"["+ std::to_string(b_->id_)+"];";
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + " * " + b_->file_subname(varname) +";";
+}
+
+std::string LazyMultiplication::get_equation( )
+{
+    return a_->get_equation() + "*" + b_->get_equation();
 }
 
 void LazyMultiplication::update_list(std::vector<LazyCreator*>& vec, int current)
