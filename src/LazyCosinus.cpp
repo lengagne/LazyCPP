@@ -14,6 +14,13 @@ void LazyCosinus::compute()
     value_ = cos(ca_->value_);
 }
 
+LazyCreator* LazyCosinus::explose()
+{
+    ca_ = pa_->explose();
+    return this;
+}
+
+
 std::string LazyCosinus::get_name() const
 {
     return "cos(" + pa_->get_name() + ")";
@@ -32,9 +39,16 @@ std::string LazyCosinus::file_print( const std::string& varname)
 //         
 void LazyCosinus::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazyCosinus:("<<this<<"): COSINUS "<<std::endl;
+    std::cout<<tab<<"LazyCosinus:("<<this<<"): "<<std::endl;
     pa_->print(tab+"\t");
 }
+
+void LazyCosinus::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazyCosinus(@"<<this<<")"<<std::endl;
+    ca_->print_tree(tab+"\t");
+}
+
 // 
 // void LazyCosinus::print_equation()
 // {
@@ -43,10 +57,6 @@ void LazyCosinus::print( const std::string& tab) const
 //     std::cout<<")";      
 // }
 
-void LazyCosinus::set_creator_input( LazyCreator* in)
-{
-    ca_ = in;
-}
 
 void LazyCosinus::update_list(std::vector<LazyCreator*>& vec, int current)
 {

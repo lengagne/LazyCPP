@@ -13,6 +13,8 @@ public:
     virtual std::string file_print( const std::string& varname="x");
     
     virtual std::string get_equation( );
+    
+    virtual void print_tree( const std::string& tab ="");
         
     void update_list(std::vector<LazyCreator*>& vec, int current);
 //     

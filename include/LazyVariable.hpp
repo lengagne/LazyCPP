@@ -89,6 +89,11 @@ public:
 //     LazyVariable(LazyValue* in);
 };
 
+inline LazyVariable operator + (double a, const LazyVariable& b)
+{
+    return b+a;
+}
+
 inline LazyVariable operator * (double a, const LazyVariable& b)
 {
     return b*a;

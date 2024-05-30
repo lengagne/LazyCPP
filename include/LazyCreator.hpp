@@ -36,6 +36,8 @@ public:
         return value_;
     }
     
+    virtual void print_tree( const std::string& tab ="")=0;
+    
     virtual void update_list(std::vector<LazyCreator*>& vec, int current)=0;
 //     virtual void print_file() const = 0;
     
@@ -54,7 +56,7 @@ private:
 
 };
 
-bool compareLazyCreator(const LazyCreator* a,
-                        const LazyCreator* b);
+bool compareLazyCreator(LazyCreator* a,
+                        LazyCreator* b);
 
 #endif //  __LAZYADDITION_HPP__

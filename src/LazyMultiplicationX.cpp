@@ -112,6 +112,7 @@ LazyCreator* LazyMultiplicationX::explose()
             }
         }
     }      
+    std::cout<<"LazyMultiplicationX explosed("<<this<<") "<<std::endl;    
     return explosed_;    
 }
 
@@ -182,7 +183,7 @@ std::string LazyMultiplicationX::get_string( )const
 */
 void LazyMultiplicationX::print( const std::string& tab) const 
 {
-    std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): MultiplicationX "<<std::endl;
+    std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): "<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t");
 }   

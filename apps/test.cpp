@@ -17,7 +17,12 @@ T test_function( T& x, T& y)
 //     return a; //+(2*x)+(2*x)+a+a+a;
 //     return a * b *c *d;
     
-    return 3.5*x -2*x*x;
+//     return sin(3.5*x) - cos(2*x*x + 2);
+//     return cos(2.0+2*x);
+//     return sin(2.0+2*x+5*3); // + 
+    return sin(1*y-x+3*x+4*y+2.0);
+    
+//     return cos(x+y) * sin (x+y) + x+y;
 }
 
 int main()
@@ -44,30 +49,13 @@ int main()
 //     lz.print_equation();
 //     std::cout<<std::endl;
     
+    
+    std::cout<<"Know LazyPrepare"<<std::endl;
     LazyPrepare("test");
     
-//     std::cout<<"X = "<< x <<std::endl;
-//     std::cout<<"Y = "<< y <<std::endl;
-//     std::cout<<"lz = " << lz <<std::endl;
-//     std::cout<<"z = "<< test_function<double>(x,y) <<std::endl<<std::endl;
-    //     PrintGraph(lz);
-    
-    X = x = -1.0;
-    Y = y = 42.0;
-
-    LazyUpdateInput();
-    LazyUpdateOutput(0,0);
-//     LazyUpdate(0,1);
-    
-//     std::cout<<"X = "<< X <<std::endl;
-//     std::cout<<"Y = "<< Y <<std::endl;        
-//     std::cout<<"lz = " << lz <<std::endl;
-//     std::cout<<"lz1 = " << lz1 <<std::endl;
-//     std::cout<<"z = "<< test_function<double>(x,y) <<std::endl<<std::endl;
-//     std::cout<<"z1 = "<< test_function<double>(x,y)*test_function<double>(x,y) <<std::endl<<std::endl;
-
-//     LazyPrintAllInputs();
-    
-    
+//     X = x = -1.0;
+//     Y = y = 42.0;
+//     LazyUpdateInput();
+//     LazyUpdateOutput(0,0);
     return 0;
 }

@@ -13,7 +13,11 @@ public:
     
     virtual std::string get_equation( );
     
+    virtual void print_tree( const std::string& tab ="");
+    
     void update_list(std::vector<LazyCreator*>& vec, int current);
+    
+    bool operator < ( const LazyMultiplication& in) const;
 //     
 //     virtual std::string get_string( )const ;
 //     

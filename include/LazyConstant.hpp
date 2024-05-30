@@ -21,6 +21,8 @@ public:
     
     void compute();
     
+    virtual LazyCreator* explose();
+    
     virtual std::string file_subname( const std::string& varname="x")
     {
         return std::to_string( value_);
@@ -31,6 +33,8 @@ public:
     virtual std::string get_name() const;
     
     virtual void print( const std::string& tab="") const; 
+    
+    virtual void print_tree( const std::string& tab ="");
     
     void update_list(std::vector<LazyCreator*>& vec, int current);      
     

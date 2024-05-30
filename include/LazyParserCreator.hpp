@@ -9,10 +9,7 @@ class LazyParserCreator : public LazyParser, public LazyCreator
 public:
     
     
-    virtual LazyCreator* explose()
-    {
-        return this;
-    }
+    virtual LazyCreator* explose() =0;
     
     virtual std::string get_equation( )
     {

@@ -1,5 +1,5 @@
-
 #include "LazyConstant.hpp"
+#include "LazyCPP.hpp"
 
 LazyConstant::LazyConstant(double value)
 {
@@ -10,11 +10,17 @@ LazyConstant::LazyConstant(double value)
 
 LazyConstant::~LazyConstant()
 {
+    std::cout<<"LazyConstant::~LazyConstant()"<<std::endl;
 }    
 
 void LazyConstant::compute()
 {
     
+}
+
+LazyCreator* LazyConstant::explose()
+{
+    return LMANAGER.add_constant(value_);
 }
     
 std::string LazyConstant::file_print( const std::string& varname)
@@ -31,14 +37,21 @@ void LazyConstant::print( const std::string& tab) const
 {
     std::cout<<tab<<"LazyConstant:("<<this<<"): "<< value_<<std::endl;    
 }
+
+void LazyConstant::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazyConstant(@"<<this<<") : "<< value_<<std::endl;
+}
+
 void LazyConstant::update_list(std::vector<LazyCreator*>& vec, int current)
 {
-    
+//     std::cout<<"On ajoute rien en LazyConstant"<<std::endl;
 }
 
 bool LazyConstant::operator < ( const LazyConstant& in) const
 {
-    return value_ < in.value_;
+//     std::cout<<value_<<" <? "<< in.value_<<std::endl;
+    return (value_ < in.value_);
 }
 /*
 

@@ -15,11 +15,15 @@ public:
 
     virtual void compute();
     
+    virtual LazyCreator* explose();
+    
     virtual std::string get_name() const;
     
     virtual std::string file_print( const std::string& varname="x");
 
     virtual void print( const std::string& tab="") const; 
+    
+    virtual void print_tree( const std::string& tab ="");
 
     virtual void update_list(std::vector<LazyCreator*>& vec, int current);
 

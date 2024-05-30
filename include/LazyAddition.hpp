@@ -8,13 +8,22 @@ class LazyAddition : public LazyCreator
 public:
     LazyAddition(LazyCreator* a, LazyCreator* b);
     
+//     ~LazyAddition()
+//     {
+//         
+//     }
+    
     void compute();
     
     virtual std::string file_print( const std::string& varname="x");
     
     virtual std::string get_equation( );
     
+    virtual void print_tree( const std::string& tab ="");
+    
     void update_list(std::vector<LazyCreator*>& vec, int current);
+    
+    bool operator < ( const LazyAddition& in) const;
 //     
 //     virtual std::string get_string( )const ;
 //     

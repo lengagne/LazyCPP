@@ -37,7 +37,7 @@ public:
 
 struct PtrComparer {
     
-    bool operator()(const LazyCreator* a, const LazyCreator* b) const {    
+    bool operator()(LazyCreator* a, LazyCreator* b) const {    
         return compareLazyCreator(a,b);
     }
 
@@ -148,7 +148,7 @@ public:
     
 //     bool is_minus_one(LazyValue * in) const;
     
-//     bool is_one(LazyValue * in) const;
+    bool is_one(LazyParser * in) const;
     
     bool is_zero(LazyParser * in) const;
 
@@ -267,6 +267,9 @@ public:
     LazyGeneratedCode* lazycode_ = nullptr;
     
     friend class LazyVariable;
+    
+    
+    int dummy_debug =0 ;
        
 };
 

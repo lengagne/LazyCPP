@@ -14,6 +14,11 @@ void LazyInput::compute()
     
 }
 
+LazyCreator* LazyInput::explose()
+{
+    return (LazyCreator*)this;
+}
+
 std::string LazyInput::get_name() const
 {
     return name_;
@@ -26,8 +31,14 @@ std::string LazyInput::file_print( const std::string& varname)
 
 void LazyInput::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazyInput:("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
+    std::cout<<tab<<"LazyInput:("<<this<<"): "<<name_<<"("<<value_<<")"<<std::endl;
 }
+
+void LazyInput::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazyInput(@"<<this<<") : "<< name_<<std::endl;
+}
+
 // 
 // std::string LazyInput::get_string( )const 
 // {

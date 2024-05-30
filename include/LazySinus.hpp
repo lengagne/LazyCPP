@@ -13,17 +13,23 @@ public:
     
     void compute();
     
-    virtual std::string get_name() const;
+    virtual LazyCreator* explose();
     
-    void set_creator_input( LazyCreator* in);
+    virtual std::string file_print( const std::string& varname="x");
+    
+    virtual std::string get_name() const;
+
+    virtual void print( const std::string& tab="") const; 
+    
+    virtual void print_tree( const std::string& tab ="");
     
     void update_list(std::vector<LazyCreator*>& vec, int current);
        
-    virtual std::string file_print( const std::string& varname="x");
+    
 //     
 //     virtual std::string get_string( )const ;
 //     
-    virtual void print( const std::string& tab="") const; 
+    
 //     
 //     virtual void print_equation();    
     

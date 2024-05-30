@@ -132,17 +132,19 @@ LazyAdditionX::LazyAdditionX(double coeff, LazyParser* in)
 LazyCreator* LazyAdditionX::explose()
 {
 //     std::cout<<"We explose LazyAdditionX("<<this<<") "<< * this <<std::endl;
-    print();
     if (explosed_ == nullptr)
     {
         int cpt =0;
         for (auto& iter : p_)
         {
-//             std::cout<<"We explose LazyAdditionX : "<< *(iter.first)<<"  @" <<iter.second <<std::endl;
+//             std::cout<<"We explose LazyAdditionX : ("<< (LMANAGER.is_one(iter.first))<<") "<< *(iter.first)<<"  @" <<iter.second <<std::endl;
             if (cpt++ == 0)
             {
+                if (LMANAGER.is_one(iter.first))
+                    explosed_ = LMANAGER.add_constant(iter.second);
 //                 std::cout<<"\tWe explose LazyAdditionX case 0"<<std::endl;
-                explosed_ = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
+                else
+                    explosed_ = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
                 
 //                 iter.first->explose();                
             }else
@@ -165,11 +167,14 @@ LazyCreator* LazyAdditionX::explose()
     //                 m = LMANAGER.add_addition(m,tmp);
                 }
             }
-            
+//     std::cout<<"LazyAdditionX explosed("<<this<<") = "<< *explosed_<<std::endl;            
         }
     }    
 //     std::cout<<"LazyAdditionX explosed("<<this<<") = "<< *explosed_<<std::endl;
 //     std::cout<<"End of explose()"<<std::endl;
+    std::cout<<"equation : "<< explosed_->get_equation()<<std::endl;
+    explosed_->print_tree();
+    std::cout<<std::endl<<std::endl;
     return explosed_;
 }
 

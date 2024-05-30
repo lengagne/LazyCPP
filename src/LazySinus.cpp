@@ -13,6 +13,12 @@ void LazySinus::compute()
     value_ = sin(ca_->value_);
 }
 
+LazyCreator* LazySinus::explose()
+{
+    ca_ = pa_->explose();
+    return this;
+}
+
 std::string LazySinus::get_name() const
 {
     return "sin(" + pa_->get_name() + ")";
@@ -32,8 +38,14 @@ std::string LazySinus::file_print( const std::string& varname)
 // 
 void LazySinus::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazySinus:("<<this<<"): SINUS "<<std::endl;
+    std::cout<<tab<<"LazySinus:("<<this<<"): "<<std::endl;
     pa_->print(tab+"\t");
+}
+
+void LazySinus::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazySinus(@"<<this<<")"<<std::endl;
+    ca_->print_tree(tab+"\t");
 }
 // 
 // void LazySinus::print_equation()
@@ -43,16 +55,13 @@ void LazySinus::print( const std::string& tab) const
 //     std::cout<<")";
 // }
 //     
-void LazySinus::set_creator_input( LazyCreator* in)
-{
-    ca_ = in;
-}
 
 void LazySinus::update_list(std::vector<LazyCreator*>& vec, int current)
 {
     if (update_ < current)
     {
         ca_->update_list(vec,current);
+        std::cout<<"On ajoute LazySinus"<<std::endl;
         vec.push_back(this);            
     }
     update_ = current;    

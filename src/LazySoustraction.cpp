@@ -36,6 +36,14 @@ std::string LazySoustraction::get_equation( )
     return a_->get_equation() + "-" + b_->get_equation();
 }
 
+void LazySoustraction::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazySoustraction(@"<<this<<")"<<std::endl;
+    a_->print_tree(tab+"\t");
+    b_->print_tree(tab+"\t");
+}
+
+
 //     
 // void LazySoustraction::print( const std::string& tab ,uint index) 
 // {

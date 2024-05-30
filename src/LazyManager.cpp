@@ -38,7 +38,11 @@ void Dependance::compute_dependances()
     std::vector< LazyCreator* > vec;
     for (auto out : sub_outputs_)
     {
-        out.second->update_list(vec,index_output_);
+        out.second->update_list(vec,index_output_);   
+        std::cout<<"dependances_.size() = "<< dependances_.size()<<std::endl;
+        std::cout<<"vec.size() = "<< vec.size()<<std::endl;
+        std::cout<<"cpt  = "<< cpt <<std::endl;
+        std::cout<<"index_output_  = "<< index_output_ <<std::endl;
         dependances_[cpt++] = vec;
         counter += vec.size();
     }
@@ -73,6 +77,11 @@ LazyManager::LazyManager()
 
 LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
 {
+    if(is_zero(a))
+        return add_parser(b);
+    if(is_zero(b))
+        return add_parser(a);
+    
     std::list<LazyParser*> vec;
     vec.push_back(a);
     vec.push_back(b);
@@ -101,17 +110,34 @@ LazyParser* LazyManager::add_cosinus( LazyParser* a)
 
 LazyCreator* LazyManager::add_creator( LazyCreator* in)
 {
-//     std::cout<<"Trying to add creator "<< in->typec_<<" : "<< *in <<std::endl;
+    std::cout<<"Trying to add creator "<< in <<" type:"<< in->typec_<<" : "<< *in <<std::endl;
     auto result = creators_.insert(in);
     if (result.second) 
     {
         // L'élément a été inséré, renvoie l'élément inséré
-//         std::cout<<" added "<<std::endl;
+//         std::cout<<" added "<< in<<std::endl;
+//         if (dummy_debug++ == 1)
+//             exit(122);
         return *result.first;
     } else {
         // L'élément existe déjà, renvoie l'élément existant
-//         std::cout<<" returned "<<std::endl;
-        delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         std::cout<<" returned previous not "<< in<<std::endl;
+//         if (dummy_debug++ == 1)
+//             exit(122);
+//         
+        // FIXME on ne peut pas supprimer car cela supprime aussi le LazyParser en cas de LazyParserCreator
+            switch (in->typec_)
+            {
+            
+                case(LAZYC_ADDITION):
+                case(LAZYC_SOUSTRACTION):
+                case(LAZYC_MULTIPLICATION):
+                    delete in;
+                default:
+                    break;
+            }
+//         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+        
         return *result.first;
     }        
 }
@@ -133,6 +159,15 @@ LazyParser* LazyManager::add_input( const double &a, const std::string& name)
 
 LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 {
+    if(is_zero(a) || is_zero(b))
+        return zero_;
+    
+    if(is_one(a))
+        return add_parser(b);
+    if(is_one(b))
+        return add_parser(a);        
+    
+    
     std::list<LazyParser*> vec;
     vec.push_back(a);
     vec.push_back(b);
@@ -169,6 +204,7 @@ LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 //     std::cout<<"explose" <<std::endl;
     LazyCreator *create = in->explose();
     std::cout<<"create = "<< *create <<std::endl; 
+    create->print_tree();
     outputs_[index].add_suboutput(create,rank);
 //     std::cout<<"fin add_output : "<< index <<" / "<< rank<<std::endl;
 //     std::cout<<"add suboutput "<< output<<" : "<< rank <<std::endl;
@@ -291,12 +327,12 @@ bool LazyManager::is_minus_one(LazyValue * in) const
 {
     return in == minus_one_;
 }    
-
-bool LazyManager::is_one(LazyValue * in) const
+*/
+bool LazyManager::is_one(LazyParser * in) const
 {
     return in == one_;
 }
-*/
+
 bool LazyManager::is_zero(LazyParser* in) const
 {
     return in == zero_;
@@ -427,7 +463,7 @@ void LazyManager::prepare(  const std::string& name,
         
         double tsart  = get_cpu_time();
         // Create the library
-        std::string command = "g++ -O3 -DNDEBUG -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so -fPIC";
+        std::string command = "g++ -O3 -DNDEBUG -fPIC -shared " + filename /*+ std::string( COMPILE_FLAGS) */+ " -I"  + " " + std::string( INCLUDE_DIR) + " -o lib"+class_name_+".so ";
         std::cout<<"Compilation command is : "<< command<<std::endl;
         int dummy = system ( command.c_str() );
         double compilation_time = get_cpu_time() - tsart;
@@ -524,7 +560,7 @@ double LazyManager::update(uint index, uint cpt) const
 /////////////////////////////////////////////////////
 
 LazyCreator* LazyManager::add_addition( LazyCreator* a , LazyCreator *b)
-{
+{   
     return add_creator( new LazyAddition(a,b));
 }
 
