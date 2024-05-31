@@ -32,7 +32,7 @@ std::string LazyMultiplication::get_equation( )
 
 void LazyMultiplication::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazyMultiplication(@"<<get_equation()<<")"<<std::endl;
+    std::cout<<tab<<"LazyMultiplication(@"<<this<<")"<<std::endl;
     a_->print_tree(tab+"\t");
     b_->print_tree(tab+"\t");
 }

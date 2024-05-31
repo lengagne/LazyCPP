@@ -45,7 +45,7 @@ void LazyCosinus::print( const std::string& tab) const
 
 void LazyCosinus::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazyCosinus(@"<<get_name()<<")"<<std::endl;
+    std::cout<<tab<<"LazyCosinus(@"<<this<<")"<<std::endl;
     ca_->print_tree(tab+"\t");
 }
 
@@ -66,4 +66,10 @@ void LazyCosinus::update_list(std::vector<LazyCreator*>& vec, int current)
         vec.push_back(this);            
     }
     update_ = current;    
+}
+
+bool LazyCosinus::operator < ( const LazyCosinus& in) const
+{
+//     std::cout<<value_<<" <? "<< in.value_<<std::endl;
+    return (pa_ < in.pa_);
 }

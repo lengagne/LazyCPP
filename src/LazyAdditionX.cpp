@@ -81,9 +81,18 @@ LazyCreator* LazyAdditionX::explose()
             if (cpt++ == 0)
             {
                 if (LMANAGER.is_one(iter.first))
+                {
+//                     std::cout<<"LazyAdditionX case 1 "<<std::endl;
                     explosed_ = LMANAGER.add_constant(iter.second);
+                }
                 else
-                    explosed_ = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
+                {
+//                     std::cout<<"LazyAdditionX case 2 "<<std::endl;
+                    if (iter.second == 1.0)
+                        explosed_ = iter.first->explose();
+                    else                    
+                        explosed_ = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
+                }
             }else
             {
                 if (iter.second ==1.0)
@@ -94,10 +103,12 @@ LazyCreator* LazyAdditionX::explose()
                     explosed_ = LMANAGER.add_soustraction(explosed_,iter.first->explose());
                 }else
                 {
+//                     std::cout<<"on ajoute une multiplicaiton par "<< iter.second <<std::endl;
                     LazyCreator* tmp = LMANAGER.add_multiplication(LMANAGER.add_constant(iter.second),iter.first->explose());                
                     explosed_ = LMANAGER.add_addition(explosed_,tmp);
                 }
             }
+//             std::cout<<"LazyAdditionX step "<<cpt<<" : "<< *explosed_<<std::endl;
         }
     }    
     return explosed_;
@@ -118,7 +129,7 @@ std::string LazyAdditionX::get_name() const
     if (is_zero())
         return "ZERO";
     
-    std::string cmd;
+    std::string cmd = "[";
     int cpt = 0;
     for (auto&i : p_)
     {
@@ -127,6 +138,7 @@ std::string LazyAdditionX::get_name() const
 //         if (i.first != LMANAGER.get_one()) 
             cmd +=  i.first->get_name() ;
     }
+    cmd+="]";
     return cmd;
 }
 
@@ -156,6 +168,7 @@ bool LazyAdditionX::is_zero() const
 void LazyAdditionX::print( const std::string& tab) const
 {
     std::cout<<tab<<"LazyAdditionX:("<<get_name()<<"): "<<std::endl;
+    std::cout<<tab<<"["<<std::endl;
     int cpt = 0;
     for (auto& iter : p_)
     {
@@ -163,18 +176,25 @@ void LazyAdditionX::print( const std::string& tab) const
         if (iter.second != 1.0) std::cout<<iter.second<<"*";
         iter.first->print(tab+"\t");
     }
+    std::cout<<tab<<"]"<<std::endl;
 }   
 
 LazyParser* LazyAdditionX::simplify()
 {
+    if (p_.size() == 0)
+        return LMANAGER.get_zero();
+    
+    for (auto& iter : p_)
+        iter.first->simplify();
+    
+    remove_zeros();
+    
     if (p_.size() == 1)
     {
         auto it = p_.begin();
-        if (it->second == 0.0)   return LMANAGER.get_zero();
         if (it->second == 1.0)   return it->first;
         if (it->first == LMANAGER.get_zero())    return it->first;
         if (it->first == LMANAGER.get_one())    return new LazyConstant(it->second);
-        
     }
     return this;
 }
@@ -191,4 +211,26 @@ void LazyAdditionX::remove_zeros()
             ++it;
         }
     }
+}
+
+bool LazyAdditionX::operator < ( const LazyAdditionX& in) const
+{
+    if ( p_.size() < in.p_.size())  return true;
+    if ( p_.size() > in.p_.size())  return false;
+    
+    auto it = p_.begin();
+    auto it2 = in.p_.begin();
+    for (; it != p_.end() && it2 != in.p_.end(); ) 
+    {
+        if( it->second < it2->second)   return true;
+        if( it->second > it2->second)   return false;
+        if( it->first < it2->first)   return true;
+        if( it->first > it2->first)   return false;
+        
+        ++it;
+        ++it2;
+    }
+    return false;
+//     std::cout<<value_<<" <? "<< in.value_<<std::endl;
+//     return (value_ < in.value_);
 }

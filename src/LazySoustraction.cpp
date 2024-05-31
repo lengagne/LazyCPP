@@ -43,7 +43,12 @@ void LazySoustraction::print_tree( const std::string& tab)
     b_->print_tree(tab+"\t");
 }
 
-
+bool LazySoustraction::operator < ( const LazySoustraction& in) const
+{
+    if (a_ < in.a_) return true;
+    if (b_ < in.b_) return true;
+    return false;
+}
 //     
 // void LazySoustraction::print( const std::string& tab ,uint index) 
 // {

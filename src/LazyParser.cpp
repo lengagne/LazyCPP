@@ -21,16 +21,21 @@ bool compareLazyParser(const LazyParser* a,
 //                 std::cout<<"return "<<(*((LazyConstant*) a) < *((LazyConstant*) b))<<std::endl;
                 return  (*((LazyInput*) a) < *((LazyInput*) b));
                 
-//             case(LAZYC_ADDITION):
+            case(LAZYP_ADDITIONX):
 // //                 std::cout<<"return "<<(*((LazyAddition*) a) < *((LazyAddition*) b))<<std::endl;
-//                 return  (*((LazyAddition*) a) < *((LazyAddition*) b));
+                return  (*((LazyAdditionX*) a) < *((LazyAdditionX*) b));
 // 
-//             case(LAZYC_MULTIPLICATION):
-// //                 std::cout<<"return "<<(*((LazyMultiplication*) a) < *((LazyMultiplication*) b))<<std::endl;
-//                 return  (*((LazyMultiplication*) a) < *((LazyMultiplication*) b));
+            case(LAZYP_MULTIPLICATIONX):
+                return  (*((LazyMultiplicationX*) a) < *((LazyMultiplicationX*) b));
+
+            case(LAZYP_COSINUS):
+                return  (*((LazyCosinus*) a) < *((LazyCosinus*) b));
+
+            case(LAZYP_SINUS):
+                return  (*((LazySinus*) a) < *((LazySinus*) b));
                 
             default:
-//                 std::cout<<"compareLazyCreator type :" << a->typec_ <<"=="<< b->typec_<<" return by default "<<(a<b)<<std::endl;
+                std::cout<<"compareLazyParser type :" << a->typep_ <<"=="<< b->typep_<<" return by default "<<(a<b)<<std::endl;
                 return (a < b);
         }        
         return (a<b);

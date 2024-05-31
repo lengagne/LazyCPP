@@ -50,11 +50,13 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
         }            
     }    
     coeff *= compact(p_);
+//     std::cout<<"coeff = "<< coeff <<std::endl;
     if (coeff != 1.0)
     {
         p_.push_back( new LazyAdditionX(coeff));
     }
-    
+    if (coeff == 0.0)
+        p_.clear();
     std::cout<<"LazyMultiplicationX::LazyMultiplicationX resultat = "<< *this <<std::endl<<std::endl;
 }
 
@@ -105,7 +107,7 @@ LazyCreator* LazyMultiplicationX::explose()
     {       
         
         int cpt = 0;
-        for (auto& iter : p_)   if ( !LMANAGER.is_one(iter))
+        for (auto& iter : p_)  // if ( !LMANAGER.is_one(iter))
         {
             if (cpt++ == 0)
             {
@@ -143,13 +145,14 @@ double LazyMultiplicationX::get_constant() const
 
 std::string LazyMultiplicationX::get_name() const
 {
-    std::string cmd;
+    std::string cmd = "{";
     int cpt = 0;
     for (auto&i : p_)
     {
         if (cpt++)  cmd +="*";
         cmd += i->get_name();
     }
+    cmd += "}";
     return cmd;
 }
 
@@ -194,18 +197,54 @@ std::string LazyMultiplicationX::get_string( )const
 void LazyMultiplicationX::print( const std::string& tab) const 
 {
     std::cout<<tab<<"LazyMultiplicationX:("<<get_name()<<"): "<<std::endl;
+    std::cout<<tab<<"{"<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t");
+    std::cout<<tab<<"}"<<std::endl;
 }   
 
 LazyParser* LazyMultiplicationX::simplify()
 {
+    for (auto& iter : p_)
+    {
+        iter->simplify();
+//         std::cout<<"iter = "<< *iter <<std::endl;
+//         std::cout<<"LMANAGER.get_zero() = "<< *LMANAGER.get_zero() <<std::endl;
+        if (LMANAGER.is_zero(iter))
+        {
+//             std::cout<<"On va avoir zero"<<std::endl;
+            return LMANAGER.get_zero();
+        }
+    }
+    
     if (p_.size() == 1)
     {
         auto it = p_.begin();
         return *it;        
     }
     return this;
+}
+
+bool LazyMultiplicationX::operator < ( const LazyMultiplicationX& in) const
+{
+    if ( p_.size() < in.p_.size())  return true;
+    if ( p_.size() > in.p_.size())  return false;
+    
+    auto it = p_.begin();
+    auto it2 = in.p_.begin();
+    for (; it != p_.end() && it2 != in.p_.end(); ) 
+    {
+//         if( it->second < it2->second)   return true;
+//         if( it->second > it2->second)   return false;
+        if( *it < *it2)   return true;
+        if( *it > *it2)   return false;
+        
+        ++it;
+        ++it2;
+    }
+    return false;
+//     std::cout<<value_<<" <? "<< in.value_<<std::endl;
+//     return (value_ < in.value_);
 }
 
 /*

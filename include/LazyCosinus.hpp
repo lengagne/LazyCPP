@@ -30,7 +30,9 @@ public:
 //     
 //     virtual std::string get_string( )const ;
 //     
-    virtual void print( const std::string& tab="") const; 
+    virtual void print( const std::string& tab="") const;
+    
+    bool operator < ( const LazyCosinus& in) const;
 //     
 //     virtual void print_equation();
     

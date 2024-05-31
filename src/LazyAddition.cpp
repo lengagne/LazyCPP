@@ -33,7 +33,7 @@ std::string LazyAddition::get_equation( )
 
 void LazyAddition::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazyAddition(@"<<get_equation()<<")"<<std::endl;
+    std::cout<<tab<<"LazyAddition(@"<<this<<")"<<std::endl;
     a_->print_tree(tab+"\t");
     b_->print_tree(tab+"\t");
 }

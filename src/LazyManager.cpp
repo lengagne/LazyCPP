@@ -139,7 +139,7 @@ LazyCreator* LazyManager::add_creator( LazyCreator* in)
 
 LazyParser* LazyManager::add_input( const double &a, const std::string& name)
 {
-    std::cout<<"add input "<< name <<std::endl;
+//     std::cout<<"add input "<< name <<std::endl;
     LazyInput* in = new LazyInput(a,name,inputs_.size());
     auto result = inputs_.insert(in);
     if (result.second) 
@@ -194,21 +194,22 @@ LazyParser* LazyManager::add_parser( LazyParser* in)
 
 LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 {
-//     if (index == 0 && rank == 0)   
-//     {
+    if (index == 0 && rank == 0)   
+    {
         std::cout<<"add output("<<index<<":"<<rank<<") = "<< *in <<std::endl;
         in->print();
-//     }
+    }
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
     LazyCreator *create = in->explose();
-//     if (index == 0 && rank == 0)
-//     {
+//     create->print_tree();
+    if (index == 0 && rank == 0)
+    {
         std::cout<<"add output("<<index<<":"<<rank<<") = "<< *create <<std::endl;
         create->print_tree();
-//     }
+    }
     outputs_[index].add_suboutput(create,rank);
     return create;
 }
@@ -436,7 +437,8 @@ void LazyManager::prepare(  const std::string& name,
                 {
                     if (it3->update_)
                     {
-                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// TYPE"<< it3->typec_<<" eq:"<< it3->get_equation() <<"\n";
+//                         f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// TYPE"<< it3->typec_<<" eq:"<< it3->get_equation() <<"\n";
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"\n";
                         it3->update_ = false;
                     }
                 }

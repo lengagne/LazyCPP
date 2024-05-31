@@ -28,6 +28,8 @@ public:
     
     virtual LazyParser* simplify();
     
+    bool operator < ( const LazyAdditionX& in) const;
+    
     std::map<LazyParser*,double> p_;
     
 private:

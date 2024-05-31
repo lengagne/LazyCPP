@@ -29,6 +29,8 @@ public:
     virtual void print( const std::string& tab ="") const;
     
     virtual LazyParser* simplify();
+    
+    bool operator < ( const LazyMultiplicationX& in) const;
 //     
 //     virtual void print_equation();
 //     

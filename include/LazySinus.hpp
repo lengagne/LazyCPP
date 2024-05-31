@@ -25,7 +25,7 @@ public:
     
     void update_list(std::vector<LazyCreator*>& vec, int current);
        
-    
+    bool operator < ( const LazySinus& in) const;
 //     
 //     virtual std::string get_string( )const ;
 //     

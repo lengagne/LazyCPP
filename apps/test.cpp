@@ -16,7 +16,9 @@ T test_function( T& x, T& y)
     
 //     return a; //+(2*x)+(2*x)+a+a+a;
 //     return a * b *c *d;
-    return cos(x+y) * sin (x+y) + x+y;
+//     return cos(x+y) * sin (x+y) + x+y;
+//     return (a + 4 - 2*x) *( 2*y);
+    return ( 3*a) *( 2*y);
 }
 
 int main()
