@@ -38,7 +38,7 @@ std::string LazySoustraction::get_equation( )
 
 void LazySoustraction::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazySoustraction(@"<<this<<")"<<std::endl;
+    std::cout<<tab<<"LazySoustraction(@"<<get_equation()<<")"<<std::endl;
     a_->print_tree(tab+"\t");
     b_->print_tree(tab+"\t");
 }

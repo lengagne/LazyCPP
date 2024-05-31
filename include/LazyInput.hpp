@@ -6,7 +6,9 @@
 class LazyInput : public LazyParserCreator {
 public:
     LazyInput(double value, 
-              const std::string name="not_defined"); 
+              const std::string name="not_defined",
+              int id=-1
+             ); 
         
     ~LazyInput();
     
@@ -23,6 +25,8 @@ public:
     virtual void print_tree( const std::string& tab ="");
 
     virtual void update_list(std::vector<LazyCreator*>& vec, int current);
+    
+    bool operator < ( const LazyInput& in) const;
 
     std::string name_;
 };

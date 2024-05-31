@@ -26,6 +26,8 @@ public:
     
     virtual void print( const std::string& tab="") const; 
     
+    virtual LazyParser* simplify();
+    
     std::map<LazyParser*,double> p_;
     
 private:

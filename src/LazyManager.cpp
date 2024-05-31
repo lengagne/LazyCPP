@@ -139,7 +139,8 @@ LazyCreator* LazyManager::add_creator( LazyCreator* in)
 
 LazyParser* LazyManager::add_input( const double &a, const std::string& name)
 {
-    LazyInput* in = new LazyInput(a,name);
+    std::cout<<"add input "<< name <<std::endl;
+    LazyInput* in = new LazyInput(a,name,inputs_.size());
     auto result = inputs_.insert(in);
     if (result.second) 
     {
@@ -179,9 +180,7 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
-//     if (in->is_zero())  return zero_;
-    
-    auto result = parsers_.insert(in);
+    auto result = parsers_.insert(in->simplify());
     if (result.second) 
     {
         // L'élément a été inséré, renvoie l'élément inséré
@@ -195,21 +194,21 @@ LazyParser* LazyManager::add_parser( LazyParser* in)
 
 LazyCreator* LazyManager::add_output( LazyParser* in, uint index, uint rank )
 {
-    if (index == 0 && rank == 0)   
-    {
-        std::cout<<"add output : "<< *in <<std::endl;
+//     if (index == 0 && rank == 0)   
+//     {
+        std::cout<<"add output("<<index<<":"<<rank<<") = "<< *in <<std::endl;
         in->print();
-    }
+//     }
     if (outputs_.find(index) == outputs_.end())
     { // there is no such element, we create it
         outputs_[index] = Dependance(index);    
     }   
     LazyCreator *create = in->explose();
-    if (index == 0 && rank == 0)
-    {
-        std::cout<<"add output : "<< *create <<std::endl;
+//     if (index == 0 && rank == 0)
+//     {
+        std::cout<<"add output("<<index<<":"<<rank<<") = "<< *create <<std::endl;
         create->print_tree();
-    }
+//     }
     outputs_[index].add_suboutput(create,rank);
     return create;
 }
@@ -373,13 +372,13 @@ void LazyManager::prepare(  const std::string& name,
         }        
     }
 
-    uint LazyCounter = 0;
+//     uint LazyCounter = 0;
     // on numerote les entrées 
-    for (auto & iter : inputs_)
-    {
-        iter->id_ = LazyCounter++;
-    }
-    uint nb_in = LazyCounter;
+//     for (auto & iter : inputs_)
+//     {
+//         iter->id_ = LazyCounter++;
+//     }
+    uint LazyCounter = inputs_.size();
     
     // on numerote les variables intermédiaires.
     for (auto& iter : outputs_) // pour toutes les sorties
@@ -405,13 +404,13 @@ void LazyManager::prepare(  const std::string& name,
         f<<"\tunsigned int get_nb_in()const \n\t{\n\t\treturn "<< get_nb_inputs() <<";\n\t}\n\n";
         f<<"\t // intermediate variables\n";
 
-        f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
+//         f<<"\t"<<RealName<<" t["<<nb_in<<"];\n";        
         f<<"\t"<<RealName<<" x["<<LazyCounter<<"];\n";      
         
         f<<"\n\n\tvoid set_input(std::vector<"<< RealName<<"> & in)\n\t{\n";
         for (auto & iter : inputs_)
         {
-                f<< "\t\tx["<< iter->id_ <<"] =  in["<<iter->id_ <<"];\n";
+                f<< "\t\tx["<< ((LazyInput*) iter)->id_ <<"] =  in["<<((LazyInput*) iter)->id_ <<"]; //" << ((LazyInput*) iter)->get_equation() <<"\n";
         }
         f<<"\t}\n\n";
         
@@ -517,7 +516,7 @@ void LazyManager::print_all_inputs() const
 {
     for (auto& iter : inputs_)
     {
-        std::cout<<" input : "<< iter->name_<<" : "<< iter->value_<<std::endl;
+        std::cout<<" input : "<< ((LazyInput*) iter)->name_<<" : "<< ((LazyInput*) iter)->value_<<std::endl;
     }
 }
 
@@ -542,7 +541,7 @@ void LazyManager::update_input()
 {
     std::vector<double> inputs(inputs_.size());
     for (auto & iter : inputs_)
-        inputs[iter->id_] = iter->value_;
+        inputs[((LazyInput*) iter)->id_] = ((LazyInput*) iter)->value_;
     
     lazycode_->set_input(inputs);    
 }

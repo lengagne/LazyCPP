@@ -6,9 +6,9 @@
 
 LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
 {    
-//     std::cout<<"LazyMultiplicationX(std::list<LazyValue*>& a)"<<std::endl;
-//     for (auto& i : a)
-//         std::cout<<"\tLazyMultiplicationX(@"<<i<<") : "<< *i <<std::endl;
+    std::cout<<"LazyMultiplicationX(std::list<LazyValue*>& a)"<<std::endl;
+    for (auto& i : a)
+        std::cout<<"\tLazyMultiplicationX(@"<<i<<") : "<< *i <<std::endl;
             
     typep_ = LAZYP_MULTIPLICATIONX;
     double coeff = 1.0;
@@ -16,34 +16,37 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
     LazyAdditionX* addx;
     LazyMultiplicationX* mulx;
     
+    LazyParser* simplified;
+    
     for(auto& i : a)
     {
-        switch (i->typep_)
+        simplified = i->simplify();
+        switch (simplified->typep_)
         {
             case(LAZYP_ADDITIONX):
-                addx = (LazyAdditionX*) i;
+                addx = (LazyAdditionX*) simplified;
                 if (addx->is_double())
                 {
-//                     std::cout<<"\t\t Ajout1 de (@"<<i<<") : "<< *i <<std::endl;
+                    std::cout<<"\t\t Ajout1 de (@"<<i<<") : "<< *i <<std::endl;
                     coeff *= addx->get_double();
                 }else
                 {
-//                     std::cout<<"\t\t Ajout2 de (@"<<i<<") : "<< *i <<std::endl;
-                    p_.push_back(i);
+                    std::cout<<"\t\t Ajout2 de (@"<<i<<") : "<< *i <<std::endl;
+                    p_.push_back(addx);
                 }
                 break;
             case(LAZYP_MULTIPLICATIONX):                
-                mulx = (LazyMultiplicationX*)i;
+                mulx = (LazyMultiplicationX*)simplified;
                 for (auto &it : mulx->p_)
                 {
-//                     std::cout<<"\t\t Ajout3 de (@"<<it<<") : "<< *it <<std::endl;                    
+                    std::cout<<"\t\t Ajout3 de (@"<<it<<") : "<< *it <<std::endl;                    
                     p_.push_back(it);
                 }
                 break;
                 
             default:
-//                 std::cout<<"\t\t Ajout4 de (@"<<i<<") : "<< *i <<std::endl;
-                p_.push_back(i);
+                std::cout<<"\t\t Ajout4 de (@"<<i<<") : "<< *i <<std::endl;
+                p_.push_back(simplified);
         }            
     }    
     coeff *= compact(p_);
@@ -52,7 +55,7 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
         p_.push_back( new LazyAdditionX(coeff));
     }
     
-//     std::cout<<"LazyMultiplicationX::LazyMultiplicationX resultat = "<< *this <<std::endl;
+    std::cout<<"LazyMultiplicationX::LazyMultiplicationX resultat = "<< *this <<std::endl<<std::endl;
 }
 
 double LazyMultiplicationX::compact(std::list<LazyParser*> in)
@@ -190,10 +193,21 @@ std::string LazyMultiplicationX::get_string( )const
 */
 void LazyMultiplicationX::print( const std::string& tab) const 
 {
-    std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): "<<std::endl;
+    std::cout<<tab<<"LazyMultiplicationX:("<<get_name()<<"): "<<std::endl;
     for (auto iter : p_)
         iter->print(tab+"\t");
 }   
+
+LazyParser* LazyMultiplicationX::simplify()
+{
+    if (p_.size() == 1)
+    {
+        auto it = p_.begin();
+        return *it;        
+    }
+    return this;
+}
+
 /*
 void LazyMultiplicationX::print_equation()
 {

@@ -16,6 +16,11 @@ bool compareLazyParser(const LazyParser* a,
             case(LAZYP_CONSTANT):
 //                 std::cout<<"return "<<(*((LazyConstant*) a) < *((LazyConstant*) b))<<std::endl;
                 return  (*((LazyConstant*) a) < *((LazyConstant*) b));
+                
+            case(LAZYP_INPUT):
+//                 std::cout<<"return "<<(*((LazyConstant*) a) < *((LazyConstant*) b))<<std::endl;
+                return  (*((LazyInput*) a) < *((LazyInput*) b));
+                
 //             case(LAZYC_ADDITION):
 // //                 std::cout<<"return "<<(*((LazyAddition*) a) < *((LazyAddition*) b))<<std::endl;
 //                 return  (*((LazyAddition*) a) < *((LazyAddition*) b));

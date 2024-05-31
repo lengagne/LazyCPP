@@ -35,12 +35,12 @@ std::string LazyConstant::get_name() const
 
 void LazyConstant::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazyConstant:("<<this<<"): "<< value_<<std::endl;    
+    std::cout<<tab<<"LazyConstant:("<<get_name()<<"): "<< value_<<std::endl;    
 }
 
 void LazyConstant::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazyConstant(@"<<this<<") : "<< value_<<std::endl;
+    std::cout<<tab<<"LazyConstant(@"<<get_name()<<") : "<< value_<<std::endl;
 }
 
 void LazyConstant::update_list(std::vector<LazyCreator*>& vec, int current)

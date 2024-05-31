@@ -38,13 +38,13 @@ std::string LazySinus::file_print( const std::string& varname)
 // 
 void LazySinus::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazySinus:("<<this<<"): "<<std::endl;
+    std::cout<<tab<<"LazySinus:("<<get_name()<<"): "<<std::endl;
     pa_->print(tab+"\t");
 }
 
 void LazySinus::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazySinus(@"<<this<<")"<<std::endl;
+    std::cout<<tab<<"LazySinus(@"<<get_name()<<")"<<std::endl;
     ca_->print_tree(tab+"\t");
 }
 // 

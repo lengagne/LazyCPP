@@ -5,9 +5,9 @@
 
 LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
 {
-    std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
+/*    std::cout<<"LazyAdditionX(std::list<LazyValue*>& a)"<<std::endl;
     for (auto& i : a)
-        std::cout<<"\t Ajout de(@"<<i<<") : "<< *i <<std::endl;    
+        std::cout<<"\t Ajout de(@"<<i<<") : "<< *i <<std::endl;  */  
     typep_ = LAZYP_ADDITIONX;    
     for ( auto& i : a)
     {
@@ -29,11 +29,11 @@ LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
         }
     }
     remove_zeros();
-    std::cout<<"LazyAdditionX result = "<<*this <<std::endl;
-    print();
-    std::cout<<"TREE"<<std::endl;
-    explose()->print_tree();
-    std::cout<<"*******************"<<std::endl<<std::endl;
+//     std::cout<<"LazyAdditionX result = "<<*this <<std::endl;
+//     print();
+//     std::cout<<"TREE"<<std::endl;
+//     explose()->print_tree();
+//     std::cout<<"*******************"<<std::endl<<std::endl;
 }
 
 LazyAdditionX::LazyAdditionX(double value)
@@ -155,7 +155,7 @@ bool LazyAdditionX::is_zero() const
 
 void LazyAdditionX::print( const std::string& tab) const
 {
-    std::cout<<tab<<"LazyAdditionX:("<<this<<"): "<<std::endl;
+    std::cout<<tab<<"LazyAdditionX:("<<get_name()<<"): "<<std::endl;
     int cpt = 0;
     for (auto& iter : p_)
     {
@@ -164,6 +164,20 @@ void LazyAdditionX::print( const std::string& tab) const
         iter.first->print(tab+"\t");
     }
 }   
+
+LazyParser* LazyAdditionX::simplify()
+{
+    if (p_.size() == 1)
+    {
+        auto it = p_.begin();
+        if (it->second == 0.0)   return LMANAGER.get_zero();
+        if (it->second == 1.0)   return it->first;
+        if (it->first == LMANAGER.get_zero())    return it->first;
+        if (it->first == LMANAGER.get_one())    return new LazyConstant(it->second);
+        
+    }
+    return this;
+}
     
 void LazyAdditionX::remove_zeros()
 {

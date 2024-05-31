@@ -26,6 +26,11 @@ public:
     virtual bool is_zero() const =0;
     
     virtual void print( const std::string& tab="") const = 0; 
+    
+    virtual LazyParser* simplify()
+    {
+        return this;
+    }
 
     LazyParserType typep_ = LAZYP_CONSTANT;
 

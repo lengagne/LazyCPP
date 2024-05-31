@@ -27,6 +27,8 @@ public:
 //     virtual std::string get_string( )const ;
 //     
     virtual void print( const std::string& tab ="") const;
+    
+    virtual LazyParser* simplify();
 //     
 //     virtual void print_equation();
 //     
