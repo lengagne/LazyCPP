@@ -9,7 +9,7 @@ T test_function( T& x, T& y)
 //      return (x+y)*(x*2)*(x+y+y+sin(y)+sin(y)+cos(x))-(x+y)*(x-y) *(y-(y*3)*y)*(x-y) * sin(y) + sin(y) * cos(y+x);
 //     return ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(x)) + ((x*2)*(y*3)*cos(((x*2)*(y*3)*cos(x))));
     
-    T a = 2*x-4;
+//     T a = 2*x-4;
 //     T b = 2*y;
 //     T c = 3; //*(x+y+2);
 //     T d = c+c+c;
@@ -18,7 +18,7 @@ T test_function( T& x, T& y)
 //     return a * b *c *d;
 //     return cos(x+y) * sin (x+y) + x+y;
 //     return (a + 4 - 2*x) *( 2*y);
-    return ( 3*a) *( 2*y);
+    return ( 3*cos(x)) *( 2*sin(y)*y);
 }
 
 int main()

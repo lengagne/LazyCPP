@@ -6,9 +6,9 @@
 
 LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
 {    
-    std::cout<<"LazyMultiplicationX(std::list<LazyValue*>& a)"<<std::endl;
-    for (auto& i : a)
-        std::cout<<"\tLazyMultiplicationX(@"<<i<<") : "<< *i <<std::endl;
+//     std::cout<<"LazyMultiplicationX(std::list<LazyValue*>& a)"<<std::endl;
+//     for (auto& i : a)
+//         std::cout<<"\tLazyMultiplicationX(@"<<i<<") : "<< *i <<std::endl;
             
     typep_ = LAZYP_MULTIPLICATIONX;
     double coeff = 1.0;
@@ -21,17 +21,20 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
     for(auto& i : a)
     {
         simplified = i->simplify();
+//         simplified = i;
         switch (simplified->typep_)
         {
             case(LAZYP_ADDITIONX):
                 addx = (LazyAdditionX*) simplified;
-                if (addx->is_double())
+                if (addx->p_.size() == 1)
                 {
-                    std::cout<<"\t\t Ajout1 de (@"<<i<<") : "<< *i <<std::endl;
-                    coeff *= addx->get_double();
+//                     std::cout<<"\t\t Ajout1 de (@"<<i<<") : "<< *i <<std::endl;
+                    auto it = addx->p_.begin();
+                    coeff *= it->second;
+                    p_.push_back(it->first);
                 }else
                 {
-                    std::cout<<"\t\t Ajout2 de (@"<<i<<") : "<< *i <<std::endl;
+//                     std::cout<<"\t\t Ajout2 de (@"<<i<<") : "<< *i <<std::endl;
                     p_.push_back(addx);
                 }
                 break;
@@ -39,67 +42,102 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
                 mulx = (LazyMultiplicationX*)simplified;
                 for (auto &it : mulx->p_)
                 {
-                    std::cout<<"\t\t Ajout3 de (@"<<it<<") : "<< *it <<std::endl;                    
+//                     std::cout<<"\t\t Ajout3 de (@"<<it<<") : "<< *it <<std::endl;                    
                     p_.push_back(it);
                 }
                 break;
                 
             default:
-                std::cout<<"\t\t Ajout4 de (@"<<i<<") : "<< *i <<std::endl;
+//                 std::cout<<"\t\t Ajout4 de (@"<<i<<") : "<< *i <<std::endl;
                 p_.push_back(simplified);
         }            
     }    
-    coeff *= compact(p_);
+    // compact modify also p_
+//     coeff *= compact(p_);
 //     std::cout<<"coeff = "<< coeff <<std::endl;
-    if (coeff != 1.0)
+
+    // erase the zero values
+    for (auto it = p_.begin(); it != p_.end(); ) 
     {
-        p_.push_back( new LazyAdditionX(coeff));
+        if ( (*it)->typep_ == LAZYP_CONSTANT)
+        {
+            coeff *= ((LazyConstant*)(*it))->value_;
+            it = p_.erase(it);
+        } else {
+            ++it;
+        }
     }
-    if (coeff == 0.0)
+    
+//     std::cout<<"coeff = "<< coeff <<std::endl;
+    if ( coeff == 0.0)
+    {
         p_.clear();
-    std::cout<<"LazyMultiplicationX::LazyMultiplicationX resultat = "<< *this <<std::endl<<std::endl;
+    }else if (coeff != 1.0)
+    {
+        p_.push_back( LMANAGER.add_parser( new LazyConstant(coeff)));
+    }
+//     std::cout<<"LazyMultiplicationX::LazyMultiplicationX resultat = "<< *this <<std::endl<<std::endl;
+//     print();
+//     std::cout<<"***************************************"<<std::endl;
+//     std::cout<<"***************************************"<<std::endl;
 }
 
-double LazyMultiplicationX::compact(std::list<LazyParser*> in)
-{
-    std::list<LazyParser*> vec;    
-    for ( auto iter : in)
-    {
-        if ( iter->typep_ == LAZYP_MULTIPLICATIONX)
-        {
-            LazyMultiplicationX* AX = (LazyMultiplicationX*) iter;
-            for (auto& iter1 : AX->p_)
-                vec.push_back( iter1);
-        }else 
-        {
-            vec.push_back(iter);
-        }
-    }    
-    
-    double cst = 1.0;
-    p_.clear();
-    for ( auto iter : vec)
-    {
-        if ( iter->typep_ == LAZYP_CONSTANT)
-        {
-            LazyConstant* c = (LazyConstant*)iter;
-            cst *= c->value_;
-        }else 
-        {
-            p_.push_back(iter);
-        }
-    }
-        
-    return cst;
-//     if ( cst)
+// double LazyMultiplicationX::compact(std::list<LazyParser*> in)
+// {
+//     
+//     std::list<LazyParser*> vec;    
+//     for ( auto iter : in)
 //     {
-//         p_.push_back( new LazyAdditionX(cst));
-//     }else
+//         
+//         if ( iter->typep_ == LAZYP_ADDITIONX)
+//         {
+//             LazyAdditionX* addx = (LazyAdditionX*) iter;
+//             if (addx->p_.size() == 1)
+//             {
+//                 auto it = addx->p_.begin();
+//                 cst *= it->second;
+//                 vec.push_back(it->first);
+//             }
+//             
+//         }
+//         
+//         if ( iter->typep_ == LAZYP_MULTIPLICATIONX)
+//         {
+//             LazyMultiplicationX* AX = (LazyMultiplicationX*) iter;
+//             for (auto& iter1 : AX->p_)
+//                 vec.push_back( iter1);
+//         }else 
+//         {
+//             vec.push_back(iter);
+//         }
+//     }    
+//     
+//     double cst = 1.0;
+//     // erase the zero values
+//     for (auto it = p_.begin(); it != p_.end(); ) 
 //     {
+//         if ( iter->typep_ == LAZYP_CONSTANT)
+// //         if (it->second == 0.0 || LMANAGER.is_zero( it->first))
+//         {
+//             cst *= it->value_;
+//             it = p_.erase(it);
+//         } else {
+//             ++it;
+//         }
+//     }
+//     
+// 
+//     if ( cst == 0.0)
+//     {
+//         p_.clear();
+//     }else if (cst !=1.0)
+//     {
+//         p_.LMANAGER.add_constant(cst);
+//     }
 //         p_.clear();
 //     }
 //     p_.sort(compareLazyParser);
-}
+// }
 
 LazyCreator* LazyMultiplicationX::explose()
 {

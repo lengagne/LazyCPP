@@ -25,7 +25,7 @@ LazyCreator* LazyConstant::explose()
     
 std::string LazyConstant::file_print( const std::string& varname)
 {
-    return std::to_string(value_);
+    return to_string_with_precision(value_);
 }
 
 std::string LazyConstant::get_name() const

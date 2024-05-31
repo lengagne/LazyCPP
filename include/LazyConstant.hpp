@@ -2,17 +2,17 @@
 #define __LAZYCONSTANT_HPP__
 
 #include "LazyParserCreator.hpp"
-// #include <sstream>
-// 
-// template <typename T>
-// std::string to_string_with_precision(const T a_value, const int n = 30)
-// {
-//     std::ostringstream out;
-//     out.precision(n);
-//     out << std::fixed << a_value;
-//     return std::move(out).str();
-// }
-// 
+#include <sstream>
+
+template <typename T>
+std::string to_string_with_precision(const T a_value, const int n = 20)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return std::move(out).str();
+}
+
 class LazyConstant : public LazyParserCreator {
 public:
     LazyConstant(double value);

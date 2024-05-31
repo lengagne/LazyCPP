@@ -14,7 +14,7 @@ public:
     
 //     inline void compute();
 //     
-    virtual double compact(std::list<LazyParser*> in);
+//     virtual double compact(std::list<LazyParser*> in);
 //     
     virtual LazyCreator* explose();
     
