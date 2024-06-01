@@ -19,6 +19,11 @@ void LazyInput::compute()
     
 }
 
+LazyParser* LazyInput::do_simplification()
+{
+    return this;    
+}
+
 LazyCreator* LazyInput::explose()
 {
     return (LazyCreator*)this;

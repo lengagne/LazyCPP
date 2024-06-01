@@ -2,6 +2,7 @@
 #define __LAZYMANAGER_HPP__
 #include <iostream>
 #include <map>
+#include <memory>
 #include <set>
 #include <vector>
 #include "LazyCPP.hpp"
@@ -36,11 +37,11 @@ struct PtrComparer {
         return compareLazyCreator(a,b);
     }
 
-    bool operator()(const LazyParser* a, const LazyParser* b) const {    
+    bool operator()(LazyParser* a, LazyParser* b) const {    
         return compareLazyParser(a,b);
     }
 
-    bool operator()(const LazyInput* a, const LazyInput* b) const {    
+    bool operator()(LazyInput* a, LazyInput* b) const {    
         return a->id_ < b->id_;
     }    
 };
@@ -73,6 +74,8 @@ public:
     LazyParser* get_one() const;
     
     LazyParser* get_zero() const;
+    
+    void init_constant();
         
     bool is_one(LazyParser * in) const;
     

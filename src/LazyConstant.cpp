@@ -18,6 +18,12 @@ void LazyConstant::compute()
     
 }
 
+LazyParser* LazyConstant::do_simplification()
+{
+//     std::cout<<"LazyConstant::do_simplification() : "<< value_ <<std::endl;
+    return this;
+}
+
 LazyCreator* LazyConstant::explose()
 {
     return LMANAGER.add_constant(value_);
@@ -50,6 +56,6 @@ void LazyConstant::update_list(std::vector<LazyCreator*>& vec, int current)
 
 bool LazyConstant::operator < ( const LazyConstant& in) const
 {
-//     std::cout<<value_<<" <? "<< in.value_<<std::endl;
+//     std::cout<<this<<" "<<value_<<" <? "<< &in <<" "<< in.value_<<"  return : "<< (value_ < in.value_) <<std::endl;
     return (value_ < in.value_);
 }

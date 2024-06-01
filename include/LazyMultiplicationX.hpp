@@ -11,6 +11,8 @@ public:
 //     double get_constant() const;
     
 //     LazyParser* get_without_constant();
+    
+    virtual LazyParser* do_simplification();
 
     virtual LazyCreator* explose();
     
@@ -19,8 +21,6 @@ public:
     virtual bool is_zero() const;
 
     virtual void print( const std::string& tab ="") const;
-    
-    virtual LazyParser* simplify();
     
     bool operator < ( const LazyMultiplicationX& in) const;
     

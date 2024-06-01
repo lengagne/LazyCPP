@@ -15,6 +15,8 @@ public:
     
     void compute();
     
+    virtual LazyParser* do_simplification();
+    
     virtual LazyCreator* explose();
     
     virtual std::string get_name() const;

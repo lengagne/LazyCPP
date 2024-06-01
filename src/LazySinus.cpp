@@ -12,6 +12,21 @@ void LazySinus::compute()
     value_ = sin(ca_->value_);
 }
 
+LazyParser* LazySinus::do_simplification()
+{
+    LazyParser* s = pa_->simplify();
+    switch (s->typep_)
+    {
+        case(LAZYP_INPUT):
+            return this;
+        
+        default:
+            std::cerr<<"In file "<< __FILE__<<" at line "<< __LINE__ <<" the type "<< s->typep_ <<" is not implemented yet."<<std::endl;
+            return this;
+    }
+}
+
+
 LazyCreator* LazySinus::explose()
 {
     ca_ = pa_->explose();

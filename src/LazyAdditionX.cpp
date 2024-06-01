@@ -3,6 +3,12 @@
 #include "LazyConstant.hpp"
 #include "LazyCPP.hpp"
 
+LazyAdditionX::LazyAdditionX( )
+{
+    typep_ = LAZYP_ADDITIONX;
+}
+
+
 LazyAdditionX::LazyAdditionX(std::list<LazyParser*>& a)
 {
     typep_ = LAZYP_ADDITIONX;    
@@ -56,6 +62,49 @@ LazyAdditionX::LazyAdditionX(double coeff, LazyParser* in)
             p_[ in] = coeff;
     }
 }
+
+LazyParser* LazyAdditionX::do_simplification()
+{
+    LazyAdditionX* out = new LazyAdditionX();
+    double constant = 0.0;
+    for (auto& iter : p_)
+    {
+        LazyParser* s = iter.first->simplify();
+        switch (s->typep_)
+        {
+//             case(LAZYP_CONSTANT):
+//                 constant += ((LazyConstant*) s)->value_ * iter.second;
+//                 break;
+            
+            case(LAZYP_ADDITIONX):
+                for (auto& i : ((LazyAdditionX*) s)->p_)
+                {
+                    out->p_[i.first] += i.second;
+                }
+                break;                
+                
+            case(LAZYP_INPUT):
+            case(LAZYP_MULTIPLICATIONX):
+            case(LAZYP_COSINUS):
+            case(LAZYP_SINUS):                    
+                out->p_[s] += iter.second;
+                break;
+                
+            default:
+                std::cerr<<"In file "<< __FILE__<<" at line "<< __LINE__ <<" the type "<< s->typep_ <<" is not implemented yet."<<std::endl;
+                out->p_[s] += iter.second;
+        }
+        
+    }
+//     std::cout<<"constant = "<< constant <<std::endl;
+    if (constant != 0)
+    {
+//         out->p_[LMANAGER.add_constant_parser(constant)] += 1.0;
+        out->p_[LMANAGER.get_one()] += constant;
+    }
+    return out;
+}
+
 
 LazyCreator* LazyAdditionX::explose()
 {
@@ -166,26 +215,6 @@ void LazyAdditionX::print( const std::string& tab) const
     }
     std::cout<<tab<<"]"<<std::endl;
 }   
-
-LazyParser* LazyAdditionX::simplify()
-{
-    if (p_.size() == 0)
-        return LMANAGER.get_zero();
-    
-    for (auto& iter : p_)
-        iter.first->simplify();
-    
-    remove_zeros();
-    
-    if (p_.size() == 1)
-    {
-        auto it = p_.begin();
-        if (it->second == 1.0)   return it->first;
-        if (it->first == LMANAGER.get_zero())    return it->first;
-        if (it->first == LMANAGER.get_one())    return new LazyConstant(it->second);
-    }
-    return this;
-}
     
 void LazyAdditionX::remove_zeros()
 {

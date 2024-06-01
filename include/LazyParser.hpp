@@ -27,16 +27,17 @@ public:
     
     virtual void print( const std::string& tab="") const = 0; 
     
-    virtual LazyParser* simplify()
-    {
-        return this;
-    }
+    virtual LazyParser* simplify();
 
     LazyParserType typep_ = LAZYP_CONSTANT;
 
     friend std::ostream& operator<< (std::ostream& stream, const LazyParser& v);
     
 protected:
+    
+    virtual LazyParser* do_simplification() = 0;
+    
+    LazyParser * simplified_ = nullptr;
     
     LazyCreator* explosed_ = nullptr;
     

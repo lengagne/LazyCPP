@@ -21,6 +21,8 @@ public:
     
     void compute();
     
+    virtual LazyParser* do_simplification();
+    
     virtual LazyCreator* explose();
     
     virtual std::string file_subname( const std::string& varname="x")

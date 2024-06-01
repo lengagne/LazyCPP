@@ -71,6 +71,68 @@ LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
 //     std::cout<< *this <<std::endl<<std::endl<<std::endl;
 }
 
+LazyParser* LazyMultiplicationX::do_simplification()
+{
+    
+    for (auto& iter : p_)
+    {
+        iter->simplify();
+        if (LMANAGER.is_zero(iter))
+        {
+            return LMANAGER.get_zero();
+        }
+    }
+    
+    if (p_.size() == 1)
+    {
+        auto it = p_.begin();
+        return *it;        
+    }
+    
+    std::list<LazyParser*> a;
+    double coeff = 1.0;
+    for (auto& iter : p_)
+    {
+        LazyParser* s = iter->simplify();
+        switch (s->typep_)
+        {
+            case(LAZYP_CONSTANT):
+                
+                if( ((LazyConstant*) s)->value_ == 0.0)
+                    return LMANAGER.get_zero();
+                
+                coeff *= ((LazyConstant*) s)->value_;
+                break;
+            
+            case(LAZYP_MULTIPLICATIONX):
+                for (auto& i : ((LazyMultiplicationX*) s)->p_)
+                {
+                    a.push_back(i);
+                }
+                break; 
+                
+            case(LAZYP_INPUT):
+            case(LAZYP_COSINUS):
+            case(LAZYP_SINUS):
+            case(LAZYP_ADDITIONX):
+                a.push_back(s);
+                break;            
+            
+            default:
+                std::cerr<<"In file "<< __FILE__<<" at line "<< __LINE__ <<" the type "<< s->typep_ <<" is not implemented yet."<<std::endl;
+                a.push_back(s);
+        }
+        
+    }    
+    if (coeff != 1.0)
+    {
+        a.push_back( LMANAGER.add_constant_parser(coeff));
+    }
+    LazyParser* out = new LazyMultiplicationX(a);
+    return out;
+}
+
+
 LazyCreator* LazyMultiplicationX::explose()
 {
     if (explosed_ == nullptr)
@@ -157,25 +219,6 @@ void LazyMultiplicationX::print( const std::string& tab) const
         iter->print(tab+"\t");
     std::cout<<tab<<"}"<<std::endl;
 }   
-
-LazyParser* LazyMultiplicationX::simplify()
-{
-    for (auto& iter : p_)
-    {
-        iter->simplify();
-        if (LMANAGER.is_zero(iter))
-        {
-            return LMANAGER.get_zero();
-        }
-    }
-    
-    if (p_.size() == 1)
-    {
-        auto it = p_.begin();
-        return *it;        
-    }
-    return this;
-}
 
 bool LazyMultiplicationX::operator < ( const LazyMultiplicationX& in) const
 {

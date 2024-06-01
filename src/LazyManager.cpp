@@ -65,11 +65,7 @@ inline double Dependance::update( uint cpt )
 
 LazyManager::LazyManager()
 {
-    one_ = add_parser(new LazyConstant(1.0));
-    zero_ = add_parser(new LazyConstant(0));
-    
-    cone_ = add_creator(one_->explose());
-    czero_ = add_creator(zero_->explose());
+    init_constant();
 }
 
 LazyParser* LazyManager::add_additionX( LazyParser* a , LazyParser *b)
@@ -92,7 +88,7 @@ LazyCreator* LazyManager::add_constant( double a)
 
 LazyParser* LazyManager::add_constant_parser( double a)
 {
-    return add_parser(new LazyAdditionX(a));
+    return add_parser(new LazyConstant(a));
 }
 
 LazyParser* LazyManager::add_cosinus( LazyParser* a)
@@ -169,14 +165,18 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
-    auto result = parsers_.insert(in->simplify());
+    return in;
+//     std::cout<<"size : "<< parsers_.size()<<" add_parser@"<<in<<"@ : "<< *in <<std::endl;
+    auto result = parsers_.insert(in);
     if (result.second) 
     {
         // L'élément a été inséré, renvoie l'élément inséré
+//         std::cout<<"ajouté"<<std::endl;
         return *result.first;
     } else {
         // L'élément existe déjà, renvoie l'élément existant
-        delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
+//         std::cout<<"previous one: "<<*result.first<<std::endl;
+//         delete in; // Tu peux supprimer le pointeur que tu as créé car il n'est pas nécessaire
         return *result.first;
     }        
 }
@@ -221,6 +221,14 @@ LazyParser* LazyManager::get_one() const
 LazyParser* LazyManager::get_zero() const
 {
     return zero_;
+}
+
+void LazyManager::init_constant()
+{
+    one_ = add_parser(new LazyConstant(1.0));
+    zero_ = add_parser(new LazyConstant(0));    
+    cone_ = add_creator(one_->explose());
+    czero_ = add_creator(zero_->explose());    
 }
 
 bool LazyManager::is_one(LazyParser * in) const
@@ -423,6 +431,7 @@ void LazyManager::reset()
     creators_.clear();
     outputs_.clear();
     clean_files();
+    init_constant();
 }
 
 void LazyManager::update_input()

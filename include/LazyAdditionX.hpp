@@ -8,11 +8,15 @@
 
 class LazyAdditionX : public LazyParser {
 public:
+    LazyAdditionX() ;
+    
     LazyAdditionX(std::list<LazyParser*>& a);
     
     LazyAdditionX(double in ) ;
     
     LazyAdditionX(double coeff, LazyParser* in);
+    
+    virtual LazyParser* do_simplification();
     
     virtual LazyCreator* explose();
     
@@ -25,8 +29,6 @@ public:
     virtual bool is_zero() const;
     
     virtual void print( const std::string& tab="") const; 
-    
-    virtual LazyParser* simplify();
     
     bool operator < ( const LazyAdditionX& in) const;
     
