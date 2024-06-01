@@ -5,7 +5,7 @@ LazyManager LMANAGER;
 
 void LazyAddOutput(LazyVariable& in,uint index,uint rank)
 {
-    in.ref_ = LMANAGER.add_output(in.ref_, index,rank);
+    in.creator_ = LMANAGER.add_output(in.parser_, index,rank);
 }
 
 uint LazyGetNbInputs()

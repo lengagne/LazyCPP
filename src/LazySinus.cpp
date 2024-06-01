@@ -1,38 +1,56 @@
-
 #include "LazySinus.hpp"
 
-LazySinus::LazySinus(LazyValue* a)
+LazySinus::LazySinus(LazyParser* a)
 {
-    type_ = LAZYSINUS;
-    a_ = a;
-    compute();
+    typec_ = LAZYC_SINUS;
+    typep_ = LAZYP_SINUS;
+    pa_ = a;
 }
     
-inline void LazySinus::compute()
+void LazySinus::compute()
 {
-    value_ = sin(a_->value_);
+    value_ = sin(ca_->value_);
 }
 
+LazyCreator* LazySinus::explose()
+{
+    ca_ = pa_->explose();
+    return this;
+}
+
+std::string LazySinus::get_name() const
+{
+    return "sin(" + pa_->get_name() + ")";
+}
+    
 std::string LazySinus::file_print( const std::string& varname)
 {
-    return varname+"["+ std::to_string(id_)+"] = sin(" + a_->file_subname(varname) + ")";
+    return   varname+"["+ std::to_string(id_)+"] = sin(" +ca_->file_subname(varname) + ");";
 }
 
-std::string LazySinus::get_string( )
+void LazySinus::print( const std::string& tab) const
 {
-    return "sin(" + a_->get_string() + ")";
+    std::cout<<tab<<"LazySinus:("<<get_name()<<"): "<<std::endl;
+    pa_->print(tab+"\t");
 }
 
-void LazySinus::print( const std::string& tab ,uint index) 
+void LazySinus::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazySinus:("<<this<<"): SINUS ("<<value_<<")"<<std::endl;
-    a_->print(tab+"\t",index);
+    std::cout<<tab<<"LazySinus(@"<<this<<")"<<std::endl;
+    ca_->print_tree(tab+"\t");
 }
 
-void LazySinus::print_equation()
+void LazySinus::update_list(std::vector<LazyCreator*>& vec, int current)
 {
-    std::cout<<"sin(";
-    a_->print_equation();
-    std::cout<<")";
+    if (update_ < current)
+    {
+        ca_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+    update_ = current;    
 }
-    
+
+bool LazySinus::operator < ( const LazySinus& in) const
+{
+    return (pa_ < in.pa_);
+}

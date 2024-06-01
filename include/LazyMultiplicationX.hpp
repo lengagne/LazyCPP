@@ -1,25 +1,30 @@
 #ifndef __LAZYMULTIPLICATIONX_HPP__
 #define __LAZYMULTIPLICATIONX_HPP__
 
-#include "LazyOperatorX.hpp"
+#include <list>
+#include "LazyParser.hpp"
 
-class LazyMultiplicationX : public LazyOperatorX {
+class LazyMultiplicationX : public LazyParser {
 public:
-    LazyMultiplicationX(std::list<LazyValue*>& a);
+    LazyMultiplicationX(std::list<LazyParser*>& a);
     
-    inline void compute();
+//     double get_constant() const;
     
-    virtual void compact();
+//     LazyParser* get_without_constant();
+
+    virtual LazyCreator* explose();
     
-    virtual LazyValue* explose();
+    virtual std::string get_name() const;
     
-    virtual std::string file_print( const std::string& varname="x");
+    virtual bool is_zero() const;
+
+    virtual void print( const std::string& tab ="") const;
     
-    virtual std::string get_string( );
+    virtual LazyParser* simplify();
     
-    virtual void print( const std::string& tab ="",uint index=0);
+    bool operator < ( const LazyMultiplicationX& in) const;
     
-    virtual void print_equation();
+    std::list<LazyParser*> p_;
     
 private:
 

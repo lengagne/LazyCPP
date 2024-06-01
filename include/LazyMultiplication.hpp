@@ -1,24 +1,27 @@
 #ifndef __LAZYMULTIPLICATION_HPP__
 #define __LAZYMULTIPLICATION_HPP__
 
-#include "LazyOperator2.hpp"
+#include "LazyCreator.hpp"
 
-class LazyMultiplication : public LazyOperator2 {
+class LazyMultiplication : public LazyCreator {
 public:
-    LazyMultiplication(LazyValue* a, LazyValue* b);
+    LazyMultiplication(LazyCreator* a, LazyCreator* b);
     
-    inline void compute();
+    void compute();
     
     virtual std::string file_print( const std::string& varname="x");
     
-    virtual std::string get_string( );
+    virtual std::string get_equation( );
     
-    virtual void print( const std::string& tab ="",uint index=0);
+    virtual void print_tree( const std::string& tab ="");
     
-    virtual void print_equation();
+    void update_list(std::vector<LazyCreator*>& vec, int current);
     
-private:
+    bool operator < ( const LazyMultiplication& in) const;
 
+    LazyCreator* a_;
+    LazyCreator* b_;
+private:
 };
 
 #endif // __LAZYMULTIPLICATION_HPP__

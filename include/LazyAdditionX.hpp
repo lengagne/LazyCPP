@@ -1,29 +1,40 @@
 #ifndef __LAZYADDITIONX_HPP__
 #define __LAZYADDITIONX_HPP__
 
-#include "LazyOperatorX.hpp"
+#include <list>
+#include <map>
 
-class LazyAdditionX : public LazyOperatorX {
+#include "LazyParser.hpp"
+
+class LazyAdditionX : public LazyParser {
 public:
-    LazyAdditionX(std::list<LazyValue*>& a);
+    LazyAdditionX(std::list<LazyParser*>& a);
     
-    inline void compute();
+    LazyAdditionX(double in ) ;
     
-    virtual void compact();
+    LazyAdditionX(double coeff, LazyParser* in);
     
-    virtual LazyValue* explose();
+    virtual LazyCreator* explose();
     
-    virtual std::string file_print( const std::string& varname="x");
+    double get_double();
     
-    virtual std::string get_string( );
+    virtual std::string get_name() const;
     
-    virtual void print( const std::string& tab ="",uint index=0);
+    bool is_double() const;
     
-    virtual void print_equation();
+    virtual bool is_zero() const;
     
-    virtual void update_list(std::vector<LazyValue*>& vec, int current);
+    virtual void print( const std::string& tab="") const; 
+    
+    virtual LazyParser* simplify();
+    
+    bool operator < ( const LazyAdditionX& in) const;
+    
+    std::map<LazyParser*,double> p_;
     
 private:
+    
+    void remove_zeros();
 
 };
 

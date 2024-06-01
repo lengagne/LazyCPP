@@ -1,36 +1,55 @@
 #include "LazyInput.hpp"
 
-
-LazyInput::LazyInput(double value, const std::string name,int id):name_(name) 
-{            
+LazyInput::LazyInput(double value, 
+                     const std::string name,int id):name_(name)
+{          
+    typec_ = LAZYC_INPUT;
+    typep_ = LAZYP_INPUT;
     value_ = value;
-    update_ = -1;
     id_ = id;
 }
     
-
-void LazyInput::print( const std::string& tab,uint index) 
+LazyInput::~LazyInput()
 {
-    std::cout<<tab<<"LazyInput:("<<this<<"): Input: "<<name_<<"("<<value_<<")"<<std::endl;
+    
+}    
+    
+void LazyInput::compute()
+{
+    
 }
 
-std::string LazyInput::get_string( )
+LazyCreator* LazyInput::explose()
 {
-    return name_ ; 
+    return (LazyCreator*)this;
 }
 
-
-void LazyInput::print_equation()
+std::string LazyInput::get_name() const
 {
-    std::cout<<name_;
+    return name_;
 }
 
-void LazyInput::propag_update(int i)
+std::string LazyInput::file_print( const std::string& varname)
 {
-    /// nothing to do
+    return name_;
 }
 
-void LazyInput::update_list(std::vector<LazyValue*>& vec, int current)
+void LazyInput::print( const std::string& tab) const
+{
+    std::cout<<tab<<"LazyInput:("<<get_name()<<"): "<<name_<<"("<<value_<<")"<<std::endl;
+}
+
+void LazyInput::print_tree( const std::string& tab)
+{
+    std::cout<<tab<<"LazyInput(@"<<get_name()<<") : "<< name_<<std::endl;
+}
+
+void LazyInput::update_list(std::vector<LazyCreator*>& vec, int current)
 {
 //     std::cout<<"no update I am an input"<<std::endl;
+}
+
+bool LazyInput::operator < ( const LazyInput& in) const
+{
+    return id_ < in.id_;
 }

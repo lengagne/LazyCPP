@@ -1,132 +1,196 @@
+#include "LazyAdditionX.hpp"
 #include "LazyMultiplicationX.hpp"
 #include "LazyMultiplication.hpp"
 #include "LazyConstant.hpp"
 #include "LazyCPP.hpp"
 
-LazyMultiplicationX::LazyMultiplicationX(std::list<LazyValue*>& a)
-{
-    type_ = LAZYMULTIPLICATIONX;
-    p_ = a;
-    p_.sort(compareLazyValue);
-    compute();
-    compact();
+LazyMultiplicationX::LazyMultiplicationX(std::list<LazyParser*>& a)
+{    
+//     std::cout<<"debut mul("<<this<<")"<<std::endl;
+//     for(auto&i : a)
+//         std::cout<<"LazyMultiplicationX  a = "<< *i<<std::endl;
+    typep_ = LAZYP_MULTIPLICATIONX;
+    double coeff = 1.0;
+    
+    LazyAdditionX* addx;
+    LazyMultiplicationX* mulx;
+    
+    LazyParser* simplified;
+    
+    for(auto& i : a)
+    {
+        simplified = i->simplify();
+        switch (simplified->typep_)
+        {
+            case(LAZYP_ADDITIONX):
+                addx = (LazyAdditionX*) simplified;
+                if (addx->p_.size() == 1)
+                {
+                    auto it = addx->p_.begin();
+                    coeff *= it->second;
+                    p_.push_back(it->first);
+                }else
+                {
+                    p_.push_back(addx);
+                }
+                break;
+            case(LAZYP_MULTIPLICATIONX):                
+                mulx = (LazyMultiplicationX*)simplified;
+                for (auto &it : mulx->p_)
+                {
+                    p_.push_back(it);
+                }
+                break;
+                
+            default:
+                p_.push_back(simplified);
+        }            
+    }    
+
+    // erase the zero values
+    for (auto it = p_.begin(); it != p_.end(); ) 
+    {
+        if ( (*it)->typep_ == LAZYP_CONSTANT)
+        {
+            coeff *= ((LazyConstant*)(*it))->value_;
+            it = p_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    
+    if ( coeff == 0.0)
+    {
+        p_.clear();
+    }else if (coeff != 1.0)
+    {
+        p_.push_back( LMANAGER.add_parser( new LazyConstant(coeff)));
+    }
+//     std::cout<<"Fin mul("<<this<<")"<<std::endl;
+//     print();
+//     std::cout<< *this <<std::endl<<std::endl<<std::endl;
 }
 
-inline void LazyMultiplicationX::compute()
+LazyCreator* LazyMultiplicationX::explose()
 {
-    value_ = 1.0;
-    for (auto iter : p_)
-        value_ *= iter->value_;
-}    
-
-void LazyMultiplicationX::compact()
-{
-    if (compacted_) return;
-    compacted_ = true;
+    if (explosed_ == nullptr)
+    {       
         
-    std::list<LazyValue*> vec;    
-    for ( auto iter : p_)
-    {
-        iter->compact(); 
-        if ( iter->type_ == LAZYMULTIPLICATIONX)
+        int cpt = 0;
+        for (auto& iter : p_)  // if ( !LMANAGER.is_one(iter))
         {
-            LazyMultiplicationX* AX = (LazyMultiplicationX*) iter;
-            for (auto& iter1 : AX->p_)
-                vec.push_back( iter1);
-        }else 
+            if (cpt++ == 0)
+            {
+                explosed_ = iter->explose();
+            }else
+            {
+                explosed_ = LMANAGER.add_multiplication(explosed_,iter->explose());
+            }
+        }
+        
+        if (explosed_ == nullptr)
+        {
+            explosed_ = LMANAGER.get_zero()->explose();
+            return explosed_;
+        }
+        
+    }      
+    return explosed_;    
+}
+
+// double LazyMultiplicationX::get_constant() const
+// {
+//     double out = 1.0;
+//     for (auto& iter : p_)
+//     {
+//         if (iter->typep_ == LAZYP_ADDITIONX)
+//         {
+//             LazyAdditionX* Ax = (LazyAdditionX*)iter;
+//             if (Ax->is_double())
+//                 out *= Ax->get_double();
+//         }
+//     }
+//     return out;
+// }
+
+std::string LazyMultiplicationX::get_name() const
+{
+    std::string cmd = "{";
+    int cpt = 0;
+    for (auto&i : p_)
+    {
+        if (cpt++)  cmd +="*";
+        cmd += i->get_name();
+    }
+    cmd += "}";
+    return cmd;
+}
+/*
+LazyParser* LazyMultiplicationX::get_without_constant() const
+{
+    std::list<LazyParser*> vec;
+    for (auto& iter : p_)
+    {
+        if (iter->typep_ != LAZYP_ADDITIONX || ! ((LazyAdditionX*)iter)->is_double())
         {
             vec.push_back(iter);
         }
-    }    
+    }
     
-    double cst = 1.0;
-    p_.clear();
-    for ( auto iter : vec)
+    if (vec.size() == 1)
+        return new LazyAdditionX(1.0,vec.front());
+    
+    return new LazyMultiplicationX(vec);
+}*/
+
+
+bool LazyMultiplicationX::is_zero() const
+{
+    return (p_.size() ==0);
+}
+
+void LazyMultiplicationX::print( const std::string& tab) const 
+{
+    std::cout<<tab<<"LazyMultiplicationX:("<<get_name()<<"): "<<std::endl;
+    std::cout<<tab<<"{"<<std::endl;
+    for (auto iter : p_)
+        iter->print(tab+"\t");
+    std::cout<<tab<<"}"<<std::endl;
+}   
+
+LazyParser* LazyMultiplicationX::simplify()
+{
+    for (auto& iter : p_)
     {
-        if ( iter->type_ == LAZYCONSTANT)
+        iter->simplify();
+        if (LMANAGER.is_zero(iter))
         {
-            LazyConstant* c = (LazyConstant*)iter;
-            cst *= c->value_;
-        }else 
-        {
-            p_.push_back(iter);
+            return LMANAGER.get_zero();
         }
     }
+    
+    if (p_.size() == 1)
+    {
+        auto it = p_.begin();
+        return *it;        
+    }
+    return this;
+}
+
+bool LazyMultiplicationX::operator < ( const LazyMultiplicationX& in) const
+{
+    if ( p_.size() < in.p_.size())  return true;
+    if ( p_.size() > in.p_.size())  return false;
+    
+    auto it = p_.begin();
+    auto it2 = in.p_.begin();
+    for (; it != p_.end() && it2 != in.p_.end(); ) 
+    {
+        if( *it < *it2)   return true;
+        if( *it > *it2)   return false;
         
-    if ( cst)
-    {
-        p_.push_back(LMANAGER.add_constant(cst));
-    }   
-    p_.sort(compareLazyValue);
-}
-
-LazyValue* LazyMultiplicationX::explose()
-{
-    p_.sort(compareLazyValue);
-    if (!explosed_)
-    {
-        explosed_ = true;
-        LazyValue* m;
-        uint cpt=0;
-        for (auto iter : p_)
-        {
-            if (cpt++ ==0)
-            {
-                m = iter->explose();
-            }else
-            {
-                m = LMANAGER.add_multiplication(m,iter->explose());
-            }
-        }        
-        exploded_ptr_ = m;
+        ++it;
+        ++it2;
     }
-    if (!exploded_ptr_)
-    {
-        std::cerr<<"ERROR in "<< __FILE__<<" at line "<<__LINE__<<" SHOULD NOT HAPPEN"<<std::endl;
-        exit(123);
-    }
-    return exploded_ptr_;
-}
-
-std::string LazyMultiplicationX::file_print( const std::string& varname)
-{
-    std::cerr<<"LazyMultiplicationX::file_print : This should not happen"<<std::endl;
-    std::exit(12);
-    
-    std::string cmd = varname+"["+ std::to_string(id_)+"] = 1 ";
-    for (auto iter : p_)
-        cmd += "*"+ iter->file_subname(varname) ;
-    cmd += " /* " + get_string() + "*/";
-    return   cmd;
-}
-
-std::string LazyMultiplicationX::get_string( )
-{
-    std::string cmd = "(";
-    uint cpt = 0;
-    for (auto iter : p_)
-    {
-        if (cpt++)  cmd = cmd +"*";
-        cmd = cmd+ iter->get_string();
-    }
-    cmd = cmd +")";
-    return cmd;
-}
-
-void LazyMultiplicationX::print( const std::string& tab,uint index) 
-{
-    std::cout<<tab<<"LazyMultiplicationX:("<<this<<"): MultiplicationX ("<<value_<<")"<<std::endl;
-    for (auto iter : p_)
-        iter->print(tab+"\t",index);
-}   
-    
-void LazyMultiplicationX::print_equation()
-{
-    std::cout<<"(";
-    for (auto iter : p_)
-    {
-        iter->print_equation();
-        std::cout<<" * ";   
-    }
-    std::cout<<1<<")";
+    return false;
 }

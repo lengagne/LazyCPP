@@ -1,10 +1,9 @@
 #include "LazyMultiplication.hpp"
 
-LazyMultiplication::LazyMultiplication(LazyValue* a, LazyValue* b) 
+LazyMultiplication::LazyMultiplication(LazyCreator* a, LazyCreator* b) 
 {
-    type_ = LAZYMULTIPLICATION;
-//     if (a<b)
-    if(compareLazyValue(a,b))
+    typec_ = LAZYC_MULTIPLICATION;
+    if (compareLazyCreator(a,b))
     {
         a_ = a;
         b_ = b; 
@@ -23,27 +22,35 @@ inline void LazyMultiplication::compute()
 
 std::string LazyMultiplication::file_print( const std::string& varname)
 {
-    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + "*" + b_->file_subname(varname);
+    return   varname+"["+ std::to_string(id_)+"] = " + a_->file_subname(varname) + " * " + b_->file_subname(varname) +";";
 }
 
-std::string LazyMultiplication::get_string( )
+std::string LazyMultiplication::get_equation( )
 {
-    return "(" + a_->get_string() + "*" + b_->get_string() + ")";
+    return "{" + a_->get_equation() + "*" + b_->get_equation() + "}";
 }
-    
-void LazyMultiplication::print( const std::string& tab,uint index) 
+
+void LazyMultiplication::print_tree( const std::string& tab)
 {
-    std::cout<<tab<<"LazyMultiplication:("<<this<<"): Multiplication ("<<value_<<")"<<std::endl;
-    a_->print(tab+"\t",index);
-    b_->print(tab+"\t",index);
-}   
-    
-void LazyMultiplication::print_equation()
-{
-    std::cout<<"(";
-    a_->print_equation();
-    std::cout<<"*";
-    b_->print_equation();
-    std::cout<<")";
+    std::cout<<tab<<"LazyMultiplication(@"<<this<<")"<<std::endl;
+    a_->print_tree(tab+"\t");
+    b_->print_tree(tab+"\t");
 }
-    
+
+void LazyMultiplication::update_list(std::vector<LazyCreator*>& vec, int current)
+{
+    if (update_ < current)
+    {
+        a_->update_list(vec,current);
+        b_->update_list(vec,current);
+        vec.push_back(this);            
+    }
+    update_ = current;    
+}
+
+bool LazyMultiplication::operator < ( const LazyMultiplication& in) const
+{
+    if (a_ < in.a_) return true;
+    if (b_ < in.b_) return true;
+    return false;
+}

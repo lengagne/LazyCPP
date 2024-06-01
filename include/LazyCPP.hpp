@@ -1,7 +1,7 @@
 #ifndef __LAZYCPP_HPP__
 #define __LAZYCPP_HPP__
 
-#include "LazyValue.hpp"
+// #include "LazyValue.hpp"
 #include "LazyInput.hpp"
 #include "LazyConstant.hpp"
 #include "LazyAddition.hpp"
@@ -37,7 +37,5 @@ void LazyUpdateInput();
 void LazyUpdateInput(uint index, double value);
 
 double LazyUpdateOutput(uint index, uint cpt);
-
-
 
 #endif // __LAZYCPP_H__
