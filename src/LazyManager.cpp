@@ -123,8 +123,9 @@ LazyCreator* LazyManager::add_creator( LazyCreator* in)
 }
 
 LazyParser* LazyManager::add_input( const double &a, const std::string& name)
-{
+{       
     LazyInput* in = new LazyInput(a,name,inputs_.size());
+    add_parser(in);
     auto result = inputs_.insert(in);
     if (result.second) 
     {
@@ -165,7 +166,6 @@ LazyParser* LazyManager::add_multiplicationX( LazyParser* a , LazyParser *b)
 
 LazyParser* LazyManager::add_parser( LazyParser* in)
 {
-    return in;
 //     std::cout<<"size : "<< parsers_.size()<<" add_parser@"<<in<<"@ : "<< *in <<std::endl;
     auto result = parsers_.insert(in);
     if (result.second) 
@@ -331,8 +331,8 @@ void LazyManager::prepare(  const std::string& name,
                 {
                     if (it3->update_)
                     {
-                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// TYPE"<< it3->typec_<<" eq:"<< it3->get_equation() <<"\n";
-//                         f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"\n";
+//                         f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"// TYPE"<< it3->typec_<<" eq:"<< it3->get_equation() <<"\n";
+                        f<< "\t\t\t\t\t"<<   it3->file_print("x")  <<"\n";
                         it3->update_ = false;
                     }
                 }
@@ -401,6 +401,10 @@ void LazyManager::prepare(  const std::string& name,
 
     lazycode_ = creator_(); 
     lazycode_->set_class_name(class_name_);
+    
+    
+//     for (auto& i : parsers_)
+//         std::cout<<"parser @"<<i<<"@ : "<< *i <<std::endl;
 }
 
 void LazyManager::print_all() const

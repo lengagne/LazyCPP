@@ -35,7 +35,7 @@ bool compareLazyParser(const LazyParser* a,
             case(LAZYP_ADDITIONX):
 //                 std::cout<<"CASE 4"<<std::endl;
                 return  (*((LazyAdditionX*) a) < *((LazyAdditionX*) b));
-
+// 
             case(LAZYP_MULTIPLICATIONX):
 //                 std::cout<<"CASE 5"<<std::endl;
                 return  (*((LazyMultiplicationX*) a) < *((LazyMultiplicationX*) b));

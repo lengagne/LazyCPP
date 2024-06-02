@@ -128,6 +128,13 @@ LazyParser* LazyMultiplicationX::do_simplification()
     {
         a.push_back( LMANAGER.add_constant_parser(coeff));
     }
+    
+    if (a.size() == 0)
+        return LMANAGER.get_zero();
+    if (a.size() == 1)
+    {
+        return *(a.begin());
+    }
     LazyParser* out = new LazyMultiplicationX(a);
     return out;
 }

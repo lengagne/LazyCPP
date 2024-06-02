@@ -34,6 +34,8 @@ public:
     
     virtual std::string get_name() const;
     
+    virtual bool is_zero() const;
+    
     virtual void print( const std::string& tab="") const; 
     
     virtual void print_tree( const std::string& tab ="");

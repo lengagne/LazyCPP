@@ -39,6 +39,11 @@ std::string LazyConstant::get_name() const
     return std::to_string(value_);
 }
 
+bool LazyConstant::is_zero() const
+{
+    return (value_ == 0.0);
+}
+
 void LazyConstant::print( const std::string& tab) const
 {
     std::cout<<tab<<"LazyConstant:("<<get_name()<<"): "<< value_<<std::endl;    

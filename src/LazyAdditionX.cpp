@@ -72,9 +72,9 @@ LazyParser* LazyAdditionX::do_simplification()
         LazyParser* s = iter.first->simplify();
         switch (s->typep_)
         {
-//             case(LAZYP_CONSTANT):
-//                 constant += ((LazyConstant*) s)->value_ * iter.second;
-//                 break;
+            case(LAZYP_CONSTANT):
+                constant += ((LazyConstant*) s)->value_ * iter.second;
+                break;
             
             case(LAZYP_ADDITIONX):
                 for (auto& i : ((LazyAdditionX*) s)->p_)
@@ -102,6 +102,11 @@ LazyParser* LazyAdditionX::do_simplification()
 //         out->p_[LMANAGER.add_constant_parser(constant)] += 1.0;
         out->p_[LMANAGER.get_one()] += constant;
     }
+    
+    out->remove_zeros();
+    
+    if( out->p_.size() == 0.0)
+        return LMANAGER.get_zero();
     return out;
 }
 
@@ -199,7 +204,20 @@ bool LazyAdditionX::is_double() const
 
 bool LazyAdditionX::is_zero() const
 {
-    return (p_.size() ==0);
+//     std::cout<<"is zero for : "<< *this <<std::endl;
+    
+    if(p_.size() == 0)
+        return true;
+    
+    if (p_.size() == 1){
+        std::map<LazyParser*, double>::const_iterator it = p_.begin();  
+        if (it->second == 0.0)
+            return true;
+        if (LMANAGER.is_zero(it->first))
+            return true;        
+    }
+//     std::cout<<"return FALSE"<<std::endl;
+    return false;
 }
 
 void LazyAdditionX::print( const std::string& tab) const
