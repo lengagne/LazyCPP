@@ -483,7 +483,7 @@ void LazyManager::clean_files()
     if (lazycode_)  
     {
         dlclose( handle_lib_);
-//         lazycode_->delete_files();
+        lazycode_->delete_files();
         destroy_code(lazycode_);        
     }
     lazycode_ = nullptr;

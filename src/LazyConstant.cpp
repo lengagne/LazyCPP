@@ -34,9 +34,14 @@ std::string LazyConstant::file_print( const std::string& varname)
     return to_string_with_precision(value_);
 }
 
+std::string LazyConstant::file_subname( const std::string& varname)
+{
+    return to_string_with_precision(value_);    
+}
+
 std::string LazyConstant::get_name() const
 {
-    return std::to_string(value_);
+    return to_string_with_precision(value_);
 }
 
 bool LazyConstant::is_zero() const

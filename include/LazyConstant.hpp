@@ -5,7 +5,7 @@
 #include <sstream>
 
 template <typename T>
-std::string to_string_with_precision(const T a_value, const int n = 20)
+std::string to_string_with_precision(const T a_value, const int n = 10)
 {
     std::ostringstream out;
     out.precision(n);
@@ -25,10 +25,7 @@ public:
     
     virtual LazyCreator* explose();
     
-    virtual std::string file_subname( const std::string& varname="x")
-    {
-        return std::to_string( value_);
-    }
+    virtual std::string file_subname( const std::string& varname="x");
     
     virtual std::string file_print( const std::string& varname="x");
     
